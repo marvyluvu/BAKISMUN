@@ -6,45 +6,67 @@
   <title>BAKISMUN 2025 — SEEK DIPLOMACY</title>
   <style>
     body {
-      background-color: #000;
+      margin: 0;
+      background: #000;
       color: #00ff88;
       font-family: "VT323", monospace;
-      font-size: 1.2rem;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
       overflow: hidden;
     }
-    .terminal {
-      max-width: 800px;
-      width: 100%;
-      text-align: left;
-      white-space: pre-wrap;
+
+    .crt {
+      position: relative;
+      width: 80%;
+      max-width: 700px;
+      padding: 40px;
+      border: 3px solid #00ff88;
+      background: rgba(0,0,0,0.9);
+      text-align: center;
+      box-shadow: 0 0 20px #00ff88;
     }
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      background: #00ff88;
-      margin-left: 5px;
-      animation: blink 1s infinite;
+
+    .crt::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,255,136,0.1) 0px,
+        rgba(0,255,136,0.05) 2px,
+        transparent 3px
+      );
+      pointer-events: none;
+      animation: flicker 1s infinite;
     }
-    @keyframes blink {
-      0% { background: #00ff88; }
-      50% { background: transparent; }
-      100% { background: #00ff88; }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.15; }
+      50% { opacity: 0.25; }
     }
-    .gateway-btn {
-      margin-top: 30px;
-      padding: 12px 24px;
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .quotes {
       font-size: 1.2rem;
+      min-height: 60px;
+    }
+
+    .gateway-btn {
+      margin-top: 25px;
+      padding: 10px 20px;
+      font-size: 1rem;
       font-family: "VT323", monospace;
       color: #00ff88;
       background: black;
       border: 2px solid #00ff88;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: 0.2s;
     }
     .gateway-btn:hover {
       background: #00ff88;
@@ -53,48 +75,33 @@
   </style>
 </head>
 <body>
-  <div class="terminal" id="terminal"></div>
+  <div class="crt">
+    <h1>BAKISMUN 2025<br>SEEK DIPLOMACY</h1>
+    <div class="quotes" id="quotes"></div>
+    <button class="gateway-btn" onclick="window.location.href='home.html'">
+      [ ACCESS GATEWAY ]
+    </button>
+  </div>
 
   <script>
-    const lines = [
-      "> Initializing BAKISMUN 2025 OS...",
-      "> Loading Diplomacy Protocols...",
-      "> \"Peace is not absence of conflict, it is the ability to handle conflict peacefully.\"",
-      "> Preparing Committees.sys...",
-      "> \"Let us never negotiate out of fear. But let us never fear to negotiate.\"",
-      "> Configuring Secretariat.dat...",
-      "> \"Diplomacy is the art of letting someone else have your way.\"",
-      "> Gateway Ready."
+    const quotes = [
+      '"Peace is not absence of conflict, it is the ability to handle conflict peacefully."',
+      '"Let us never negotiate out of fear. But let us never fear to negotiate."',
+      '"Diplomacy is the art of letting someone else have your way."',
+      '"In the arena of diplomacy, words are weapons sharper than swords."',
+      '"Seek diplomacy, and you shall find peace."'
     ];
 
-    const terminal = document.getElementById("terminal");
-    let lineIndex = 0;
-    let charIndex = 0;
+    let index = 0;
+    const quoteBox = document.getElementById("quotes");
 
-    function typeLine() {
-      if (lineIndex < lines.length) {
-        const line = lines[lineIndex];
-        if (charIndex < line.length) {
-          terminal.innerHTML += line.charAt(charIndex);
-          charIndex++;
-          setTimeout(typeLine, 40); // typing speed
-        } else {
-          terminal.innerHTML += "\n";
-          charIndex = 0;
-          lineIndex++;
-          setTimeout(typeLine, 400); // delay between lines
-        }
-      } else {
-        // Add gateway button at the end
-        const btn = document.createElement("button");
-        btn.className = "gateway-btn";
-        btn.textContent = "[ ACCESS GATEWAY ]";
-        btn.onclick = () => window.location.href = "home.html";
-        terminal.appendChild(btn);
-      }
+    function showQuote() {
+      quoteBox.textContent = quotes[index];
+      index = (index + 1) % quotes.length;
     }
 
-    typeLine();
+    showQuote();
+    setInterval(showQuote, 2500); // change every 2.5s
   </script>
 </body>
 </html>
