@@ -18,7 +18,7 @@
     overflow:hidden;
   }
 
-  /* Subtle CRT + grid to reduce emptiness */
+  /* Subtle CRT + grid */
   .overlay-scan{
     position:fixed; inset:0; pointer-events:none;
     background: repeating-linear-gradient(to bottom,
@@ -38,7 +38,7 @@
 
   /* Desktop area */
   .desktop{
-    position:absolute; inset:0 0 36px 0; /* leave space for taskbar */
+    position:absolute; inset:0 0 36px 0;
     padding:18px;
     display:grid;
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
@@ -62,7 +62,7 @@
   .icon:hover{ box-shadow:0 0 14px var(--green); border-color:var(--green) }
   .icon svg{ width:42px; height:42px; filter: drop-shadow(0 0 6px var(--green)); }
 
-  /* Ticker (fills space + adds vibe) */
+  /* Ticker */
   .ticker{
     position:absolute; left:18px; right:18px; bottom:48px;
     padding:6px 10px; background:rgba(0,0,0,.55);
@@ -75,7 +75,7 @@
   }
   @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-100%)} }
 
-  /* Windows (terminal style) */
+  /* Windows */
   .window{
     position:absolute; top:120px; left:120px; width:360px; max-width:92vw;
     background:black; border:2px solid var(--green); display:none; flex-direction:column;
@@ -86,6 +86,7 @@
     padding:6px 8px; display:flex; justify-content:space-between; align-items:center;
     cursor:move; font-size:18px; text-shadow:0 0 6px var(--green);
   }
+  .title-left{display:flex; gap:10px; align-items:center}
   .btns{display:flex; gap:6px}
   .tb-btn{
     width:22px; height:22px; border:1px solid var(--green); background:black; color:var(--green);
@@ -116,7 +117,33 @@
   }
   .menu a:hover{ background:var(--green); color:black }
 
-  /* Mobile: windows go centered & wide */
+  /* --- Google Form CRT theming via filters --- */
+  .crt-form-wrap{
+    position:relative; height:100%; background:black; overflow:hidden;
+  }
+  .crt-form-wrap::after{ /* very subtle scanlines over iframe area */
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(to bottom,
+      rgba(0,255,136,.05) 0px,
+      rgba(0,255,136,.02) 2px,
+      transparent 3px);
+    mix-blend-mode:screen;
+  }
+  .crt-form-iframe{
+    width:100%; height:100%; border:0; margin:0; padding:0;
+    /* Turn default white/purple Google Form into green-on-black */
+    filter:
+      invert(1)            /* white -> black */
+      hue-rotate(120deg)   /* purple -> green */
+      saturate(1.6)
+      contrast(1.15)
+      brightness(0.95);
+    /* If something looks off on some devices, the Theme toggle removes this filter */
+    background:black;
+  }
+  .native-form .crt-form-iframe{ filter:none !important; background:transparent }
+
+  /* Mobile */
   @media (max-width:768px){
     .desktop{ grid-template-columns: repeat(4, 1fr); grid-auto-rows: 100px; gap:12px }
     .window{ left:10px !important; top:60px !important; width:calc(100vw - 20px) !important; }
@@ -128,12 +155,10 @@
 <div class="overlay-grid"></div>
 <div class="overlay-scan"></div>
 
-<!-- Desktop icons (Inline SVG = always loads) -->
+<!-- Desktop icons -->
 <div class="desktop">
 
-  <!-- Secretariat -->
   <div class="icon" onclick="openWindow('secretariat')">
-    <!-- floppy icon -->
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
       <path d="M16 4v6H8V4"/>
@@ -142,9 +167,7 @@
     Secretariat
   </div>
 
-  <!-- Committees -->
   <div class="icon" onclick="openWindow('committees')">
-    <!-- scroll icon -->
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M8 6h10a2 2 0 0 1 2 2v8H9a3 3 0 0 1-3-3V6z"/>
       <path d="M8 6a2 2 0 1 0-4 0v7a3 3 0 0 0 3 3"/>
@@ -153,9 +176,7 @@
     Committees
   </div>
 
-  <!-- Applications -->
   <div class="icon" onclick="openWindow('applications')">
-    <!-- form icon -->
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M9 2h6l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3z"/>
       <path d="M14 2v6h6"/>
@@ -164,9 +185,7 @@
     Apply
   </div>
 
-  <!-- Contact -->
   <div class="icon" onclick="openWindow('contact')">
-    <!-- antenna icon -->
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M12 19V8"/>
       <circle cx="12" cy="5" r="2"/>
@@ -175,63 +194,21 @@
     Contact
   </div>
 
-  <!-- Resources -->
-  <div class="icon" onclick="openWindow('resources')">
-    <!-- book icon -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 0-3 3z"/>
-      <path d="M5 4v16a3 3 0 0 1 3-3h10"/>
-    </svg>
-    Resources
-  </div>
-
-  <!-- Schedule -->
-  <div class="icon" onclick="openWindow('schedule')">
-    <!-- calendar icon -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <rect x="3" y="4" width="18" height="18" rx="2"/>
-      <path d="M16 2v4M8 2v4M3 10h18"/>
-    </svg>
-    Schedule
-  </div>
-
-  <!-- Country Matrix -->
-  <div class="icon" onclick="openWindow('matrix')">
-    <!-- grid icon -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <rect x="3" y="3" width="7" height="7"/>
-      <rect x="14" y="3" width="7" height="7"/>
-      <rect x="3" y="14" width="7" height="7"/>
-      <rect x="14" y="14" width="7" height="7"/>
-    </svg>
-    Country Matrix
-  </div>
-
-  <!-- Gallery -->
-  <div class="icon" onclick="openWindow('gallery')">
-    <!-- image icon -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <rect x="3" y="5" width="18" height="14" rx="2"/>
-      <path d="M8 13l3-3 4 4 2-2 2 2"/>
-      <circle cx="8.5" cy="9.5" r="1.5"/>
-    </svg>
-    Gallery
-  </div>
-
 </div>
 
 <!-- Quote ticker -->
 <div class="ticker">
   <span id="tickerText">
     “Seek Diplomacy, Find Peace.” • “Let us never negotiate out of fear. But let us never fear to negotiate.” •
-    “In the arena of diplomacy, words are weapons sharper than swords.” • “Peace is not the absence of conflict, but the ability to resolve it.”
+    “In the arena of diplomacy, words are weapons sharper than swords.” • “Peace is not the absence of conflict, but the ability to resolve it.” 
+    • “Diplomacy is the art of telling people to go to hell in such a way that they ask for directions.” • “The supreme art of war is to subdue the enemy without fighting.”
   </span>
 </div>
 
-<!-- WINDOWS -->
+<!-- Secretariat window -->
 <div id="secretariat" class="window" style="top:110px;left:80px;width:420px">
   <div class="title-bar">
-    Secretariat
+    <div class="title-left">Secretariat</div>
     <div class="btns">
       <button class="tb-btn" onclick="minimize('secretariat')">–</button>
       <button class="tb-btn" onclick="closeWindow('secretariat')">X</button>
@@ -241,13 +218,13 @@
     <p>[ SECRETARY-GENERAL ] — Name, short bio.</p>
     <p>[ DSG ] — Name, short bio.</p>
     <p>[ USG COMMS ] — Name, short bio.</p>
-    <p>Tip: replace this with cards & photos later.</p>
   </div>
 </div>
 
+<!-- Committees window -->
 <div id="committees" class="window" style="top:160px;left:180px;width:460px">
   <div class="title-bar">
-    Committees & Agendas
+    <div class="title-left">Committees & Agendas</div>
     <div class="btns">
       <button class="tb-btn" onclick="minimize('committees')">–</button>
       <button class="tb-btn" onclick="closeWindow('committees')">X</button>
@@ -257,28 +234,37 @@
     <p>GA — Topic A / Topic B</p>
     <p>UNSC — Topic A / Topic B</p>
     <p>WHO — Topic A / Topic B</p>
-    <p>Click here to open PDFs (later): <em>study_guide_ga.pdf</em></p>
   </div>
 </div>
 
-<div id="applications" class="window" style="top:210px;left:70px;width:420px">
+<!-- Applications window with CRT-styled Google Form -->
+<div id="applications" class="window" style="top:210px;left:70px;width:700px;height:600px;max-width:95vw;max-height:80vh;">
   <div class="title-bar">
-    Applications
+    <div class="title-left">
+      Applications
+      <button class="tb-btn" style="margin-left:8px" onclick="toggleFormTheme()" title="Toggle Form Theme">Theme</button>
+    </div>
     <div class="btns">
       <button class="tb-btn" onclick="minimize('applications')">–</button>
       <button class="tb-btn" onclick="closeWindow('applications')">X</button>
     </div>
   </div>
-  <div class="win-content">
-    <p>Embed your Google Form link here:</p>
-    <p><a href="#" style="color:var(--green)">Delegate Form</a> • <a href="#" style="color:var(--green)">Chair Form</a> • <a href="#" style="color:var(--green)">Press Form</a></p>
-    <p>Or paste the &lt;iframe&gt; from Google Forms to render inline.</p>
+  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
+    <div id="formWrap" class="crt-form-wrap">
+      <iframe 
+        class="crt-form-iframe"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true" 
+        frameborder="0" marginheight="0" marginwidth="0">
+        Loading…
+      </iframe>
+    </div>
   </div>
 </div>
 
+<!-- Contact window -->
 <div id="contact" class="window" style="top:80px;left:520px;width:360px">
   <div class="title-bar">
-    Contact
+    <div class="title-left">Contact</div>
     <div class="btns">
       <button class="tb-btn" onclick="minimize('contact')">–</button>
       <button class="tb-btn" onclick="closeWindow('contact')">X</button>
@@ -288,66 +274,6 @@
     <p>Email: example@bakismun.org</p>
     <p>Instagram: @bakismun</p>
     <p>Discord: discord.gg/example</p>
-  </div>
-</div>
-
-<div id="resources" class="window" style="top:120px;left:940px;width:360px">
-  <div class="title-bar">
-    Resources
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('resources')">–</button>
-      <button class="tb-btn" onclick="closeWindow('resources')">X</button>
-    </div>
-  </div>
-  <div class="win-content">
-    <p>Rules of Procedure (PDF)</p>
-    <p>Position Paper Guide (PDF)</p>
-    <p>Best Delegate Blog (link)</p>
-  </div>
-</div>
-
-<div id="schedule" class="window" style="top:240px;left:980px;width:360px">
-  <div class="title-bar">
-    Schedule
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('schedule')">–</button>
-      <button class="tb-btn" onclick="closeWindow('schedule')">X</button>
-    </div>
-  </div>
-  <div class="win-content">
-    <p>Day 1 — Registration 08:00 • Opening 10:00 • Session I 11:00</p>
-    <p>Day 2 — Session II 09:00 • Social 19:00</p>
-    <p>Day 3 — Session III 09:00 • Closing 16:00</p>
-  </div>
-</div>
-
-<div id="matrix" class="window" style="top:300px;left:520px;width:420px">
-  <div class="title-bar">
-    Country Matrix
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('matrix')">–</button>
-      <button class="tb-btn" onclick="closeWindow('matrix')">X</button>
-    </div>
-  </div>
-  <div class="win-content">
-    <p>Upload a CSV/Sheet later or link a PDF. Example layout:</p>
-    <pre>Committee | Country | Status
-GA        | Egypt   | Available
-GA        | France  | Taken
-UNSC      | China   | Available</pre>
-  </div>
-</div>
-
-<div id="gallery" class="window" style="top:140px;left:1240px;width:360px">
-  <div class="title-bar">
-    Gallery
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('gallery')">–</button>
-      <button class="tb-btn" onclick="closeWindow('gallery')">X</button>
-    </div>
-  </div>
-  <div class="win-content">
-    <p>Add photos after the event, or teaser shots now.</p>
   </div>
 </div>
 
@@ -362,14 +288,10 @@ UNSC      | China   | Available</pre>
   <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
   <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
   <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
-  <a href="#" onclick="openWindow('resources');toggleMenu()">Resources</a>
-  <a href="#" onclick="openWindow('schedule');toggleMenu()">Schedule</a>
-  <a href="#" onclick="openWindow('matrix');toggleMenu()">Country Matrix</a>
   <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
 </div>
 
 <script>
-  // Open/close
   function openWindow(id){
     const w = document.getElementById(id);
     w.style.display = 'flex';
@@ -378,18 +300,17 @@ UNSC      | China   | Available</pre>
     makeDraggable(w);
   }
   function closeWindow(id){ document.getElementById(id).style.display='none' }
-  function minimize(id){ const w=document.getElementById(id); w.style.display='none' }
+  function minimize(id){ document.getElementById(id).style.display='none' }
 
-  // Z-index focus
+  // z-index
   let zTop = 10;
   function bringToFront(el){ el.style.zIndex = ++zTop }
 
-  // Draggable
+  // draggable
   function makeDraggable(win){
     const bar = win.querySelector('.title-bar');
-    if(bar._dragBound) return; // prevent rebinding
+    if(bar._dragBound) return;
     let dx=0, dy=0, dragging=false;
-
     const down = (e)=>{
       dragging=true; bringToFront(win);
       const rect = win.getBoundingClientRect();
@@ -420,12 +341,12 @@ UNSC      | China   | Available</pre>
     bar._dragBound = true;
   }
 
-  // Center on mobile (wide)
   function centerOnMobile(win){
     if(window.innerWidth < 768){
       win.style.left = '10px';
       win.style.top  = '60px';
       win.style.width = (window.innerWidth - 20) + 'px';
+      win.style.height = (window.innerHeight - 120) + 'px';
     }
   }
 
@@ -449,13 +370,11 @@ UNSC      | China   | Available</pre>
   }
   setInterval(tick,1000); tick();
 
-  // Ensure ticker always long enough (fallback if text short)
-  (function ensureTicker(){
-    const t = document.getElementById('tickerText');
-    if(t && t.textContent.length < 120){
-      t.textContent = (t.textContent + ' • ' + t.textContent + ' • ' + t.textContent);
-    }
-  })();
+  // Toggle Google Form theme (CRT vs Native)
+  function toggleFormTheme(){
+    const wrap = document.getElementById('formWrap');
+    wrap.classList.toggle('native-form');
+  }
 </script>
 </body>
 </html>
