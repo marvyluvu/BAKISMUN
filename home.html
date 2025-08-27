@@ -1,255 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BAKISMUN 2025 Desktop</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: url('wallpaper.png') center center fixed;
-      background-size: cover;
-      font-family: "VT323", monospace;
-      overflow: hidden;
-      color: #00ff88;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BAKISMUN 2025 — Diplomacy OS</title>
+<style>
+  :root{
+    --green:#00ff88;
+    --bg:black;
+  }
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"VT323", monospace;
+    background: url('wallpaper.png') center/cover fixed var(--bg);
+    color:var(--green);
+    overflow:hidden;
+  }
 
-    /* CRT scanline effect */
-    body::after {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(0,255,136,0.07) 0px,
-        rgba(0,255,136,0.03) 2px,
-        transparent 3px
-      );
-      pointer-events: none;
-    }
+  /* Subtle CRT + grid to reduce emptiness */
+  .overlay-scan{
+    position:fixed; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(to bottom,
+      rgba(0,255,136,.07) 0px,
+      rgba(0,255,136,.03) 2px,
+      transparent 3px);
+    mix-blend-mode:screen;
+  }
+  .overlay-grid{
+    position:fixed; inset:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,255,136,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,.08) 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px;
+    opacity:.14;
+  }
 
-    /* Desktop Icons */
-    .icon {
-      width: 80px;
-      text-align: center;
-      margin: 20px;
-      cursor: pointer;
-      display: inline-block;
-      color: #00ff88;
-      text-shadow: 0 0 8px #00ff88;
-    }
-    .icon img {
-      width: 48px;
-      height: 48px;
-      display: block;
-      margin: 0 auto 5px;
-      filter: drop-shadow(0 0 6px #00ff88) invert(100%);
-    }
-    .icon:hover {
-      text-shadow: 0 0 12px #00ff88;
-    }
+  /* Desktop area */
+  .desktop{
+    position:absolute; inset:0 0 36px 0; /* leave space for taskbar */
+    padding:18px;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    grid-auto-rows: 110px;
+    gap:16px;
+    align-content:start;
+  }
 
-    /* Window (CRT style) */
-    .window {
-      position: absolute;
-      top: 120px;
-      left: 120px;
-      width: 320px;
-      background: black;
-      border: 2px solid #00ff88;
-      display: none;
-      flex-direction: column;
-      box-shadow: 0 0 15px #00ff88;
-    }
-    .title-bar {
-      background: #003322;
-      color: #00ff88;
-      padding: 5px;
-      cursor: move;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1rem;
-      text-shadow: 0 0 6px #00ff88;
-    }
-    .close-btn {
-      background: black;
-      color: #00ff88;
-      border: 1px solid #00ff88;
-      width: 20px;
-      height: 20px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .close-btn:hover {
-      background: #00ff88;
-      color: black;
-    }
-    .window-content {
-      padding: 10px;
-      background: black;
-      color: #00ff88;
-      font-size: 0.9rem;
-      line-height: 1.3rem;
-      text-shadow: 0 0 6px #00ff88;
-    }
+  /* Icon */
+  .icon{
+    user-select:none;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px; cursor:pointer; text-align:center;
+    color:var(--green);
+    text-shadow:0 0 8px var(--green);
+    border:1px solid transparent;
+    transition:.15s;
+    background:rgba(0,0,0,.25);
+    border-radius:8px;
+  }
+  .icon:hover{ box-shadow:0 0 14px var(--green); border-color:var(--green) }
+  .icon svg{ width:42px; height:42px; filter: drop-shadow(0 0 6px var(--green)); }
 
-    /* Taskbar */
-    .taskbar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 36px;
-      background: black;
-      border-top: 2px solid #00ff88;
-      color: #00ff88;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 10px;
-      font-size: 1rem;
-      text-shadow: 0 0 8px #00ff88;
-    }
-    .start-btn {
-      background: black;
-      border: 2px solid #00ff88;
-      padding: 3px 12px;
-      color: #00ff88;
-      cursor: pointer;
-      font-weight: bold;
-      text-shadow: 0 0 6px #00ff88;
-    }
-    .start-btn:hover {
-      background: #00ff88;
-      color: black;
-    }
-  </style>
+  /* Ticker (fills space + adds vibe) */
+  .ticker{
+    position:absolute; left:18px; right:18px; bottom:48px;
+    padding:6px 10px; background:rgba(0,0,0,.55);
+    border:1px solid var(--green); box-shadow:0 0 10px var(--green);
+    white-space:nowrap; overflow:hidden;
+  }
+  .ticker span{
+    display:inline-block; padding-left:100%;
+    animation:marq 18s linear infinite;
+  }
+  @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-100%)} }
+
+  /* Windows (terminal style) */
+  .window{
+    position:absolute; top:120px; left:120px; width:360px; max-width:92vw;
+    background:black; border:2px solid var(--green); display:none; flex-direction:column;
+    box-shadow:0 0 16px var(--green);
+  }
+  .title-bar{
+    background:#003322; color:var(--green);
+    padding:6px 8px; display:flex; justify-content:space-between; align-items:center;
+    cursor:move; font-size:18px; text-shadow:0 0 6px var(--green);
+  }
+  .btns{display:flex; gap:6px}
+  .tb-btn{
+    width:22px; height:22px; border:1px solid var(--green); background:black; color:var(--green);
+    font-weight:bold; cursor:pointer;
+  }
+  .tb-btn:hover{ background:var(--green); color:black }
+  .win-content{ padding:12px; font-size:16px; line-height:1.35; text-shadow:0 0 6px var(--green); }
+
+  /* Taskbar */
+  .taskbar{
+    position:fixed; left:0; right:0; bottom:0; height:36px;
+    background:black; border-top:2px solid var(--green); display:flex; align-items:center;
+    gap:10px; padding:0 8px; color:var(--green); text-shadow:0 0 8px var(--green);
+  }
+  .start{
+    background:black; border:2px solid var(--green); padding:3px 12px; cursor:pointer; font-weight:bold;
+  }
+  .start:hover{ background:var(--green); color:black }
+  .clock{ margin-left:auto }
+
+  /* Start menu */
+  .menu{
+    position:fixed; left:8px; bottom:40px; width:220px; background:black; border:2px solid var(--green);
+    display:none; box-shadow:0 0 16px var(--green);
+  }
+  .menu a{
+    display:block; padding:8px 10px; color:var(--green); text-decoration:none; border-bottom:1px solid rgba(0,255,136,.3);
+  }
+  .menu a:hover{ background:var(--green); color:black }
+
+  /* Mobile: windows go centered & wide */
+  @media (max-width:768px){
+    .desktop{ grid-template-columns: repeat(4, 1fr); grid-auto-rows: 100px; gap:12px }
+    .window{ left:10px !important; top:60px !important; width:calc(100vw - 20px) !important; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- Desktop Icons -->
+<div class="overlay-grid"></div>
+<div class="overlay-scan"></div>
+
+<!-- Desktop icons (Inline SVG = always loads) -->
+<div class="desktop">
+
+  <!-- Secretariat -->
   <div class="icon" onclick="openWindow('secretariat')">
-    <img src="https://img.icons8.com/ios-filled/50/00ff88/file.png" alt="Secretariat">
+    <!-- floppy icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+      <path d="M16 4v6H8V4"/>
+      <rect x="8" y="14" width="8" height="6"/>
+    </svg>
     Secretariat
   </div>
+
+  <!-- Committees -->
   <div class="icon" onclick="openWindow('committees')">
-    <img src="https://img.icons8.com/ios-filled/50/00ff88/scroll.png" alt="Committees">
+    <!-- scroll icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <path d="M8 6h10a2 2 0 0 1 2 2v8H9a3 3 0 0 1-3-3V6z"/>
+      <path d="M8 6a2 2 0 1 0-4 0v7a3 3 0 0 0 3 3"/>
+      <path d="M16 13H9m7-3H9"/>
+    </svg>
     Committees
   </div>
+
+  <!-- Applications -->
   <div class="icon" onclick="openWindow('applications')">
-    <img src="https://img.icons8.com/ios-filled/50/00ff88/edit.png" alt="Applications">
+    <!-- form icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <path d="M9 2h6l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3z"/>
+      <path d="M14 2v6h6"/>
+      <path d="M8 13h8M8 17h8M8 9h4"/>
+    </svg>
     Apply
   </div>
+
+  <!-- Contact -->
   <div class="icon" onclick="openWindow('contact')">
-    <img src="https://img.icons8.com/ios-filled/50/00ff88/satellite.png" alt="Contact">
+    <!-- antenna icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <path d="M12 19V8"/>
+      <circle cx="12" cy="5" r="2"/>
+      <path d="M5 8a7 7 0 0 1 14 0M3 10a9 9 0 0 1 18 0M1 12a11 11 0 0 1 22 0"/>
+    </svg>
     Contact
   </div>
 
-  <!-- Windows -->
-  <div id="secretariat" class="window">
-    <div class="title-bar">
-      Secretariat
-      <button class="close-btn" onclick="closeWindow('secretariat')">X</button>
-    </div>
-    <div class="window-content">
-      <p>[ SECRETARY-GENERAL ]</p>
-      <p>Name, bio, picture here.</p>
-    </div>
+  <!-- Resources -->
+  <div class="icon" onclick="openWindow('resources')">
+    <!-- book icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 0-3 3z"/>
+      <path d="M5 4v16a3 3 0 0 1 3-3h10"/>
+    </svg>
+    Resources
   </div>
 
-  <div id="committees" class="window">
-    <div class="title-bar">
-      Committees
-      <button class="close-btn" onclick="closeWindow('committees')">X</button>
-    </div>
-    <div class="window-content">
-      <p>GA | Agenda 1...</p>
-      <p>UNSC | Agenda 2...</p>
-      <p>WHO | Agenda 3...</p>
-    </div>
+  <!-- Schedule -->
+  <div class="icon" onclick="openWindow('schedule')">
+    <!-- calendar icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <path d="M16 2v4M8 2v4M3 10h18"/>
+    </svg>
+    Schedule
   </div>
 
-  <div id="applications" class="window">
-    <div class="title-bar">
-      Applications
-      <button class="close-btn" onclick="closeWindow('applications')">X</button>
-    </div>
-    <div class="window-content">
-      <p>Embed Google Form here for Delegate/Chair/Press.</p>
-    </div>
+  <!-- Country Matrix -->
+  <div class="icon" onclick="openWindow('matrix')">
+    <!-- grid icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <rect x="3" y="3" width="7" height="7"/>
+      <rect x="14" y="3" width="7" height="7"/>
+      <rect x="3" y="14" width="7" height="7"/>
+      <rect x="14" y="14" width="7" height="7"/>
+    </svg>
+    Country Matrix
   </div>
 
-  <div id="contact" class="window">
-    <div class="title-bar">
-      Contact
-      <button class="close-btn" onclick="closeWindow('contact')">X</button>
-    </div>
-    <div class="window-content">
-      <p>Email: example@bakismun.org</p>
-      <p>Instagram: @bakismun</p>
-      <p>Discord: discord.gg/example</p>
-    </div>
+  <!-- Gallery -->
+  <div class="icon" onclick="openWindow('gallery')">
+    <!-- image icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <rect x="3" y="5" width="18" height="14" rx="2"/>
+      <path d="M8 13l3-3 4 4 2-2 2 2"/>
+      <circle cx="8.5" cy="9.5" r="1.5"/>
+    </svg>
+    Gallery
   </div>
 
-  <!-- Taskbar -->
-  <div class="taskbar">
-    <div class="start-btn">[ BAKISMUN ]</div>
-    <div id="clock"></div>
+</div>
+
+<!-- Quote ticker -->
+<div class="ticker">
+  <span id="tickerText">
+    “Seek Diplomacy, Find Peace.” • “Let us never negotiate out of fear. But let us never fear to negotiate.” •
+    “In the arena of diplomacy, words are weapons sharper than swords.” • “Peace is not the absence of conflict, but the ability to resolve it.”
+  </span>
+</div>
+
+<!-- WINDOWS -->
+<div id="secretariat" class="window" style="top:110px;left:80px;width:420px">
+  <div class="title-bar">
+    Secretariat
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('secretariat')">–</button>
+      <button class="tb-btn" onclick="closeWindow('secretariat')">X</button>
+    </div>
   </div>
+  <div class="win-content">
+    <p>[ SECRETARY-GENERAL ] — Name, short bio.</p>
+    <p>[ DSG ] — Name, short bio.</p>
+    <p>[ USG COMMS ] — Name, short bio.</p>
+    <p>Tip: replace this with cards & photos later.</p>
+  </div>
+</div>
 
-  <script>
-    function openWindow(id) {
-      const win = document.getElementById(id);
-      win.style.display = "flex";
-      centerOnMobile(win);
-      makeDraggable(win);
+<div id="committees" class="window" style="top:160px;left:180px;width:460px">
+  <div class="title-bar">
+    Committees & Agendas
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('committees')">–</button>
+      <button class="tb-btn" onclick="closeWindow('committees')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>GA — Topic A / Topic B</p>
+    <p>UNSC — Topic A / Topic B</p>
+    <p>WHO — Topic A / Topic B</p>
+    <p>Click here to open PDFs (later): <em>study_guide_ga.pdf</em></p>
+  </div>
+</div>
+
+<div id="applications" class="window" style="top:210px;left:70px;width:420px">
+  <div class="title-bar">
+    Applications
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('applications')">–</button>
+      <button class="tb-btn" onclick="closeWindow('applications')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>Embed your Google Form link here:</p>
+    <p><a href="#" style="color:var(--green)">Delegate Form</a> • <a href="#" style="color:var(--green)">Chair Form</a> • <a href="#" style="color:var(--green)">Press Form</a></p>
+    <p>Or paste the &lt;iframe&gt; from Google Forms to render inline.</p>
+  </div>
+</div>
+
+<div id="contact" class="window" style="top:80px;left:520px;width:360px">
+  <div class="title-bar">
+    Contact
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('contact')">–</button>
+      <button class="tb-btn" onclick="closeWindow('contact')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>Email: example@bakismun.org</p>
+    <p>Instagram: @bakismun</p>
+    <p>Discord: discord.gg/example</p>
+  </div>
+</div>
+
+<div id="resources" class="window" style="top:120px;left:940px;width:360px">
+  <div class="title-bar">
+    Resources
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('resources')">–</button>
+      <button class="tb-btn" onclick="closeWindow('resources')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>Rules of Procedure (PDF)</p>
+    <p>Position Paper Guide (PDF)</p>
+    <p>Best Delegate Blog (link)</p>
+  </div>
+</div>
+
+<div id="schedule" class="window" style="top:240px;left:980px;width:360px">
+  <div class="title-bar">
+    Schedule
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('schedule')">–</button>
+      <button class="tb-btn" onclick="closeWindow('schedule')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>Day 1 — Registration 08:00 • Opening 10:00 • Session I 11:00</p>
+    <p>Day 2 — Session II 09:00 • Social 19:00</p>
+    <p>Day 3 — Session III 09:00 • Closing 16:00</p>
+  </div>
+</div>
+
+<div id="matrix" class="window" style="top:300px;left:520px;width:420px">
+  <div class="title-bar">
+    Country Matrix
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('matrix')">–</button>
+      <button class="tb-btn" onclick="closeWindow('matrix')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>Upload a CSV/Sheet later or link a PDF. Example layout:</p>
+    <pre>Committee | Country | Status
+GA        | Egypt   | Available
+GA        | France  | Taken
+UNSC      | China   | Available</pre>
+  </div>
+</div>
+
+<div id="gallery" class="window" style="top:140px;left:1240px;width:360px">
+  <div class="title-bar">
+    Gallery
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('gallery')">–</button>
+      <button class="tb-btn" onclick="closeWindow('gallery')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>Add photos after the event, or teaser shots now.</p>
+  </div>
+</div>
+
+<!-- Taskbar -->
+<div class="taskbar">
+  <button class="start" onclick="toggleMenu()">[ BAKISMUN ]</button>
+  <div class="clock" id="clock"></div>
+</div>
+
+<!-- Start Menu -->
+<div class="menu" id="menu">
+  <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
+  <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
+  <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
+  <a href="#" onclick="openWindow('resources');toggleMenu()">Resources</a>
+  <a href="#" onclick="openWindow('schedule');toggleMenu()">Schedule</a>
+  <a href="#" onclick="openWindow('matrix');toggleMenu()">Country Matrix</a>
+  <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
+</div>
+
+<script>
+  // Open/close
+  function openWindow(id){
+    const w = document.getElementById(id);
+    w.style.display = 'flex';
+    bringToFront(w);
+    centerOnMobile(w);
+    makeDraggable(w);
+  }
+  function closeWindow(id){ document.getElementById(id).style.display='none' }
+  function minimize(id){ const w=document.getElementById(id); w.style.display='none' }
+
+  // Z-index focus
+  let zTop = 10;
+  function bringToFront(el){ el.style.zIndex = ++zTop }
+
+  // Draggable
+  function makeDraggable(win){
+    const bar = win.querySelector('.title-bar');
+    if(bar._dragBound) return; // prevent rebinding
+    let dx=0, dy=0, dragging=false;
+
+    const down = (e)=>{
+      dragging=true; bringToFront(win);
+      const rect = win.getBoundingClientRect();
+      dx = (e.touches?e.touches[0].clientX:e.clientX) - rect.left;
+      dy = (e.touches?e.touches[0].clientY:e.clientY) - rect.top;
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('touchmove', move, {passive:false});
+      document.addEventListener('touchend', up);
+    };
+    const move = (e)=>{
+      if(!dragging) return;
+      const x = (e.touches?e.touches[0].clientX:e.clientX) - dx;
+      const y = (e.touches?e.touches[0].clientY:e.clientY) - dy;
+      win.style.left = x + 'px';
+      win.style.top  = y + 'px';
+      e.preventDefault?.();
+    };
+    const up = ()=>{
+      dragging=false;
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+      document.removeEventListener('touchmove', move);
+      document.removeEventListener('touchend', up);
+    };
+    bar.addEventListener('mousedown', down);
+    bar.addEventListener('touchstart', down, {passive:true});
+    bar._dragBound = true;
+  }
+
+  // Center on mobile (wide)
+  function centerOnMobile(win){
+    if(window.innerWidth < 768){
+      win.style.left = '10px';
+      win.style.top  = '60px';
+      win.style.width = (window.innerWidth - 20) + 'px';
     }
+  }
 
-    function closeWindow(id) {
-      document.getElementById(id).style.display = "none";
+  // Start menu
+  function toggleMenu(){
+    const m = document.getElementById('menu');
+    m.style.display = (m.style.display==='block') ? 'none' : 'block';
+  }
+  document.addEventListener('click', (e)=>{
+    const m = document.getElementById('menu');
+    if(m.style.display==='block' && !e.target.closest('#menu') && !e.target.closest('.start')){
+      m.style.display='none';
     }
+  });
 
-    // Draggable windows
-    function makeDraggable(el) {
-      const bar = el.querySelector(".title-bar");
-      let offsetX = 0, offsetY = 0, dragging = false;
+  // Clock
+  function tick(){
+    const now = new Date();
+    document.getElementById('clock').textContent =
+      now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+  setInterval(tick,1000); tick();
 
-      bar.onmousedown = function(e) {
-        dragging = true;
-        offsetX = e.clientX - el.offsetLeft;
-        offsetY = e.clientY - el.offsetTop;
-        document.onmousemove = function(e) {
-          if (dragging) {
-            el.style.left = (e.clientX - offsetX) + "px";
-            el.style.top = (e.clientY - offsetY) + "px";
-          }
-        };
-        document.onmouseup = function() {
-          dragging = false;
-          document.onmousemove = null;
-        };
-      };
+  // Ensure ticker always long enough (fallback if text short)
+  (function ensureTicker(){
+    const t = document.getElementById('tickerText');
+    if(t && t.textContent.length < 120){
+      t.textContent = (t.textContent + ' • ' + t.textContent + ' • ' + t.textContent);
     }
-
-    // Auto-center on mobile
-    function centerOnMobile(win) {
-      if (window.innerWidth < 768) {
-        win.style.left = "10px";
-        win.style.top = "60px";
-        win.style.width = (window.innerWidth - 20) + "px";
-      }
-    }
-
-    // Clock
-    function updateClock() {
-      const now = new Date();
-      document.getElementById("clock").textContent =
-        now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-  </script>
+  })();
+</script>
 </body>
 </html>
