@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAKISMUN 2025 Desktop</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('wallpaper.png') center center fixed;
+      background-size: cover;
+      font-family: "VT323", monospace;
+      overflow: hidden;
+    }
+
+    /* Desktop Icons */
+    .icon {
+      width: 80px;
+      text-align: center;
+      color: #00ff88;
+      margin: 20px;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .icon img {
+      width: 48px;
+      height: 48px;
+      display: block;
+      margin: 0 auto 5px;
+      filter: drop-shadow(0 0 5px #00ff88);
+    }
+
+    /* Window */
+    .window {
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      width: 300px;
+      background: #e0e0e0;
+      border: 2px solid #000;
+      display: none;
+      flex-direction: column;
+      box-shadow: 5px 5px 0 #444;
+    }
+    .title-bar {
+      background: #000080;
+      color: white;
+      padding: 5px;
+      cursor: move;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+    }
+    .close-btn {
+      background: #ff0000;
+      color: white;
+      border: none;
+      width: 20px;
+      height: 20px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .window-content {
+      padding: 10px;
+      background: white;
+      font-size: 0.9rem;
+    }
+
+    /* Taskbar */
+    .taskbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: #000080;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 1rem;
+    }
+    .start-btn {
+      background: #c0c0c0;
+      border: 2px solid #fff;
+      padding: 5px 10px;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop Icons -->
+  <div class="icon" onclick="openWindow('secretariat')">
+    <img src="https://img.icons8.com/fluency/48/folder-invoices.png" alt="Secretariat">
+    Secretariat
+  </div>
+  <div class="icon" onclick="openWindow('committees')">
+    <img src="https://img.icons8.com/fluency/48/document.png" alt="Committees">
+    Committees
+  </div>
+  <div class="icon" onclick="openWindow('applications')">
+    <img src="https://img.icons8.com/fluency/48/application-window.png" alt="Applications">
+    Applications
+  </div>
+  <div class="icon" onclick="openWindow('contact')">
+    <img src="https://img.icons8.com/fluency/48/phone.png" alt="Contact">
+    Contact
+  </div>
+
+  <!-- Windows -->
+  <div id="secretariat" class="window">
+    <div class="title-bar">
+      Secretariat
+      <button class="close-btn" onclick="closeWindow('secretariat')">X</button>
+    </div>
+    <div class="window-content">
+      <p>Welcome to the Secretariat window.</p>
+      <p>Add profiles here.</p>
+    </div>
+  </div>
+
+  <div id="committees" class="window">
+    <div class="title-bar">
+      Committees
+      <button class="close-btn" onclick="closeWindow('committees')">X</button>
+    </div>
+    <div class="window-content">
+      <p>List of committees & agendas here.</p>
+    </div>
+  </div>
+
+  <div id="applications" class="window">
+    <div class="title-bar">
+      Applications
+      <button class="close-btn" onclick="closeWindow('applications')">X</button>
+    </div>
+    <div class="window-content">
+      <p>Embed Google Form here for delegates, chairs, etc.</p>
+    </div>
+  </div>
+
+  <div id="contact" class="window">
+    <div class="title-bar">
+      Contact
+      <button class="close-btn" onclick="closeWindow('contact')">X</button>
+    </div>
+    <div class="window-content">
+      <p>Email: example@bakismun.org</p>
+      <p>Instagram: @bakismun</p>
+    </div>
+  </div>
+
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <div class="start-btn">Start</div>
+    <div id="clock"></div>
+  </div>
+
+  <script>
+    function openWindow(id) {
+      const win = document.getElementById(id);
+      win.style.display = "flex";
+      centerOnMobile(win);
+      makeDraggable(win);
+    }
+
+    function closeWindow(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    // Draggable windows
+    function makeDraggable(el) {
+      const bar = el.querySelector(".title-bar");
+      let offsetX = 0, offsetY = 0, dragging = false;
+
+      bar.onmousedown = function(e) {
+        dragging = true;
+        offsetX = e.clientX - el.offsetLeft;
+        offsetY = e.clientY - el.offsetTop;
+        document.onmousemove = function(e) {
+          if (dragging) {
+            el.style.left = (e.clientX - offsetX) + "px";
+            el.style.top = (e.clientY - offsetY) + "px";
+          }
+        };
+        document.onmouseup = function() {
+          dragging = false;
+          document.onmousemove = null;
+        };
+      };
+    }
+
+    // Auto-center on mobile
+    function centerOnMobile(win) {
+      if (window.innerWidth < 768) {
+        win.style.left = "10px";
+        win.style.top = "60px";
+        win.style.width = (window.innerWidth - 20) + "px";
+      }
+    }
+
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent =
+        now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
