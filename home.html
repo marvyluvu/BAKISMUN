@@ -12,60 +12,87 @@
       background-size: cover;
       font-family: "VT323", monospace;
       overflow: hidden;
+      color: #00ff88;
+    }
+
+    /* CRT scanline effect */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,255,136,0.07) 0px,
+        rgba(0,255,136,0.03) 2px,
+        transparent 3px
+      );
+      pointer-events: none;
     }
 
     /* Desktop Icons */
     .icon {
       width: 80px;
       text-align: center;
-      color: #00ff88;
       margin: 20px;
       cursor: pointer;
       display: inline-block;
+      color: #00ff88;
+      text-shadow: 0 0 8px #00ff88;
     }
     .icon img {
       width: 48px;
       height: 48px;
       display: block;
       margin: 0 auto 5px;
-      filter: drop-shadow(0 0 5px #00ff88);
+      filter: drop-shadow(0 0 6px #00ff88) invert(100%);
+    }
+    .icon:hover {
+      text-shadow: 0 0 12px #00ff88;
     }
 
-    /* Window */
+    /* Window (CRT style) */
     .window {
       position: absolute;
-      top: 100px;
-      left: 100px;
-      width: 300px;
-      background: #e0e0e0;
-      border: 2px solid #000;
+      top: 120px;
+      left: 120px;
+      width: 320px;
+      background: black;
+      border: 2px solid #00ff88;
       display: none;
       flex-direction: column;
-      box-shadow: 5px 5px 0 #444;
+      box-shadow: 0 0 15px #00ff88;
     }
     .title-bar {
-      background: #000080;
-      color: white;
+      background: #003322;
+      color: #00ff88;
       padding: 5px;
       cursor: move;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 1rem;
+      text-shadow: 0 0 6px #00ff88;
     }
     .close-btn {
-      background: #ff0000;
-      color: white;
-      border: none;
+      background: black;
+      color: #00ff88;
+      border: 1px solid #00ff88;
       width: 20px;
       height: 20px;
       font-size: 14px;
       cursor: pointer;
     }
+    .close-btn:hover {
+      background: #00ff88;
+      color: black;
+    }
     .window-content {
       padding: 10px;
-      background: white;
+      background: black;
+      color: #00ff88;
       font-size: 0.9rem;
+      line-height: 1.3rem;
+      text-shadow: 0 0 6px #00ff88;
     }
 
     /* Taskbar */
@@ -74,22 +101,29 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 40px;
-      background: #000080;
-      color: white;
+      height: 36px;
+      background: black;
+      border-top: 2px solid #00ff88;
+      color: #00ff88;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 10px;
       font-size: 1rem;
+      text-shadow: 0 0 8px #00ff88;
     }
     .start-btn {
-      background: #c0c0c0;
-      border: 2px solid #fff;
-      padding: 5px 10px;
-      color: black;
+      background: black;
+      border: 2px solid #00ff88;
+      padding: 3px 12px;
+      color: #00ff88;
       cursor: pointer;
       font-weight: bold;
+      text-shadow: 0 0 6px #00ff88;
+    }
+    .start-btn:hover {
+      background: #00ff88;
+      color: black;
     }
   </style>
 </head>
@@ -97,19 +131,19 @@
 
   <!-- Desktop Icons -->
   <div class="icon" onclick="openWindow('secretariat')">
-    <img src="https://img.icons8.com/fluency/48/folder-invoices.png" alt="Secretariat">
+    <img src="https://img.icons8.com/ios-filled/50/00ff88/file.png" alt="Secretariat">
     Secretariat
   </div>
   <div class="icon" onclick="openWindow('committees')">
-    <img src="https://img.icons8.com/fluency/48/document.png" alt="Committees">
+    <img src="https://img.icons8.com/ios-filled/50/00ff88/scroll.png" alt="Committees">
     Committees
   </div>
   <div class="icon" onclick="openWindow('applications')">
-    <img src="https://img.icons8.com/fluency/48/application-window.png" alt="Applications">
-    Applications
+    <img src="https://img.icons8.com/ios-filled/50/00ff88/edit.png" alt="Applications">
+    Apply
   </div>
   <div class="icon" onclick="openWindow('contact')">
-    <img src="https://img.icons8.com/fluency/48/phone.png" alt="Contact">
+    <img src="https://img.icons8.com/ios-filled/50/00ff88/satellite.png" alt="Contact">
     Contact
   </div>
 
@@ -120,8 +154,8 @@
       <button class="close-btn" onclick="closeWindow('secretariat')">X</button>
     </div>
     <div class="window-content">
-      <p>Welcome to the Secretariat window.</p>
-      <p>Add profiles here.</p>
+      <p>[ SECRETARY-GENERAL ]</p>
+      <p>Name, bio, picture here.</p>
     </div>
   </div>
 
@@ -131,7 +165,9 @@
       <button class="close-btn" onclick="closeWindow('committees')">X</button>
     </div>
     <div class="window-content">
-      <p>List of committees & agendas here.</p>
+      <p>GA | Agenda 1...</p>
+      <p>UNSC | Agenda 2...</p>
+      <p>WHO | Agenda 3...</p>
     </div>
   </div>
 
@@ -141,7 +177,7 @@
       <button class="close-btn" onclick="closeWindow('applications')">X</button>
     </div>
     <div class="window-content">
-      <p>Embed Google Form here for delegates, chairs, etc.</p>
+      <p>Embed Google Form here for Delegate/Chair/Press.</p>
     </div>
   </div>
 
@@ -153,12 +189,13 @@
     <div class="window-content">
       <p>Email: example@bakismun.org</p>
       <p>Instagram: @bakismun</p>
+      <p>Discord: discord.gg/example</p>
     </div>
   </div>
 
   <!-- Taskbar -->
   <div class="taskbar">
-    <div class="start-btn">Start</div>
+    <div class="start-btn">[ BAKISMUN ]</div>
     <div id="clock"></div>
   </div>
 
