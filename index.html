@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAKISMUN 2025 — SEEK DIPLOMACY</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #00ff88;
+      font-family: "VT323", monospace;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .terminal {
+      max-width: 800px;
+      width: 100%;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background: #00ff88;
+      margin-left: 5px;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0% { background: #00ff88; }
+      50% { background: transparent; }
+      100% { background: #00ff88; }
+    }
+    .gateway-btn {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 1.2rem;
+      font-family: "VT323", monospace;
+      color: #00ff88;
+      background: black;
+      border: 2px solid #00ff88;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .gateway-btn:hover {
+      background: #00ff88;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal" id="terminal"></div>
+
+  <script>
+    const lines = [
+      "> Initializing BAKISMUN 2025 OS...",
+      "> Loading Diplomacy Protocols...",
+      "> \"Peace is not absence of conflict, it is the ability to handle conflict peacefully.\"",
+      "> Preparing Committees.sys...",
+      "> \"Let us never negotiate out of fear. But let us never fear to negotiate.\"",
+      "> Configuring Secretariat.dat...",
+      "> \"Diplomacy is the art of letting someone else have your way.\"",
+      "> Gateway Ready."
+    ];
+
+    const terminal = document.getElementById("terminal");
+    let lineIndex = 0;
+    let charIndex = 0;
+
+    function typeLine() {
+      if (lineIndex < lines.length) {
+        const line = lines[lineIndex];
+        if (charIndex < line.length) {
+          terminal.innerHTML += line.charAt(charIndex);
+          charIndex++;
+          setTimeout(typeLine, 40); // typing speed
+        } else {
+          terminal.innerHTML += "\n";
+          charIndex = 0;
+          lineIndex++;
+          setTimeout(typeLine, 400); // delay between lines
+        }
+      } else {
+        // Add gateway button at the end
+        const btn = document.createElement("button");
+        btn.className = "gateway-btn";
+        btn.textContent = "[ ACCESS GATEWAY ]";
+        btn.onclick = () => window.location.href = "home.html";
+        terminal.appendChild(btn);
+      }
+    }
+
+    typeLine();
+  </script>
+</body>
+</html>
