@@ -4,6 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>BAKISMUN 2025 — Diplomacy OS</title>
+
+<!-- Optional: loads VT323 everywhere -->
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.ico">
+
 <style>
   :root{
     --green:#00ff88;
@@ -18,7 +23,7 @@
     overflow:hidden;
   }
 
-  /* Subtle CRT + grid */
+  /* CRT overlays */
   .overlay-scan{
     position:fixed; inset:0; pointer-events:none;
     background: repeating-linear-gradient(to bottom,
@@ -36,7 +41,7 @@
     opacity:.14;
   }
 
-  /* Desktop area */
+  /* Desktop grid */
   .desktop{
     position:absolute; inset:0 0 36px 0;
     padding:18px;
@@ -47,7 +52,7 @@
     align-content:start;
   }
 
-  /* Icon */
+  /* Icons */
   .icon{
     user-select:none;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -62,7 +67,7 @@
   .icon:hover{ box-shadow:0 0 14px var(--green); border-color:var(--green) }
   .icon svg{ width:42px; height:42px; filter: drop-shadow(0 0 6px var(--green)); }
 
-  /* Ticker */
+  /* Announcement ticker */
   .ticker{
     position:absolute; left:18px; right:18px; bottom:48px;
     padding:6px 10px; background:rgba(0,0,0,.55);
@@ -86,14 +91,16 @@
     padding:6px 8px; display:flex; justify-content:space-between; align-items:center;
     cursor:move; font-size:18px; text-shadow:0 0 6px var(--green);
   }
-  .title-left{display:flex; gap:10px; align-items:center}
   .btns{display:flex; gap:6px}
   .tb-btn{
     width:22px; height:22px; border:1px solid var(--green); background:black; color:var(--green);
     font-weight:bold; cursor:pointer;
   }
   .tb-btn:hover{ background:var(--green); color:black }
-  .win-content{ padding:12px; font-size:16px; line-height:1.35; text-shadow:0 0 6px var(--green); }
+  .win-content{
+    padding:12px; font-size:16px; line-height:1.35; text-shadow:0 0 6px var(--green);
+    overflow-y:auto; max-height:70vh;
+  }
 
   /* Taskbar */
   .taskbar{
@@ -109,7 +116,7 @@
 
   /* Start menu */
   .menu{
-    position:fixed; left:8px; bottom:40px; width:220px; background:black; border:2px solid var(--green);
+    position:fixed; left:8px; bottom:40px; width:240px; background:black; border:2px solid var(--green);
     display:none; box-shadow:0 0 16px var(--green);
   }
   .menu a{
@@ -117,33 +124,11 @@
   }
   .menu a:hover{ background:var(--green); color:black }
 
-  /* --- Google Form CRT theming via filters --- */
-  .crt-form-wrap{
-    position:relative; height:100%; background:black; overflow:hidden;
-  }
-  .crt-form-wrap::after{ /* very subtle scanlines over iframe area */
-    content:""; position:absolute; inset:0; pointer-events:none;
-    background: repeating-linear-gradient(to bottom,
-      rgba(0,255,136,.05) 0px,
-      rgba(0,255,136,.02) 2px,
-      transparent 3px);
-    mix-blend-mode:screen;
-  }
-  .crt-form-iframe{
-    width:100%; height:100%; border:0; margin:0; padding:0;
-    /* Turn default white/purple Google Form into green-on-black */
-    filter:
-      invert(1)            /* white -> black */
-      hue-rotate(120deg)   /* purple -> green */
-      saturate(1.6)
-      contrast(1.15)
-      brightness(0.95);
-    /* If something looks off on some devices, the Theme toggle removes this filter */
-    background:black;
-  }
-  .native-form .crt-form-iframe{ filter:none !important; background:transparent }
+  /* Form container */
+  .form-wrap{height:100%; background:black;}
+  .form-wrap iframe{width:100%; height:100%; border:0}
 
-  /* Mobile */
+  /* Mobile tweaks */
   @media (max-width:768px){
     .desktop{ grid-template-columns: repeat(4, 1fr); grid-auto-rows: 100px; gap:12px }
     .window{ left:10px !important; top:60px !important; width:calc(100vw - 20px) !important; }
@@ -158,6 +143,15 @@
 <!-- Desktop icons -->
 <div class="desktop">
 
+  <!-- Conference Info -->
+  <div class="icon" onclick="openWindow('confinfo')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><path d="M12 8v8M12 6h.01"/>
+    </svg>
+    Conference Info
+  </div>
+
+  <!-- Secretariat -->
   <div class="icon" onclick="openWindow('secretariat')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
@@ -167,6 +161,7 @@
     Secretariat
   </div>
 
+  <!-- Committees -->
   <div class="icon" onclick="openWindow('committees')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M8 6h10a2 2 0 0 1 2 2v8H9a3 3 0 0 1-3-3V6z"/>
@@ -176,6 +171,7 @@
     Committees
   </div>
 
+  <!-- Applications -->
   <div class="icon" onclick="openWindow('applications')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M9 2h6l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3z"/>
@@ -185,6 +181,7 @@
     Apply
   </div>
 
+  <!-- Contact -->
   <div class="icon" onclick="openWindow('contact')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M12 19V8"/>
@@ -196,19 +193,39 @@
 
 </div>
 
-<!-- Quote ticker -->
+<!-- Ticker -->
 <div class="ticker">
   <span id="tickerText">
-    “Seek Diplomacy, Find Peace.” • “Let us never negotiate out of fear. But let us never fear to negotiate.” •
-    “In the arena of diplomacy, words are weapons sharper than swords.” • “Peace is not the absence of conflict, but the ability to resolve it.” 
-    • “Diplomacy is the art of telling people to go to hell in such a way that they ask for directions.” • “The supreme art of war is to subdue the enemy without fighting.”
+    BAKISMUN 2025 • October 10–12 • Beaconhouse Al Khaleej International School, Al Azra, Sharjah • Fees: AED 130 (Late: Aug 15–Sep 15) • Email: bakismun@gmail.com • Instagram: @bakismun
   </span>
 </div>
 
-<!-- Secretariat window -->
-<div id="secretariat" class="window" style="top:110px;left:80px;width:420px">
+<!-- WINDOWS -->
+
+<!-- Conference Info -->
+<div id="confinfo" class="window" style="top:90px;left:820px;width:520px">
   <div class="title-bar">
-    <div class="title-left">Secretariat</div>
+    Conference Info
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('confinfo')">–</button>
+      <button class="tb-btn" onclick="closeWindow('confinfo')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <h3>Conference Details</h3>
+    <p><b>Dates:</b> October 10, 11, and 12, 2025</p>
+    <p><b>Venue:</b> Beaconhouse Al Khaleej International School (BAKIS), Al Azra, Sharjah, UAE</p>
+    <p><b>Fees:</b> Late — AED 130 (🗓️ Aug 15 – Sep 15)</p>
+    <hr>
+    <h3>Difficulty Guide</h3>
+    <p>Beginner: 0–3 MUNs • Intermediate: 4–7 MUNs • Advanced: 8+ MUNs</p>
+  </div>
+</div>
+
+<!-- Secretariat -->
+<div id="secretariat" class="window" style="top:110px;left:80px;width:460px">
+  <div class="title-bar">
+    Secretariat
     <div class="btns">
       <button class="tb-btn" onclick="minimize('secretariat')">–</button>
       <button class="tb-btn" onclick="closeWindow('secretariat')">X</button>
@@ -216,64 +233,86 @@
   </div>
   <div class="win-content">
     <p>[ SECRETARY-GENERAL ] — Name, short bio.</p>
-    <p>[ DSG ] — Name, short bio.</p>
-    <p>[ USG COMMS ] — Name, short bio.</p>
+    <p>[ DEPUTY SEC-GEN ] — Name, short bio.</p>
+    <p>[ USG — Communications ] — Name, short bio.</p>
+    <p>[ USG — Logistics ] — Name, short bio.</p>
+    <p style="opacity:.75">Tip: you can add photos later; upload images to repo and link them here.</p>
   </div>
 </div>
 
-<!-- Committees window -->
-<div id="committees" class="window" style="top:160px;left:180px;width:460px">
+<!-- Committees -->
+<div id="committees" class="window" style="top:160px;left:180px;width:720px">
   <div class="title-bar">
-    <div class="title-left">Committees & Agendas</div>
+    Committees & Agendas
     <div class="btns">
       <button class="tb-btn" onclick="minimize('committees')">–</button>
       <button class="tb-btn" onclick="closeWindow('committees')">X</button>
     </div>
   </div>
   <div class="win-content">
-    <p>GA — Topic A / Topic B</p>
-    <p>UNSC — Topic A / Topic B</p>
-    <p>WHO — Topic A / Topic B</p>
+    <h3>Beginner Committees</h3>
+    <p><b>WHO — World Health Organization</b><br>
+      • Integrating Artificial Intelligence in Global Healthcare: Opportunities and Ethical Challenges<br>
+      • Guaranteeing Impartial Access to Life-Saving Medications Through Diplomatic Arrangements</p>
+    <p><b>UNICEF — United Nations International Children's Emergency Fund</b><br>
+      • Cooperative Procedures for Protecting Children from Abuse in the Digital Age<br>
+      • Diplomatic Actions to Secure Children’s Rights in Regions of Armed Conflict</p>
+
+    <h3>Intermediate Committees</h3>
+    <p><b>UNHRC — United Nations Human Rights Council</b><br>
+      • The Human Rights Implications of Artificial Intelligence in Law Enforcement<br>
+      • Political Measures to Protect Ethnic and Religious Minorities in Conflict Zones</p>
+    <p><b>UNODC — United Nations Office on Drugs and Crime</b><br>
+      • Tackling Corruption in Public Institutions and Government Agencies<br>
+      • Preventing the Use of Children in Drug Production and Trafficking</p>
+    <p><b>UNOOSA — United Nations Office for Outer Space Affairs</b><br>
+      • Addressing the Militarization of Outer Space and Strengthening Diplomatic Measures for Peaceful Use<br>
+      • Modifying Extraterrestrial Environments for Human Survival & Resilience Against Global Threats</p>
+
+    <h3>Advanced Committees</h3>
+    <p><b>GA1 (DISEC) — Disarmament and International Security Committee</b><br>
+      • Global Regulation of AI-Powered Weapons: Preventing an International Arms Race<br>
+      • Fostering Diplomatic Solutions to Regional Arms Races and Military Alliances</p>
+    <p><b>FIFA — Fédération Internationale de Football Association</b><br>
+      • Regulating Human Rights in Hosting International Football Tournaments<br>
+      • Regulating Player Transfers & Protecting Youth Athletes from Exploitation</p>
+    <p><b>HCC — Historical Crisis Committee</b><br>
+      • The Rwandan Genocide (1994): Rapid International Response and Prevention Strategies<br>
+      • Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</p>
   </div>
 </div>
 
-<!-- Applications window with CRT-styled Google Form -->
-<div id="applications" class="window" style="top:210px;left:70px;width:700px;height:600px;max-width:95vw;max-height:80vh;">
+<!-- Applications (embedded Google Form; no filters) -->
+<div id="applications" class="window" style="top:210px;left:70px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
   <div class="title-bar">
-    <div class="title-left">
-      Applications
-      <button class="tb-btn" style="margin-left:8px" onclick="toggleFormTheme()" title="Toggle Form Theme">Theme</button>
-    </div>
+    Applications
     <div class="btns">
       <button class="tb-btn" onclick="minimize('applications')">–</button>
       <button class="tb-btn" onclick="closeWindow('applications')">X</button>
     </div>
   </div>
   <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
-    <div id="formWrap" class="crt-form-wrap">
+    <div class="form-wrap">
       <iframe 
-        class="crt-form-iframe"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true" 
-        frameborder="0" marginheight="0" marginwidth="0">
+        src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true">
         Loading…
       </iframe>
     </div>
   </div>
 </div>
 
-<!-- Contact window -->
-<div id="contact" class="window" style="top:80px;left:520px;width:360px">
+<!-- Contact -->
+<div id="contact" class="window" style="top:80px;left:520px;width:420px">
   <div class="title-bar">
-    <div class="title-left">Contact</div>
+    Contact
     <div class="btns">
       <button class="tb-btn" onclick="minimize('contact')">–</button>
       <button class="tb-btn" onclick="closeWindow('contact')">X</button>
     </div>
   </div>
   <div class="win-content">
-    <p>Email: example@bakismun.org</p>
-    <p>Instagram: @bakismun</p>
-    <p>Discord: discord.gg/example</p>
+    <p><b>Email:</b> <a href="mailto:bakismun@gmail.com" style="color:var(--green)">bakismun@gmail.com</a></p>
+    <p><b>Instagram:</b> <a href="https://instagram.com/bakismun" target="_blank" style="color:var(--green)">@bakismun</a></p>
   </div>
 </div>
 
@@ -285,6 +324,7 @@
 
 <!-- Start Menu -->
 <div class="menu" id="menu">
+  <a href="#" onclick="openWindow('confinfo');toggleMenu()">Conference Info</a>
   <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
   <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
   <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
@@ -302,11 +342,11 @@
   function closeWindow(id){ document.getElementById(id).style.display='none' }
   function minimize(id){ document.getElementById(id).style.display='none' }
 
-  // z-index
+  // z-index focus
   let zTop = 10;
   function bringToFront(el){ el.style.zIndex = ++zTop }
 
-  // draggable
+  // draggable (mouse + touch)
   function makeDraggable(win){
     const bar = win.querySelector('.title-bar');
     if(bar._dragBound) return;
@@ -341,6 +381,7 @@
     bar._dragBound = true;
   }
 
+  // mobile centering + sizing
   function centerOnMobile(win){
     if(window.innerWidth < 768){
       win.style.left = '10px';
@@ -350,7 +391,7 @@
     }
   }
 
-  // Start menu
+  // Start menu toggle + click-away
   function toggleMenu(){
     const m = document.getElementById('menu');
     m.style.display = (m.style.display==='block') ? 'none' : 'block';
@@ -370,11 +411,13 @@
   }
   setInterval(tick,1000); tick();
 
-  // Toggle Google Form theme (CRT vs Native)
-  function toggleFormTheme(){
-    const wrap = document.getElementById('formWrap');
-    wrap.classList.toggle('native-form');
-  }
+  // Ensure ticker long enough
+  (function ensureTicker(){
+    const t = document.getElementById('tickerText');
+    if(t && t.textContent.length < 120){
+      t.textContent = (t.textContent + ' • ' + t.textContent + ' • ' + t.textContent);
+    }
+  })();
 </script>
 </body>
 </html>
