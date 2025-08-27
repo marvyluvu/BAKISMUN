@@ -13,6 +13,8 @@
   :root{
     --green:#00ff88;
     --bg:black;
+    --amber:#ffcc66;
+    --red:#ff6666;
   }
   html,body{height:100%}
   body{
@@ -76,7 +78,7 @@
   }
   .ticker span{
     display:inline-block; padding-left:100%;
-    animation:marq 18s linear infinite;
+    animation:marq 26s linear infinite;
   }
   @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-100%)} }
 
@@ -101,6 +103,41 @@
     padding:12px; font-size:16px; line-height:1.35; text-shadow:0 0 6px var(--green);
     overflow-y:auto; max-height:70vh;
   }
+
+  /* Secretariat cards */
+  .cards{
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
+    gap:14px;
+  }
+  .card{
+    background:rgba(0,0,0,.35);
+    border:1px solid var(--green);
+    box-shadow:0 0 10px var(--green);
+    padding:10px; text-align:center;
+  }
+  .avatar{
+    width:96px; height:96px; border-radius:50%;
+    object-fit:cover; border:2px solid var(--green);
+    box-shadow:0 0 10px var(--green); margin-bottom:10px;
+    background:#001b12;
+  }
+  .name{ font-size:20px; }
+  .role{ opacity:.9 }
+
+  /* Difficulty badges + sections */
+  .badge{
+    display:inline-block; padding:2px 8px; margin-bottom:6px; border:1px solid; border-radius:999px; font-size:14px;
+  }
+  .level-beginner .badge{ color:var(--green); border-color:var(--green); box-shadow:0 0 10px var(--green) }
+  .level-intermediate .badge{ color:var(--amber); border-color:var(--amber); box-shadow:0 0 10px var(--amber) }
+  .level-advanced .badge{ color:var(--red); border-color:var(--red); box-shadow:0 0 10px var(--red) }
+
+  .level-beginner{ border-left:3px solid var(--green); padding-left:10px; margin-bottom:14px }
+  .level-intermediate{ border-left:3px solid var(--amber); padding-left:10px; margin-bottom:14px }
+  .level-advanced{ border-left:3px solid var(--red); padding-left:10px; margin-bottom:14px }
+
+  .topics{ margin:6px 0 12px 0 }
+  .topics li{ margin:2px 0 }
 
   /* Taskbar */
   .taskbar{
@@ -132,6 +169,7 @@
   @media (max-width:768px){
     .desktop{ grid-template-columns: repeat(4, 1fr); grid-auto-rows: 100px; gap:12px }
     .window{ left:10px !important; top:60px !important; width:calc(100vw - 20px) !important; }
+    .cards{ grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -193,10 +231,14 @@
 
 </div>
 
-<!-- Ticker -->
+<!-- Ticker with more quotes -->
 <div class="ticker">
   <span id="tickerText">
-    BAKISMUN 2025 • October 10–12 • Beaconhouse Al Khaleej International School, Al Azra, Sharjah • Fees: AED 130 (Late: Aug 15–Sep 15) • Email: bakismun@gmail.com • Instagram: @bakismun
+    “Seek Diplomacy, Find Peace.” • “Let us never negotiate out of fear. But let us never fear to negotiate.” •
+    “Peace is not the absence of conflict, but the ability to resolve it.” •
+    “In diplomacy, words are bridges.” • “Dialogue is the shortest path between rivals.” •
+    “Firm on values, flexible in method.” • “Listen first; speak for all.” •
+    BAKISMUN 2025 • Oct 10–12 • BAKIS, Sharjah • Fees (Late): AED 130 • Email: bakismun@gmail.com • Instagram: @bakismun
   </span>
 </div>
 
@@ -223,7 +265,7 @@
 </div>
 
 <!-- Secretariat -->
-<div id="secretariat" class="window" style="top:110px;left:80px;width:460px">
+<div id="secretariat" class="window" style="top:110px;left:80px;width:640px">
   <div class="title-bar">
     Secretariat
     <div class="btns">
@@ -232,16 +274,31 @@
     </div>
   </div>
   <div class="win-content">
-    <p>[ SECRETARY-GENERAL ] — Name, short bio.</p>
-    <p>[ DEPUTY SEC-GEN ] — Name, short bio.</p>
-    <p>[ USG — Communications ] — Name, short bio.</p>
-    <p>[ USG — Logistics ] — Name, short bio.</p>
-    <p style="opacity:.75">Tip: you can add photos later; upload images to repo and link them here.</p>
+    <div class="cards">
+      <!-- SG -->
+      <div class="card">
+        <img class="avatar" src="zeyad.jpeg" alt="Zeyad Hany — Secretary-General" onerror="this.style.opacity=.25">
+        <div class="name">Zeyad Hany</div>
+        <div class="role">Secretary-General</div>
+      </div>
+      <!-- DSG 1 -->
+      <div class="card">
+        <img class="avatar" src="nour.jpeg" alt="Nour Ashraf — Deputy Secretary-General" onerror="this.style.opacity=.25">
+        <div class="name">Nour Ashraf</div>
+        <div class="role">Deputy Secretary-General</div>
+      </div>
+      <!-- DSG 2 -->
+      <div class="card">
+        <img class="avatar" src="joudy.jpeg" alt="Joudy Ramy — Deputy Secretary-General" onerror="this.style.opacity=.25">
+        <div class="name">Joudy Ramy</div>
+        <div class="role">Deputy Secretary-General</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Committees -->
-<div id="committees" class="window" style="top:160px;left:180px;width:720px">
+<!-- Committees (color coded) -->
+<div id="committees" class="window" style="top:160px;left:180px;width:820px">
   <div class="title-bar">
     Committees & Agendas
     <div class="btns">
@@ -250,35 +307,60 @@
     </div>
   </div>
   <div class="win-content">
-    <h3>Beginner Committees</h3>
-    <p><b>WHO — World Health Organization</b><br>
-      • Integrating Artificial Intelligence in Global Healthcare: Opportunities and Ethical Challenges<br>
-      • Guaranteeing Impartial Access to Life-Saving Medications Through Diplomatic Arrangements</p>
-    <p><b>UNICEF — United Nations International Children's Emergency Fund</b><br>
-      • Cooperative Procedures for Protecting Children from Abuse in the Digital Age<br>
-      • Diplomatic Actions to Secure Children’s Rights in Regions of Armed Conflict</p>
+    <!-- Beginner -->
+    <section class="level-beginner">
+      <span class="badge">Beginner</span>
+      <h3>WHO — World Health Organization</h3>
+      <ul class="topics">
+        <li>Integrating Artificial Intelligence in Global Healthcare: Opportunities and Ethical Challenges</li>
+        <li>Guaranteeing Impartial Access to Life-Saving Medications Through Diplomatic Arrangements</li>
+      </ul>
+      <h3>UNICEF — United Nations International Children's Emergency Fund</h3>
+      <ul class="topics">
+        <li>Cooperative Procedures for Protecting Children from Abuse in the Digital Age</li>
+        <li>Diplomatic Actions to Secure Children’s Rights in Regions of Armed Conflict</li>
+      </ul>
+    </section>
 
-    <h3>Intermediate Committees</h3>
-    <p><b>UNHRC — United Nations Human Rights Council</b><br>
-      • The Human Rights Implications of Artificial Intelligence in Law Enforcement<br>
-      • Political Measures to Protect Ethnic and Religious Minorities in Conflict Zones</p>
-    <p><b>UNODC — United Nations Office on Drugs and Crime</b><br>
-      • Tackling Corruption in Public Institutions and Government Agencies<br>
-      • Preventing the Use of Children in Drug Production and Trafficking</p>
-    <p><b>UNOOSA — United Nations Office for Outer Space Affairs</b><br>
-      • Addressing the Militarization of Outer Space and Strengthening Diplomatic Measures for Peaceful Use<br>
-      • Modifying Extraterrestrial Environments for Human Survival & Resilience Against Global Threats</p>
+    <!-- Intermediate -->
+    <section class="level-intermediate">
+      <span class="badge">Intermediate</span>
+      <h3>UNHRC — United Nations Human Rights Council</h3>
+      <ul class="topics">
+        <li>The Human Rights Implications of Artificial Intelligence in Law Enforcement</li>
+        <li>Political Measures to Protect Ethnic and Religious Minorities in Conflict Zones</li>
+      </ul>
+      <h3>UNODC — United Nations Office on Drugs and Crime</h3>
+      <ul class="topics">
+        <li>Tackling Corruption in Public Institutions and Government Agencies</li>
+        <li>Preventing the Use of Children in Drug Production and Trafficking</li>
+      </ul>
+      <h3>UNOOSA — United Nations Office for Outer Space Affairs</h3>
+      <ul class="topics">
+        <li>Addressing the Militarization of Outer Space and Strengthening Diplomatic Measures for Peaceful Use</li>
+        <li>Modifying Extraterrestrial Environments for Human Survival & Resilience Against Global Threats</li>
+      </ul>
+    </section>
 
-    <h3>Advanced Committees</h3>
-    <p><b>GA1 (DISEC) — Disarmament and International Security Committee</b><br>
-      • Global Regulation of AI-Powered Weapons: Preventing an International Arms Race<br>
-      • Fostering Diplomatic Solutions to Regional Arms Races and Military Alliances</p>
-    <p><b>FIFA — Fédération Internationale de Football Association</b><br>
-      • Regulating Human Rights in Hosting International Football Tournaments<br>
-      • Regulating Player Transfers & Protecting Youth Athletes from Exploitation</p>
-    <p><b>HCC — Historical Crisis Committee</b><br>
-      • The Rwandan Genocide (1994): Rapid International Response and Prevention Strategies<br>
-      • Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</p>
+    <!-- Advanced -->
+    <section class="level-advanced">
+      <span class="badge">Advanced</span>
+      <h3>GA1 (DISEC) — Disarmament and International Security Committee</h3>
+      <ul class="topics">
+        <li>Global Regulation of AI-Powered Weapons: Preventing an International Arms Race</li>
+        <li>Fostering Diplomatic Solutions to Regional Arms Races and Military Alliances</li>
+      </ul>
+      <h3>FIFA — Fédération Internationale de Football Association</h3>
+      <ul class="topics">
+        <li>Regulating Human Rights in Hosting International Football Tournaments</li>
+        <li>Regulating Player Transfers & Protecting Youth Athletes from Exploitation</li>
+      </ul>
+      <h3>HCC — Historical Crisis Committee</h3>
+      <ul class="topics">
+        <li>The Rwandan Genocide (1994): Rapid International Response and Prevention Strategies</li>
+        <li>Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</li>
+      </ul>
+    </section>
   </div>
 </div>
 
