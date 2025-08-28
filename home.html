@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>BAKISMUN 2025 — Diplomacy OS</title>
 
-<!-- Optional: loads VT323 everywhere -->
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
 
@@ -105,10 +104,7 @@
   }
 
   /* Secretariat cards */
-  .cards{
-    display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
-    gap:14px;
-  }
+  .cards{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:14px; }
   .card{
     background:rgba(0,0,0,.35);
     border:1px solid var(--green);
@@ -165,10 +161,23 @@
   .form-wrap{height:100%; background:black;}
   .form-wrap iframe{width:100%; height:100%; border:0}
 
+  /* Toast notification */
+  .toast{
+    position:fixed; right:16px; top:16px; max-width:360px;
+    background:black; border:2px solid var(--green); padding:10px 12px;
+    box-shadow:0 0 16px var(--green); z-index:9999; display:flex; gap:10px; align-items:flex-start;
+  }
+  .toast svg{ width:22px; height:22px; flex:0 0 auto; filter: drop-shadow(0 0 6px var(--green)); }
+  .toast .tcontent{ font-size:16px; line-height:1.25 }
+  .toast .close{ margin-left:auto; background:black; color:var(--green); border:1px solid var(--green); cursor:pointer; }
+  .toast .close:hover{ background:var(--green); color:black }
+  .toast .pill{ display:inline-block; border:1px solid var(--green); padding:2px 8px; margin-top:6px }
+
   /* Mobile tweaks */
   @media (max-width:768px){
     .desktop{ grid-template-columns: repeat(4, 1fr); grid-auto-rows: 100px; gap:12px }
     .window{ left:10px !important; top:60px !important; width:calc(100vw - 20px) !important; }
+    .toast{ left:16px; right:16px }
     .cards{ grid-template-columns: 1fr 1fr; }
   }
 </style>
@@ -177,6 +186,20 @@
 
 <div class="overlay-grid"></div>
 <div class="overlay-scan"></div>
+
+<!-- Toast: In-school payment -->
+<div id="toast" class="toast">
+  <!-- bell icon -->
+  <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+    <path d="M6 8a6 6 0 1 1 12 0v5l2 2H4l2-2Z"/><path d="M10 19a2 2 0 0 0 4 0"/>
+  </svg>
+  <div class="tcontent">
+    <div><b>In-school payment available</b></div>
+    <div>Mon–Thu, <b>7:15 AM–4:00 PM</b> • <b>AED 130</b></div>
+    <div class="pill">Pay at BAKIS campus</div>
+  </div>
+  <button class="close" onclick="dismissToast()">X</button>
+</div>
 
 <!-- Desktop icons -->
 <div class="desktop">
@@ -219,6 +242,16 @@
     Apply
   </div>
 
+  <!-- Photographer Applications -->
+  <div class="icon" onclick="openWindow('photography')">
+    <!-- camera icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+      <path d="M4 7h3l2-2h6l2 2h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </svg>
+    Photographer
+  </div>
+
   <!-- Contact -->
   <div class="icon" onclick="openWindow('contact')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
@@ -231,14 +264,13 @@
 
 </div>
 
-<!-- Ticker with more quotes -->
+<!-- Ticker with quotes + info -->
 <div class="ticker">
   <span id="tickerText">
     “Seek Diplomacy, Find Peace.” • “Let us never negotiate out of fear. But let us never fear to negotiate.” •
-    “Peace is not the absence of conflict, but the ability to resolve it.” •
-    “In diplomacy, words are bridges.” • “Dialogue is the shortest path between rivals.” •
-    “Firm on values, flexible in method.” • “Listen first; speak for all.” •
-    BAKISMUN 2025 • Oct 10–12 • BAKIS, Sharjah • Fees (Late): AED 130 • Email: bakismun@gmail.com • Instagram: @bakismun
+    “Peace is not the absence of conflict, but the ability to resolve it.” • “In diplomacy, words are bridges.” •
+    “Dialogue is the shortest path between rivals.” • “Firm on values, flexible in method.” • “Listen first; speak for all.” •
+    In-school payment: Mon–Thu 7:15 AM–4:00 PM • AED 130 • At BAKIS campus.
   </span>
 </div>
 
@@ -364,7 +396,7 @@
   </div>
 </div>
 
-<!-- Applications (embedded Google Form; no filters) -->
+<!-- Applications (embedded Google Form) -->
 <div id="applications" class="window" style="top:210px;left:70px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
   <div class="title-bar">
     Applications
@@ -377,6 +409,25 @@
     <div class="form-wrap">
       <iframe 
         src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true">
+        Loading…
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Photographer Applications (embedded) -->
+<div id="photography" class="window" style="top:140px;left:940px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar">
+    Photographer Applications
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('photography')">–</button>
+      <button class="tb-btn" onclick="closeWindow('photography')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
+    <div class="form-wrap">
+      <iframe 
+        src="https://docs.google.com/forms/d/e/1FAIpQLScptkvGS3Au8lDH2QYqpisT01l08HYbvIyDLlrjdnOIuDXp1g/viewform?embedded=true">
         Loading…
       </iframe>
     </div>
@@ -410,6 +461,7 @@
   <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
   <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
   <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
+  <a href="#" onclick="openWindow('photography');toggleMenu()">Photographer Applications</a>
   <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
 </div>
 
@@ -423,6 +475,9 @@
   }
   function closeWindow(id){ document.getElementById(id).style.display='none' }
   function minimize(id){ document.getElementById(id).style.display='none' }
+
+  // Toast
+  function dismissToast(){ const t=document.getElementById('toast'); if(t) t.style.display='none' }
 
   // z-index focus
   let zTop = 10;
