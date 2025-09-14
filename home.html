@@ -24,6 +24,12 @@
     overflow:hidden;
   }
 
+  /* THEME VARIANTS */
+  .window.amber{ border-color:var(--amber); box-shadow:0 0 16px var(--amber); }
+  .title-bar.amber{ background:#332600; color:var(--amber); text-shadow:0 0 6px var(--amber); }
+  .window.amber .tb-btn{ border-color:var(--amber); color:var(--amber); }
+  .window.amber .tb-btn:hover{ background:var(--amber); color:black; }
+
   /* CRT overlays */
   .overlay-scan{
     position:fixed; inset:0; pointer-events:none;
@@ -75,10 +81,7 @@
     border:1px solid var(--green); box-shadow:0 0 10px var(--green);
     white-space:nowrap; overflow:hidden;
   }
-  .ticker span{
-    display:inline-block; padding-left:100%;
-    animation:marq 26s linear infinite;
-  }
+  .ticker span{ display:inline-block; padding-left:100%; animation:marq 26s linear infinite; }
   @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-100%)} }
 
   /* Windows */
@@ -105,25 +108,13 @@
 
   /* Secretariat cards */
   .cards{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:14px; }
-  .card{
-    background:rgba(0,0,0,.35);
-    border:1px solid var(--green);
-    box-shadow:0 0 10px var(--green);
-    padding:10px; text-align:center;
-  }
-  .avatar{
-    width:96px; height:96px; border-radius:50%;
-    object-fit:cover; border:2px solid var(--green);
-    box-shadow:0 0 10px var(--green); margin-bottom:10px;
-    background:#001b12;
-  }
+  .card{ background:rgba(0,0,0,.35); border:1px solid var(--green); box-shadow:0 0 10px var(--green); padding:10px; text-align:center; }
+  .avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:2px solid var(--green); box-shadow:0 0 10px var(--green); margin-bottom:10px; background:#001b12; }
   .name{ font-size:20px; }
   .role{ opacity:.9 }
 
   /* Difficulty badges + sections */
-  .badge{
-    display:inline-block; padding:2px 8px; margin-bottom:6px; border:1px solid; border-radius:999px; font-size:14px;
-  }
+  .badge{ display:inline-block; padding:2px 8px; margin-bottom:6px; border:1px solid; border-radius:999px; font-size:14px; }
   .level-beginner .badge{ color:var(--green); border-color:var(--green); box-shadow:0 0 10px var(--green) }
   .level-intermediate .badge{ color:var(--amber); border-color:var(--amber); box-shadow:0 0 10px var(--amber) }
   .level-advanced .badge{ color:var(--red); border-color:var(--red); box-shadow:0 0 10px var(--red) }
@@ -141,9 +132,7 @@
     background:black; border-top:2px solid var(--green); display:flex; align-items:center;
     gap:10px; padding:0 8px; color:var(--green); text-shadow:0 0 8px var(--green);
   }
-  .start{
-    background:black; border:2px solid var(--green); padding:3px 12px; cursor:pointer; font-weight:bold;
-  }
+  .start{ background:black; border:2px solid var(--green); padding:3px 12px; cursor:pointer; font-weight:bold; }
   .start:hover{ background:var(--green); color:black }
   .clock{ margin-left:auto }
 
@@ -152,9 +141,7 @@
     position:fixed; left:8px; bottom:40px; width:240px; background:black; border:2px solid var(--green);
     display:none; box-shadow:0 0 16px var(--green);
   }
-  .menu a{
-    display:block; padding:8px 10px; color:var(--green); text-decoration:none; border-bottom:1px solid rgba(0,255,136,.3);
-  }
+  .menu a{ display:block; padding:8px 10px; color:var(--green); text-decoration:none; border-bottom:1px solid rgba(0,255,136,.3); }
   .menu a:hover{ background:var(--green); color:black }
 
   /* Form container */
@@ -163,9 +150,8 @@
 
   /* Toast notification */
   .toast{
-    position:fixed; right:16px; bottom:60px; /* bottom instead of top */
-    max-width:360px;
-    background:black; border:2px solid var(--green); padding:10px 12px;
+    position:fixed; right:16px; bottom:60px;
+    max-width:360px; background:black; border:2px solid var(--green); padding:10px 12px;
     box-shadow:0 0 16px var(--green); z-index:9999; display:flex; gap:10px; align-items:flex-start;
   }
   .toast svg{ width:22px; height:22px; flex:0 0 auto; filter: drop-shadow(0 0 6px var(--green)); }
@@ -205,7 +191,7 @@
 <div class="desktop">
 
   <!-- Conference Info -->
-  <div class="icon" onclick="openWindow('confinfo')">
+  <div class="icon" onclick="openWindow('confinfo')" role="button" tabindex="0">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <circle cx="12" cy="12" r="10"/><path d="M12 8v8M12 6h.01"/>
     </svg>
@@ -213,7 +199,7 @@
   </div>
 
   <!-- Secretariat -->
-  <div class="icon" onclick="openWindow('secretariat')">
+  <div class="icon" onclick="openWindow('secretariat')" role="button" tabindex="0">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
       <path d="M16 4v6H8V4"/>
@@ -223,7 +209,7 @@
   </div>
 
   <!-- Committees -->
-  <div class="icon" onclick="openWindow('committees')">
+  <div class="icon" onclick="openWindow('committees')" role="button" tabindex="0">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M8 6h10a2 2 0 0 1 2 2v8H9a3 3 0 0 1-3-3V6z"/>
       <path d="M8 6a2 2 0 1 0-4 0v7a3 3 0 0 0 3 3"/>
@@ -233,7 +219,7 @@
   </div>
 
   <!-- Applications -->
-  <div class="icon" onclick="openWindow('applications')">
+  <div class="icon" onclick="openWindow('applications')" role="button" tabindex="0">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M9 2h6l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3z"/>
       <path d="M14 2v6h6"/>
@@ -242,9 +228,9 @@
     Apply
   </div>
 
-  <!-- Delegate Handbook -->
-  <div class="icon" onclick="openWindow('handbook')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
+  <!-- Delegate Handbook (Amber) -->
+  <div class="icon" onclick="openWindow('handbook')" role="button" tabindex="0" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
       <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/>
     </svg>
@@ -252,7 +238,7 @@
   </div>
 
   <!-- Contact -->
-  <div class="icon" onclick="openWindow('contact')">
+  <div class="icon" onclick="openWindow('contact')" role="button" tabindex="0">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M12 19V8"/>
       <circle cx="12" cy="5" r="2"/>
@@ -334,4 +320,226 @@
     </div>
   </div>
   <div class="win-content">
-   
+    <section class="level-beginner">
+      <span class="badge">Beginner</span>
+      <h3>WHO — World Health Organization</h3>
+      <ul class="topics">
+        <li>Integrating Artificial Intelligence in Global Healthcare: Opportunities and Ethical Challenges</li>
+        <li>Guaranteeing Impartial Access to Life-Saving Medications Through Diplomatic Arrangements</li>
+      </ul>
+      <h3>UNICEF — United Nations International Children's Emergency Fund</h3>
+      <ul class="topics">
+        <li>Cooperative Procedures for Protecting Children from Abuse in the Digital Age</li>
+        <li>Diplomatic Actions to Secure Children’s Rights in Regions of Armed Conflict</li>
+      </ul>
+    </section>
+
+    <section class="level-intermediate">
+      <span class="badge">Intermediate</span>
+      <h3>UNHRC — United Nations Human Rights Council</h3>
+      <ul class="topics">
+        <li>The Human Rights Implications of Artificial Intelligence in Law Enforcement</li>
+        <li>Political Measures to Protect Ethnic and Religious Minorities in Conflict Zones</li>
+      </ul>
+      <h3>UNODC — United Nations Office on Drugs and Crime</h3>
+      <ul class="topics">
+        <li>Tackling Corruption in Public Institutions and Government Agencies</li>
+        <li>Preventing the Use of Children in Drug Production and Trafficking</li>
+      </ul>
+      <h3>UNOOSA — United Nations Office for Outer Space Affairs</h3>
+      <ul class="topics">
+        <li>Addressing the Militarization of Outer Space and Strengthening Diplomatic Measures for Peaceful Use</li>
+        <li>Modifying Extraterrestrial Environments for Human Survival & Resilience Against Global Threats</li>
+      </ul>
+    </section>
+
+    <section class="level-advanced">
+      <span class="badge">Advanced</span>
+      <h3>GA1 (DISEC) — Disarmament and International Security Committee</h3>
+      <ul class="topics">
+        <li>Global Regulation of AI-Powered Weapons: Preventing an International Arms Race</li>
+        <li>Fostering Diplomatic Solutions to Regional Arms Races and Military Alliances</li>
+      </ul>
+      <h3>FIFA — Fédération Internationale de Football Association</h3>
+      <ul class="topics">
+        <li>Regulating Human Rights in Hosting International Football Tournaments</li>
+        <li>Regulating Player Transfers & Protecting Youth Athletes from Exploitation</li>
+      </ul>
+      <h3>HCC — Historical Crisis Committee</h3>
+      <ul class="topics">
+        <li>The Rwandan Genocide (1994): Rapid International Response and Prevention Strategies</li>
+        <li>Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<!-- Applications (embedded Google Form) -->
+<div id="applications" class="window" style="top:210px;left:70px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar">
+    Applications
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('applications')">–</button>
+      <button class="tb-btn" onclick="closeWindow('applications')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
+    <div class="form-wrap">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true">
+        Loading…
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Delegate Handbook (AMBER) -->
+<div id="handbook" class="window amber" style="top:140px;left:220px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">
+    Delegate Handbook
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('handbook')">–</button>
+      <button class="tb-btn" onclick="closeWindow('handbook')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
+    <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%; overflow: hidden; border-radius: 8px;">
+      <iframe loading="lazy"
+        style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none;"
+        src="https://www.canva.com/design/DAGr6GHAKG4/8zquyLd5-JMk1WCawGD5BA/view?embed"
+        allowfullscreen="allowfullscreen" allow="fullscreen">
+      </iframe>
+    </div>
+    <p style="margin:8px 10px 0;font-size:14px;">
+      <a href="https://www.canva.com/design/DAGr6GHAKG4/8zquyLd5-JMk1WCawGD5BA/view?utm_content=DAGr6GHAKG4&utm_campaign=designshare&utm_medium=embeds&utm_source=link"
+         target="_blank" rel="noopener" style="color:var(--amber)">
+         Open Delegate Handbook in Canva
+      </a>
+    </p>
+  </div>
+</div>
+
+<!-- Contact -->
+<div id="contact" class="window" style="top:80px;left:520px;width:420px">
+  <div class="title-bar">
+    Contact
+    <div class="btns">
+      <button class="tb-btn" onclick="minimize('contact')">–</button>
+      <button class="tb-btn" onclick="closeWindow('contact')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p><b>Email:</b> <a href="mailto:bakismun@gmail.com" style="color:var(--green)">bakismun@gmail.com</a></p>
+    <p><b>Instagram:</b> <a href="https://instagram.com/bakismun" target="_blank" style="color:var(--green)">@bakismun</a></p>
+  </div>
+</div>
+
+<!-- Taskbar -->
+<div class="taskbar">
+  <button class="start" onclick="toggleMenu()">[ BAKISMUN ]</button>
+  <div class="clock" id="clock"></div>
+</div>
+
+<!-- Start Menu -->
+<div class="menu" id="menu">
+  <a href="#" onclick="openWindow('confinfo');toggleMenu()">Conference Info</a>
+  <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
+  <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
+  <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
+  <a href="#" onclick="openWindow('handbook');toggleMenu()">Delegate Handbook</a>
+  <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
+</div>
+
+<script>
+  function openWindow(id){
+    const w = document.getElementById(id);
+    if(!w) return;
+    w.style.display = 'flex';
+    bringToFront(w);
+    centerOnMobile(w);
+    makeDraggable(w);
+  }
+  function closeWindow(id){ const w=document.getElementById(id); if(w) w.style.display='none' }
+  function minimize(id){ closeWindow(id) }
+
+  // Dismiss toast
+  function dismissToast(){ const t=document.getElementById('toast'); if(t) t.style.display='none' }
+
+  // z-index focus
+  let zTop = 10;
+  function bringToFront(el){ el.style.zIndex = ++zTop }
+
+  // draggable (mouse + touch)
+  function makeDraggable(win){
+    const bar = win.querySelector('.title-bar');
+    if(!bar || bar._dragBound) return;
+    let dx=0, dy=0, dragging=false;
+    const down = (e)=>{
+      dragging=true; bringToFront(win);
+      const rect = win.getBoundingClientRect();
+      dx = (e.touches?e.touches[0].clientX:e.clientX) - rect.left;
+      dy = (e.touches?e.touches[0].clientY:e.clientY) - rect.top;
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('touchmove', move, {passive:false});
+      document.addEventListener('touchend', up);
+    };
+    const move = (e)=>{
+      if(!dragging) return;
+      const x = (e.touches?e.touches[0].clientX:e.clientX) - dx;
+      const y = (e.touches?e.touches[0].clientY:e.clientY) - dy;
+      win.style.left = x + 'px';
+      win.style.top  = y + 'px';
+      e.preventDefault?.();
+    };
+    const up = ()=>{
+      dragging=false;
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+      document.removeEventListener('touchmove', move);
+      document.removeEventListener('touchend', up);
+    };
+    bar.addEventListener('mousedown', down);
+    bar.addEventListener('touchstart', down, {passive:true});
+    bar._dragBound = true;
+  }
+
+  // mobile centering + sizing
+  function centerOnMobile(win){
+    if(window.innerWidth < 768){
+      win.style.left = '10px';
+      win.style.top  = '60px';
+      win.style.width = (window.innerWidth - 20) + 'px';
+      win.style.height = (window.innerHeight - 120) + 'px';
+    }
+  }
+
+  // Start menu toggle + click-away
+  function toggleMenu(){
+    const m = document.getElementById('menu');
+    m.style.display = (m.style.display==='block') ? 'none' : 'block';
+  }
+  document.addEventListener('click', (e)=>{
+    const m = document.getElementById('menu');
+    if(m.style.display==='block' && !e.target.closest('#menu') && !e.target.closest('.start')){
+      m.style.display='none';
+    }
+  });
+
+  // Clock
+  function tick(){
+    const now = new Date();
+    document.getElementById('clock').textContent =
+      now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+  setInterval(tick,1000); tick();
+
+  // Ensure ticker long enough
+  (function ensureTicker(){
+    const t = document.getElementById('tickerText');
+    if(t && t.textContent.length < 120){
+      t.textContent = (t.textContent + ' • ' + t.textContent + ' • ' + t.textContent);
+    }
+  })();
+</script>
+</body>
+</html>
