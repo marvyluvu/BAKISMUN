@@ -31,11 +31,10 @@
   .window.amber .tb-btn:hover{ background:var(--amber); color:black; }
 
   /* maximize mode */
-  .window.max {
-    left: 10px !important;
-    top: 60px !important;
-    width: calc(100vw - 20px) !important;
-    height: calc(100vh - 120px) !important; /* leaves room for taskbar/ticker */
+  .window.max{
+    left:10px !important; top:60px !important;
+    width:calc(100vw - 20px) !important;
+    height:calc(100vh - 120px) !important; /* leaves room for taskbar/ticker */
   }
 
   /* CRT overlays */
@@ -52,7 +51,7 @@
     background-image:
       linear-gradient(rgba(0,255,136,.08) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0,255,136,.08) 1px, transparent 1px);
-    background-size: 40px 40px, 40px 40px;
+    background-size:40px 40px, 40px 40px;
     opacity:.14;
   }
 
@@ -63,8 +62,7 @@
     display:grid;
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     grid-auto-rows: 110px;
-    gap:16px;
-    align-content:start;
+    gap:16px; align-content:start;
   }
 
   /* Icons */
@@ -72,12 +70,9 @@
     user-select:none;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:6px; cursor:pointer; text-align:center;
-    color:var(--green);
-    text-shadow:0 0 8px var(--green);
-    border:1px solid transparent;
-    transition:.15s;
-    background:rgba(0,0,0,.25);
-    border-radius:8px;
+    color:var(--green); text-shadow:0 0 8px var(--green);
+    border:1px solid transparent; transition:.15s;
+    background:rgba(0,0,0,.25); border-radius:8px;
   }
   .icon:hover{ box-shadow:0 0 14px var(--green); border-color:var(--green) }
   .icon svg{ width:42px; height:42px; filter: drop-shadow(0 0 6px var(--green)); }
@@ -118,8 +113,7 @@
   .cards{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:14px; }
   .card{ background:rgba(0,0,0,.35); border:1px solid var(--green); box-shadow:0 0 10px var(--green); padding:10px; text-align:center; }
   .avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:2px solid var(--green); box-shadow:0 0 10px var(--green); margin-bottom:10px; background:#001b12; }
-  .name{ font-size:20px; }
-  .role{ opacity:.9 }
+  .name{ font-size:20px; } .role{ opacity:.9 }
 
   /* Difficulty badges + sections */
   .badge{ display:inline-block; padding:2px 8px; margin-bottom:6px; border:1px solid; border-radius:999px; font-size:14px; }
@@ -131,17 +125,7 @@
   .level-intermediate{ border-left:3px solid var(--amber); padding-left:10px; margin-bottom:14px }
   .level-advanced{ border-left:3px solid var(--red); padding-left:10px; margin-bottom:14px }
 
-  .topics{ margin:6px 0 12px 0 }
-  .topics li{ margin:2px 0 }
-
-  /* Simple amber buttons grid */
-  .btn-list { display:grid; gap:10px; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); margin-top:8px; }
-  .btn {
-    display:inline-block; padding:8px 10px; border:1px solid var(--amber); color:var(--amber);
-    text-decoration:none; text-align:center; background:rgba(0,0,0,.35); box-shadow:0 0 8px var(--amber);
-    cursor:pointer;
-  }
-  .btn:hover { background:var(--amber); color:black }
+  .topics{ margin:6px 0 12px 0 } .topics li{ margin:2px 0 }
 
   /* Taskbar */
   .taskbar{
@@ -165,7 +149,7 @@
   .form-wrap{height:100%; background:black;}
   .form-wrap iframe{width:100%; height:100%; border:0}
 
-  /* Toast notification */
+  /* Toast notification (bottom so it doesn’t block icons) */
   .toast{
     position:fixed; right:16px; bottom:60px;
     max-width:360px; background:black; border:2px solid var(--green); padding:10px 12px;
@@ -206,7 +190,6 @@
 
 <!-- Desktop icons -->
 <div class="desktop">
-
   <!-- Conference Info -->
   <div class="icon" onclick="openWindow('confinfo')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
@@ -246,7 +229,7 @@
   </div>
 
   <!-- Background Guides (Amber) -->
-  <div class="icon" onclick="openWindow('bgGuides')" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
+  <div class="icon" onclick="openWindow('bg-guides')" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
       <rect x="3" y="4" width="18" height="16" rx="2"/>
       <path d="M7 8h10M7 12h10M7 16h6"/>
@@ -272,7 +255,6 @@
     </svg>
     Contact
   </div>
-
 </div>
 
 <!-- Ticker -->
@@ -397,11 +379,6 @@
         <li>Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</li>
       </ul>
     </section>
-
-    <!-- Quick Background Guide buttons inside Committees -->
-    <hr style="border-color:rgba(255,204,102,.35)">
-    <h3 style="color:var(--amber);text-shadow:0 0 6px var(--amber)">Background Guides</h3>
-    <div id="bgLinksInside" class="btn-list"></div>
   </div>
 </div>
 
@@ -447,19 +424,139 @@
   </div>
 </div>
 
-<!-- Background Guides index window -->
-<div id="bgGuides" class="window amber" style="top:120px;left:160px;width:680px;">
+<!-- Background Guides main menu -->
+<div id="bg-guides" class="window amber" style="top:120px;left:120px;width:640px;height:400px;max-width:95vw;max-height:80vh;">
   <div class="title-bar amber">
     Background Guides
     <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bgGuides')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bgGuides')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bgGuides')">X</button>
+      <button class="tb-btn" onclick="minimize('bg-guides')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-guides')">X</button>
     </div>
   </div>
   <div class="win-content">
-    <p>Select a committee to open its guide.</p>
-    <div id="bgList" class="btn-list"></div>
+    <p>Select a committee to view its Background Guide:</p>
+    <ul>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-who')">WHO</a></li>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unicef')">UNICEF</a></li>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unhrc')">UNHRC</a></li>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unodc')">UNODC</a></li>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unoosa')">UNOOSA</a></li>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-fifa')">FIFA</a></li>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-hcc')">HCC</a></li>
+      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-disec')">GA1 (DISEC)</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- WHO -->
+<div id="bg-who" class="window amber" style="top:160px;left:180px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">WHO — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-who')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-who')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-who')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%">
+    <iframe src="https://www.canva.com/design/DAGyrrO852g/snABSmQHVtxxjzPcnYfAHQ/view?embed" style="width:100%;height:100%;border:none;"></iframe>
+  </div>
+</div>
+
+<!-- UNICEF -->
+<div id="bg-unicef" class="window amber" style="top:160px;left:200px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">UNICEF — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-unicef')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-unicef')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-unicef')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%">
+    <iframe src="https://www.canva.com/design/DAGygANb1ew/F2REP5RL8qMPBd9SGqiTaQ/view?embed" style="width:100%;height:100%;border:none;"></iframe>
+  </div>
+</div>
+
+<!-- UNHRC -->
+<div id="bg-unhrc" class="window amber" style="top:160px;left:220px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">UNHRC — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-unhrc')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-unhrc')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-unhrc')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%">
+    <iframe src="https://www.canva.com/design/DAGyqc5Tw-o/T2z0flVD0vyKh7Q_B9DbkQ/view?embed" style="width:100%;height:100%;border:none;"></iframe>
+  </div>
+</div>
+
+<!-- UNODC -->
+<div id="bg-unodc" class="window amber" style="top:160px;left:240px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">UNODC — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-unodc')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-unodc')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-unodc')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%">
+    <iframe src="https://www.canva.com/design/DAGy8ONatq4/Gs9sHQgcZ3sL9coaWjrBHA/view?embed" style="width:100%;height:100%;border:none;"></iframe>
+  </div>
+</div>
+
+<!-- UNOOSA -->
+<div id="bg-unoosa" class="window amber" style="top:160px;left:260px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">UNOOSA — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-unoosa')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-unoosa')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-unoosa')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%">
+    <iframe src="https://www.canva.com/design/DAGypAdArmI/9SMT2fTbaEH2_mC37kH26Q/view?embed" style="width:100%;height:100%;border:none;"></iframe>
+  </div>
+</div>
+
+<!-- FIFA -->
+<div id="bg-fifa" class="window amber" style="top:160px;left:280px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">FIFA — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-fifa')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-fifa')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-fifa')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%">
+    <iframe src="https://www.canva.com/design/DAGypAblUQA/Tj7LHP6yM03Odytjc_zsYg/view?embed" style="width:100%;height:100%;border:none;"></iframe>
+  </div>
+</div>
+
+<!-- HCC -->
+<div id="bg-hcc" class="window amber" style="top:160px;left:300px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">HCC — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-hcc')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-hcc')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-hcc')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="padding:0;height:100%">
+    <iframe src="https://www.canva.com/design/DAGy8Xm2OIY/iLWUD49-gqHyg6uinexLzA/view?embed" style="width:100%;height:100%;border:none;"></iframe>
+  </div>
+</div>
+
+<!-- DISEC Coming Soon -->
+<div id="bg-disec" class="window amber" style="top:160px;left:320px;width:740px;height:420px;max-width:95vw;max-height:80vh;">
+  <div class="title-bar amber">GA1 (DISEC) — Background Guide
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bg-disec')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bg-disec')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bg-disec')">X</button>
+    </div>
+  </div>
+  <div class="win-content" style="display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;">
+    <p><b>Background Guide Coming Soon!</b></p>
   </div>
 </div>
 
@@ -490,7 +587,7 @@
   <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
   <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
   <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
-  <a href="#" onclick="openWindow('bgGuides');toggleMenu()">Background Guides</a>
+  <a href="#" onclick="openWindow('bg-guides');toggleMenu()">Background Guides</a>
   <a href="#" onclick="openWindow('handbook');toggleMenu()">Delegate Handbook</a>
   <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
 </div>
@@ -577,87 +674,6 @@
       m.style.display='none';
     }
   });
-
-  // Clock
-  function tick(){
-    const now = new Date();
-    document.getElementById('clock').textContent =
-      now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-  }
-  setInterval(tick,1000); tick();
-
-  // ===== Background Guides data + dynamic windows =====
-  // Use EMBED view URLs (…/view?embed). Provided by you:
-  const BG_GUIDES = [
-    { key: 'unicef', name: 'UNICEF — United Nations Children\'s Fund', url: 'https://www.canva.com/design/DAGygANb1ew/F2REP5RL8qMPBd9SGqiTaQ/view?embed' },
-    { key: 'hcc',    name: 'HCC — Historical Crisis Committee',       url: 'https://www.canva.com/design/DAGy8Xm2OIY/iLWUD49-gqHyg6uinexLzA/view?embed' },
-    { key: 'unodc',  name: 'UNODC — United Nations Office on Drugs and Crime', url: 'https://www.canva.com/design/DAGy8ONatq4/Gs9sHQgcZ3sL9coaWjrBHA/view?embed' },
-    { key: 'who',    name: 'WHO — World Health Organization',          url: 'https://www.canva.com/design/DAGyrrO852g/snABSmQHVtxxjzPcnYfAHQ/view?embed' },
-    { key: 'unhrc',  name: 'UNHRC — United Nations Human Rights Council', url: 'https://www.canva.com/design/DAGyqc5Tw-o/T2z0flVD0vyKh7Q_B9DbkQ/view?embed' },
-    { key: 'fifa',   name: 'FIFA — Fédération Internationale de Football Association', url: 'https://www.canva.com/design/DAGypAblUQA/Tj7LHP6yM03Odytjc_zsYg/view?embed' },
-    // To add more later, e.g.:
-    // { key: 'unoosa', name: 'UNOOSA — Outer Space Affairs', url: 'PASTE_EMBED_URL' },
-    // { key: 'disec',  name: 'GA1 (DISEC) — Disarmament & International Security', url: 'PASTE_EMBED_URL' },
-  ];
-
-  // Build list in Background Guides index window
-  (function buildBGList(){
-    const container = document.getElementById('bgList');
-    if(!container) return;
-    container.innerHTML = BG_GUIDES.map(g =>
-      `<a href="#" class="btn" onclick="openGuide('${g.key}')">${g.name}</a>`
-    ).join('');
-  })();
-
-  // Also inject quick links inside the Committees window
-  (function buildBGLinksInside(){
-    const container = document.getElementById('bgLinksInside');
-    if(!container) return;
-    container.innerHTML = BG_GUIDES.map(g =>
-      `<a href="#" class="btn" onclick="openGuide('${g.key}')">${g.name}</a>`
-    ).join('');
-  })();
-
-  // Create/open a dynamic guide window for a committee
-  function openGuide(key){
-    const guide = BG_GUIDES.find(g => g.key === key);
-    if(!guide){ return; }
-    const winId = `bg-${key}`;
-    let w = document.getElementById(winId);
-    if(!w){
-      w = document.createElement('div');
-      w.id = winId;
-      w.className = 'window amber';
-      w.style.cssText = 'top:120px;left:120px;width:760px;height:600px;max-width:95vw;max-height:80vh;';
-      const viewUrl = guide.url;
-      const openUrl = viewUrl.replace('/view?embed','/view');
-      w.innerHTML = `
-        <div class="title-bar amber">
-          ${guide.name}
-          <div class="btns">
-            <button class="tb-btn" onclick="toggleMax('${winId}')">⬜</button>
-            <button class="tb-btn" onclick="minimize('${winId}')">–</button>
-            <button class="tb-btn" onclick="closeWindow('${winId}')">X</button>
-          </div>
-        </div>
-        <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
-          <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%;
-                      overflow: hidden; border-radius: 8px;">
-            <iframe loading="lazy"
-              style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none;"
-              src="${viewUrl}"
-              allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
-          </div>
-          <p style="margin:8px 10px 0;font-size:14px;">
-            <a href="${openUrl}" target="_blank" rel="noopener" style="color:var(--amber)">
-              Open guide in Canva
-            </a>
-          </p>
-        </div>`;
-      document.body.appendChild(w);
-    }
-    openWindow(winId);
-  }
 
   // Clock
   function tick(){
