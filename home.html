@@ -24,12 +24,6 @@
     overflow:hidden;
   }
 
-  /* red-themed window variant */
-  .window.red{ border-color:var(--red); box-shadow:0 0 16px var(--red); }
-  .title-bar.red{ background:#330000; color:var(--red); text-shadow:0 0 6px var(--red); }
-  .window.red .tb-btn{ border-color:var(--red); color:var(--red); }
-  .window.red .tb-btn:hover{ background:var(--red); color:black; }
-
   /* CRT overlays */
   .overlay-scan{
     position:fixed; inset:0; pointer-events:none;
@@ -169,7 +163,8 @@
 
   /* Toast notification */
   .toast{
-    position:fixed; right:16px; bottom:60px; max-width:360px;
+    position:fixed; right:16px; bottom:60px; /* bottom instead of top */
+    max-width:360px;
     background:black; border:2px solid var(--green); padding:10px 12px;
     box-shadow:0 0 16px var(--green); z-index:9999; display:flex; gap:10px; align-items:flex-start;
   }
@@ -195,7 +190,6 @@
 
 <!-- Toast: In-school payment -->
 <div id="toast" class="toast">
-  <!-- bell icon -->
   <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
     <path d="M6 8a6 6 0 1 1 12 0v5l2 2H4l2-2Z"/><path d="M10 19a2 2 0 0 0 4 0"/>
   </svg>
@@ -209,18 +203,6 @@
 
 <!-- Desktop icons -->
 <div class="desktop">
-
-  <!-- Pager (red) -->
-  <div class="icon" onclick="openWindow('pager')" style="color:var(--red);text-shadow:0 0 8px var(--red)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2">
-      <rect x="3" y="6" width="18" height="12" rx="2"/>
-      <rect x="6" y="9" width="12" height="3"/>
-      <circle cx="8" cy="14" r="1"/>
-      <circle cx="12" cy="14" r="1"/>
-      <circle cx="16" cy="14" r="1"/>
-    </svg>
-    Pager Apps
-  </div>
 
   <!-- Conference Info -->
   <div class="icon" onclick="openWindow('confinfo')">
@@ -260,13 +242,13 @@
     Apply
   </div>
 
-  <!-- Photographer Applications -->
-  <div class="icon" onclick="openWindow('photography')">
+  <!-- Delegate Handbook -->
+  <div class="icon" onclick="openWindow('handbook')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <path d="M4 7h3l2-2h6l2 2h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
-      <circle cx="12" cy="13" r="4"/>
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+      <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/>
     </svg>
-    Photographer
+    Handbook
   </div>
 
   <!-- Contact -->
@@ -281,12 +263,11 @@
 
 </div>
 
-<!-- Ticker with quotes + info -->
+<!-- Ticker -->
 <div class="ticker">
   <span id="tickerText">
     “Seek Diplomacy, Find Peace.” • “Let us never negotiate out of fear. But let us never fear to negotiate.” •
     “Peace is not the absence of conflict, but the ability to resolve it.” • “In diplomacy, words are bridges.” •
-    “Dialogue is the shortest path between rivals.” • “Firm on values, flexible in method.” • “Listen first; speak for all.” •
     In-school payment: Mon–Thu 7:15 AM–4:00 PM • AED 130 • At BAKIS campus.
   </span>
 </div>
@@ -343,7 +324,7 @@
   </div>
 </div>
 
-<!-- Committees (color coded) -->
+<!-- Committees -->
 <div id="committees" class="window" style="top:160px;left:180px;width:820px">
   <div class="title-bar">
     Committees & Agendas
@@ -353,236 +334,4 @@
     </div>
   </div>
   <div class="win-content">
-    <section class="level-beginner">
-      <span class="badge">Beginner</span>
-      <h3>WHO — World Health Organization</h3>
-      <ul class="topics">
-        <li>Integrating Artificial Intelligence in Global Healthcare: Opportunities and Ethical Challenges</li>
-        <li>Guaranteeing Impartial Access to Life-Saving Medications Through Diplomatic Arrangements</li>
-      </ul>
-      <h3>UNICEF — United Nations International Children's Emergency Fund</h3>
-      <ul class="topics">
-        <li>Cooperative Procedures for Protecting Children from Abuse in the Digital Age</li>
-        <li>Diplomatic Actions to Secure Children’s Rights in Regions of Armed Conflict</li>
-      </ul>
-    </section>
-
-    <section class="level-intermediate">
-      <span class="badge">Intermediate</span>
-      <h3>UNHRC — United Nations Human Rights Council</h3>
-      <ul class="topics">
-        <li>The Human Rights Implications of Artificial Intelligence in Law Enforcement</li>
-        <li>Political Measures to Protect Ethnic and Religious Minorities in Conflict Zones</li>
-      </ul>
-      <h3>UNODC — United Nations Office on Drugs and Crime</h3>
-      <ul class="topics">
-        <li>Tackling Corruption in Public Institutions and Government Agencies</li>
-        <li>Preventing the Use of Children in Drug Production and Trafficking</li>
-      </ul>
-      <h3>UNOOSA — United Nations Office for Outer Space Affairs</h3>
-      <ul class="topics">
-        <li>Addressing the Militarization of Outer Space and Strengthening Diplomatic Measures for Peaceful Use</li>
-        <li>Modifying Extraterrestrial Environments for Human Survival & Resilience Against Global Threats</li>
-      </ul>
-    </section>
-
-    <section class="level-advanced">
-      <span class="badge">Advanced</span>
-      <h3>GA1 (DISEC) — Disarmament and International Security Committee</h3>
-      <ul class="topics">
-        <li>Global Regulation of AI-Powered Weapons: Preventing an International Arms Race</li>
-        <li>Fostering Diplomatic Solutions to Regional Arms Races and Military Alliances</li>
-      </ul>
-      <h3>FIFA — Fédération Internationale de Football Association</h3>
-      <ul class="topics">
-        <li>Regulating Human Rights in Hosting International Football Tournaments</li>
-        <li>Regulating Player Transfers & Protecting Youth Athletes from Exploitation</li>
-      </ul>
-      <h3>HCC — Historical Crisis Committee</h3>
-      <ul class="topics">
-        <li>The Rwandan Genocide (1994): Rapid International Response and Prevention Strategies</li>
-        <li>Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</li>
-      </ul>
-    </section>
-  </div>
-</div>
-
-<!-- Pager (embedded Google Form, red) -->
-<div id="pager" class="window red" style="top:140px;left:940px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar red">
-    Pager Applications
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('pager')">–</button>
-      <button class="tb-btn" onclick="closeWindow('pager')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
-    <div class="form-wrap">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf4H8xwrpEDKNWlgl4OmaiOLeUoW-6fYbEsAODZrVkQDcHH_w/viewform?embedded=true">
-        Loading…
-      </iframe>
-    </div>
-  </div>
-</div>
-
-<!-- Applications (embedded Google Form) -->
-<div id="applications" class="window" style="top:210px;left:70px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar">
-    Applications
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('applications')">–</button>
-      <button class="tb-btn" onclick="closeWindow('applications')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
-    <div class="form-wrap">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true">
-        Loading…
-      </iframe>
-    </div>
-  </div>
-</div>
-
-<!-- Photographer Applications (embedded) -->
-<div id="photography" class="window" style="top:140px;left:940px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar">
-    Photographer Applications
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('photography')">–</button>
-      <button class="tb-btn" onclick="closeWindow('photography')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
-    <div class="form-wrap">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScptkvGS3Au8lDH2QYqpisT01l08HYbvIyDLlrjdnOIuDXp1g/viewform?embedded=true">
-        Loading…
-      </iframe>
-    </div>
-  </div>
-</div>
-
-<!-- Contact -->
-<div id="contact" class="window" style="top:80px;left:520px;width:420px">
-  <div class="title-bar">
-    Contact
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('contact')">–</button>
-      <button class="tb-btn" onclick="closeWindow('contact')">X</button>
-    </div>
-  </div>
-  <div class="win-content">
-    <p><b>Email:</b> <a href="mailto:bakismun@gmail.com" style="color:var(--green)">bakismun@gmail.com</a></p>
-    <p><b>Instagram:</b> <a href="https://instagram.com/bakismun" target="_blank" style="color:var(--green)">@bakismun</a></p>
-  </div>
-</div>
-
-<!-- Taskbar -->
-<div class="taskbar">
-  <button class="start" onclick="toggleMenu()">[ BAKISMUN ]</button>
-  <div class="clock" id="clock"></div>
-</div>
-
-<!-- Start Menu -->
-<div class="menu" id="menu">
-  <a href="#" onclick="openWindow('pager');toggleMenu()">Pager Applications</a>
-  <a href="#" onclick="openWindow('confinfo');toggleMenu()">Conference Info</a>
-  <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
-  <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
-  <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
-  <a href="#" onclick="openWindow('photography');toggleMenu()">Photographer Applications</a>
-  <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
-</div>
-
-<script>
-  function openWindow(id){
-    const w = document.getElementById(id);
-    w.style.display = 'flex';
-    bringToFront(w);
-    centerOnMobile(w);
-    makeDraggable(w);
-  }
-  function closeWindow(id){ document.getElementById(id).style.display='none' }
-  function minimize(id){ document.getElementById(id).style.display='none' }
-
-  // Toast
-  function dismissToast(){ const t=document.getElementById('toast'); if(t) t.style.display='none' }
-
-  // z-index focus
-  let zTop = 10;
-  function bringToFront(el){ el.style.zIndex = ++zTop }
-
-  // draggable (mouse + touch)
-  function makeDraggable(win){
-    const bar = win.querySelector('.title-bar');
-    if(bar._dragBound) return;
-    let dx=0, dy=0, dragging=false;
-    const down = (e)=>{
-      dragging=true; bringToFront(win);
-      const rect = win.getBoundingClientRect();
-      dx = (e.touches?e.touches[0].clientX:e.clientX) - rect.left;
-      dy = (e.touches?e.touches[0].clientY:e.clientY) - rect.top;
-      document.addEventListener('mousemove', move);
-      document.addEventListener('mouseup', up);
-      document.addEventListener('touchmove', move, {passive:false});
-      document.addEventListener('touchend', up);
-    };
-    const move = (e)=>{
-      if(!dragging) return;
-      const x = (e.touches?e.touches[0].clientX:e.clientX) - dx;
-      const y = (e.touches?e.touches[0].clientY:e.clientY) - dy;
-      win.style.left = x + 'px';
-      win.style.top  = y + 'px';
-      e.preventDefault?.();
-    };
-    const up = ()=>{
-      dragging=false;
-      document.removeEventListener('mousemove', move);
-      document.removeEventListener('mouseup', up);
-      document.removeEventListener('touchmove', move);
-      document.removeEventListener('touchend', up);
-    };
-    bar.addEventListener('mousedown', down);
-    bar.addEventListener('touchstart', down, {passive:true});
-    bar._dragBound = true;
-  }
-
-  // mobile centering + sizing
-  function centerOnMobile(win){
-    if(window.innerWidth < 768){
-      win.style.left = '10px';
-      win.style.top  = '60px';
-      win.style.width = (window.innerWidth - 20) + 'px';
-      win.style.height = (window.innerHeight - 120) + 'px';
-    }
-  }
-
-  // Start menu toggle + click-away
-  function toggleMenu(){
-    const m = document.getElementById('menu');
-    m.style.display = (m.style.display==='block') ? 'none' : 'block';
-  }
-  document.addEventListener('click', (e)=>{
-    const m = document.getElementById('menu');
-    if(m.style.display==='block' && !e.target.closest('#menu') && !e.target.closest('.start')){
-      m.style.display='none';
-    }
-  });
-
-  // Clock
-  function tick(){
-    const now = new Date();
-    document.getElementById('clock').textContent =
-      now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-  }
-  setInterval(tick,1000); tick();
-
-  // Ensure ticker long enough
-  (function ensureTicker(){
-    const t = document.getElementById('tickerText');
-    if(t && t.textContent.length < 120){
-      t.textContent = (t.textContent + ' • ' + t.textContent + ' • ' + t.textContent);
-    }
-  })();
-</script>
-</body>
-</html>
+   
