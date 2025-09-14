@@ -134,6 +134,15 @@
   .topics{ margin:6px 0 12px 0 }
   .topics li{ margin:2px 0 }
 
+  /* Simple amber buttons grid */
+  .btn-list { display:grid; gap:10px; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); margin-top:8px; }
+  .btn {
+    display:inline-block; padding:8px 10px; border:1px solid var(--amber); color:var(--amber);
+    text-decoration:none; text-align:center; background:rgba(0,0,0,.35); box-shadow:0 0 8px var(--amber);
+    cursor:pointer;
+  }
+  .btn:hover { background:var(--amber); color:black }
+
   /* Taskbar */
   .taskbar{
     position:fixed; left:0; right:0; bottom:0; height:36px;
@@ -236,7 +245,16 @@
     Apply
   </div>
 
-  <!-- Delegate Handbook (Amber icon) -->
+  <!-- Background Guides (Amber) -->
+  <div class="icon" onclick="openWindow('bgGuides')" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
+      <rect x="3" y="4" width="18" height="16" rx="2"/>
+      <path d="M7 8h10M7 12h10M7 16h6"/>
+    </svg>
+    Background Guides
+  </div>
+
+  <!-- Delegate Handbook (Amber) -->
   <div class="icon" onclick="openWindow('handbook')" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -379,6 +397,11 @@
         <li>Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</li>
       </ul>
     </section>
+
+    <!-- Quick Background Guide buttons inside Committees -->
+    <hr style="border-color:rgba(255,204,102,.35)">
+    <h3 style="color:var(--amber);text-shadow:0 0 6px var(--amber)">Background Guides</h3>
+    <div id="bgLinksInside" class="btn-list"></div>
   </div>
 </div>
 
@@ -419,8 +442,24 @@
       <a href="https://www.canva.com/design/DAGy8gZiO0Y/sS9D2er_FwRRpeRoflgs6w/view?utm_content=DAGy8gZiO0Y&utm_campaign=designshare&utm_medium=embeds&utm_source=link"
          target="_blank" rel="noopener" style="color:var(--amber)">
          Open BAKISMUN Delegate Handbook in Canva
-      </a> 
+      </a> by ozoo hany
     </p>
+  </div>
+</div>
+
+<!-- Background Guides index window -->
+<div id="bgGuides" class="window amber" style="top:120px;left:160px;width:680px;">
+  <div class="title-bar amber">
+    Background Guides
+    <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('bgGuides')">⬜</button>
+      <button class="tb-btn" onclick="minimize('bgGuides')">–</button>
+      <button class="tb-btn" onclick="closeWindow('bgGuides')">X</button>
+    </div>
+  </div>
+  <div class="win-content">
+    <p>Select a committee to open its guide.</p>
+    <div id="bgList" class="btn-list"></div>
   </div>
 </div>
 
@@ -451,6 +490,7 @@
   <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
   <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
   <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
+  <a href="#" onclick="openWindow('bgGuides');toggleMenu()">Background Guides</a>
   <a href="#" onclick="openWindow('handbook');toggleMenu()">Delegate Handbook</a>
   <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
 </div>
@@ -537,6 +577,87 @@
       m.style.display='none';
     }
   });
+
+  // Clock
+  function tick(){
+    const now = new Date();
+    document.getElementById('clock').textContent =
+      now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+  setInterval(tick,1000); tick();
+
+  // ===== Background Guides data + dynamic windows =====
+  // Use EMBED view URLs (…/view?embed). Provided by you:
+  const BG_GUIDES = [
+    { key: 'unicef', name: 'UNICEF — United Nations Children\'s Fund', url: 'https://www.canva.com/design/DAGygANb1ew/F2REP5RL8qMPBd9SGqiTaQ/view?embed' },
+    { key: 'hcc',    name: 'HCC — Historical Crisis Committee',       url: 'https://www.canva.com/design/DAGy8Xm2OIY/iLWUD49-gqHyg6uinexLzA/view?embed' },
+    { key: 'unodc',  name: 'UNODC — United Nations Office on Drugs and Crime', url: 'https://www.canva.com/design/DAGy8ONatq4/Gs9sHQgcZ3sL9coaWjrBHA/view?embed' },
+    { key: 'who',    name: 'WHO — World Health Organization',          url: 'https://www.canva.com/design/DAGyrrO852g/snABSmQHVtxxjzPcnYfAHQ/view?embed' },
+    { key: 'unhrc',  name: 'UNHRC — United Nations Human Rights Council', url: 'https://www.canva.com/design/DAGyqc5Tw-o/T2z0flVD0vyKh7Q_B9DbkQ/view?embed' },
+    { key: 'fifa',   name: 'FIFA — Fédération Internationale de Football Association', url: 'https://www.canva.com/design/DAGypAblUQA/Tj7LHP6yM03Odytjc_zsYg/view?embed' },
+    // To add more later, e.g.:
+    // { key: 'unoosa', name: 'UNOOSA — Outer Space Affairs', url: 'PASTE_EMBED_URL' },
+    // { key: 'disec',  name: 'GA1 (DISEC) — Disarmament & International Security', url: 'PASTE_EMBED_URL' },
+  ];
+
+  // Build list in Background Guides index window
+  (function buildBGList(){
+    const container = document.getElementById('bgList');
+    if(!container) return;
+    container.innerHTML = BG_GUIDES.map(g =>
+      `<a href="#" class="btn" onclick="openGuide('${g.key}')">${g.name}</a>`
+    ).join('');
+  })();
+
+  // Also inject quick links inside the Committees window
+  (function buildBGLinksInside(){
+    const container = document.getElementById('bgLinksInside');
+    if(!container) return;
+    container.innerHTML = BG_GUIDES.map(g =>
+      `<a href="#" class="btn" onclick="openGuide('${g.key}')">${g.name}</a>`
+    ).join('');
+  })();
+
+  // Create/open a dynamic guide window for a committee
+  function openGuide(key){
+    const guide = BG_GUIDES.find(g => g.key === key);
+    if(!guide){ return; }
+    const winId = `bg-${key}`;
+    let w = document.getElementById(winId);
+    if(!w){
+      w = document.createElement('div');
+      w.id = winId;
+      w.className = 'window amber';
+      w.style.cssText = 'top:120px;left:120px;width:760px;height:600px;max-width:95vw;max-height:80vh;';
+      const viewUrl = guide.url;
+      const openUrl = viewUrl.replace('/view?embed','/view');
+      w.innerHTML = `
+        <div class="title-bar amber">
+          ${guide.name}
+          <div class="btns">
+            <button class="tb-btn" onclick="toggleMax('${winId}')">⬜</button>
+            <button class="tb-btn" onclick="minimize('${winId}')">–</button>
+            <button class="tb-btn" onclick="closeWindow('${winId}')">X</button>
+          </div>
+        </div>
+        <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
+          <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%;
+                      overflow: hidden; border-radius: 8px;">
+            <iframe loading="lazy"
+              style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none;"
+              src="${viewUrl}"
+              allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+          </div>
+          <p style="margin:8px 10px 0;font-size:14px;">
+            <a href="${openUrl}" target="_blank" rel="noopener" style="color:var(--amber)">
+              Open guide in Canva
+            </a>
+          </p>
+        </div>`;
+      document.body.appendChild(w);
+    }
+    openWindow(winId);
+  }
 
   // Clock
   function tick(){
