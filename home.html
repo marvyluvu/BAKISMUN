@@ -30,6 +30,14 @@
   .window.amber .tb-btn{ border-color:var(--amber); color:var(--amber); }
   .window.amber .tb-btn:hover{ background:var(--amber); color:black; }
 
+  /* maximize mode */
+  .window.max {
+    left: 10px !important;
+    top: 60px !important;
+    width: calc(100vw - 20px) !important;
+    height: calc(100vh - 120px) !important; /* leaves room for taskbar/ticker */
+  }
+
   /* CRT overlays */
   .overlay-scan{
     position:fixed; inset:0; pointer-events:none;
@@ -191,7 +199,7 @@
 <div class="desktop">
 
   <!-- Conference Info -->
-  <div class="icon" onclick="openWindow('confinfo')" role="button" tabindex="0">
+  <div class="icon" onclick="openWindow('confinfo')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <circle cx="12" cy="12" r="10"/><path d="M12 8v8M12 6h.01"/>
     </svg>
@@ -199,7 +207,7 @@
   </div>
 
   <!-- Secretariat -->
-  <div class="icon" onclick="openWindow('secretariat')" role="button" tabindex="0">
+  <div class="icon" onclick="openWindow('secretariat')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
       <path d="M16 4v6H8V4"/>
@@ -209,7 +217,7 @@
   </div>
 
   <!-- Committees -->
-  <div class="icon" onclick="openWindow('committees')" role="button" tabindex="0">
+  <div class="icon" onclick="openWindow('committees')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M8 6h10a2 2 0 0 1 2 2v8H9a3 3 0 0 1-3-3V6z"/>
       <path d="M8 6a2 2 0 1 0-4 0v7a3 3 0 0 0 3 3"/>
@@ -219,7 +227,7 @@
   </div>
 
   <!-- Applications -->
-  <div class="icon" onclick="openWindow('applications')" role="button" tabindex="0">
+  <div class="icon" onclick="openWindow('applications')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M9 2h6l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3z"/>
       <path d="M14 2v6h6"/>
@@ -228,8 +236,8 @@
     Apply
   </div>
 
-  <!-- Delegate Handbook (Amber) -->
-  <div class="icon" onclick="openWindow('handbook')" role="button" tabindex="0" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
+  <!-- Delegate Handbook (Amber icon) -->
+  <div class="icon" onclick="openWindow('handbook')" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
       <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/>
@@ -238,7 +246,7 @@
   </div>
 
   <!-- Contact -->
-  <div class="icon" onclick="openWindow('contact')" role="button" tabindex="0">
+  <div class="icon" onclick="openWindow('contact')">
     <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
       <path d="M12 19V8"/>
       <circle cx="12" cy="5" r="2"/>
@@ -374,7 +382,7 @@
   </div>
 </div>
 
-<!-- Applications (embedded Google Form) -->
+<!-- Applications -->
 <div id="applications" class="window" style="top:210px;left:70px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
   <div class="title-bar">
     Applications
@@ -385,9 +393,7 @@
   </div>
   <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
     <div class="form-wrap">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true">
-        Loading…
-      </iframe>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true">Loading…</iframe>
     </div>
   </div>
 </div>
@@ -397,6 +403,7 @@
   <div class="title-bar amber">
     Delegate Handbook
     <div class="btns">
+      <button class="tb-btn" onclick="toggleMax('handbook')">⬜</button>
       <button class="tb-btn" onclick="minimize('handbook')">–</button>
       <button class="tb-btn" onclick="closeWindow('handbook')">X</button>
     </div>
@@ -405,15 +412,14 @@
     <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%; overflow: hidden; border-radius: 8px;">
       <iframe loading="lazy"
         style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none;"
-        src="https://www.canva.com/design/DAGr6GHAKG4/8zquyLd5-JMk1WCawGD5BA/view?embed"
-        allowfullscreen="allowfullscreen" allow="fullscreen">
-      </iframe>
+        src="https://www.canva.com/design/DAGy8gZiO0Y/sS9D2er_FwRRpeRoflgs6w/view?embed"
+        allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
     </div>
     <p style="margin:8px 10px 0;font-size:14px;">
-      <a href="https://www.canva.com/design/DAGr6GHAKG4/8zquyLd5-JMk1WCawGD5BA/view?utm_content=DAGr6GHAKG4&utm_campaign=designshare&utm_medium=embeds&utm_source=link"
+      <a href="https://www.canva.com/design/DAGy8gZiO0Y/sS9D2er_FwRRpeRoflgs6w/view?utm_content=DAGy8gZiO0Y&utm_campaign=designshare&utm_medium=embeds&utm_source=link"
          target="_blank" rel="noopener" style="color:var(--amber)">
-         Open Delegate Handbook in Canva
-      </a>
+         Open BAKISMUN Delegate Handbook in Canva
+      </a> by ozoo hany
     </p>
   </div>
 </div>
@@ -460,6 +466,13 @@
   }
   function closeWindow(id){ const w=document.getElementById(id); if(w) w.style.display='none' }
   function minimize(id){ closeWindow(id) }
+
+  function toggleMax(id){
+    const w = document.getElementById(id);
+    if(!w) return;
+    w.classList.toggle('max');
+    bringToFront(w);
+  }
 
   // Dismiss toast
   function dismissToast(){ const t=document.getElementById('toast'); if(t) t.style.display='none' }
