@@ -24,6 +24,7 @@
     background:radial-gradient(circle at top, #050b09 0, #000 55%);
     color:var(--green);
     overflow:hidden;
+    letter-spacing:.5px;
   }
 
   /* CRT overlays */
@@ -71,7 +72,7 @@
     transition:
       opacity .7s ease,
       transform .7s ease,
-      box-shadow .7s ease,
+      box-shadow 1s ease,
       border-color .7s ease,
       color .7s ease;
   }
@@ -123,6 +124,7 @@
     border-color:var(--green);
     box-shadow:0 0 18px rgba(0,255,136,.55);
     color:var(--green);
+    animation:softPulse 6s ease-in-out infinite;
   }
 
   /* blue = silent takeover */
@@ -130,6 +132,7 @@
     border-color:var(--blue);
     box-shadow:0 0 22px rgba(79,208,255,.75);
     color:var(--blue);
+    animation:bluePulse 10s ease-in-out infinite;
   }
 
   .win-blue .win-header{
@@ -145,6 +148,17 @@
     3%{opacity:.7}
     4%{opacity:.4}
     5%{opacity:1}
+  }
+
+  @keyframes softPulse{
+    0%,100%{box-shadow:0 0 18px rgba(0,255,136,.55);}
+    50%{box-shadow:0 0 22px rgba(0,255,136,.75);}
+  }
+
+  @keyframes bluePulse{
+    0%,100%{box-shadow:0 0 22px rgba(79,208,255,.75);}
+    40%{box-shadow:0 0 28px rgba(79,208,255,.85);}
+    70%{box-shadow:0 0 18px rgba(79,208,255,.65);}
   }
 
   /* cursor */
@@ -175,9 +189,26 @@
     color:var(--green);
   }
 
-  @media (max-width:700px){
-    .win{width:calc(100vw - 32px);}
-    .win-body{max-height:45vh;}
+  @media (max-width:900px){
+    .desktop{padding:14px;}
+  }
+
+  @media (max-width:720px){
+    body{overflow-y:auto;}
+    .desktop{min-height:100vh;}
+    .win{
+      position:relative !important;
+      top:auto !important;
+      right:auto !important;
+      bottom:auto !important;
+      left:auto !important;
+      transform:scale(1) translateY(0) !important;
+      width:100%;
+      max-width:100%;
+      margin:12px auto;
+    }
+    .win-body{max-height:none;}
+    .footer{position:relative;margin:30px 0 18px;}
   }
 </style>
 </head>
@@ -204,7 +235,7 @@
   <div id="w-log" class="win win-green" style="bottom:70px;left:24px;width:320px;">
     <div class="win-header">
       <div class="win-title">
-        <span>syslog.txt</span>
+        <span>syslog://trace</span>
       </div>
       <div class="dots">
         <span class="dot"></span><span class="dot"></span>
@@ -213,10 +244,11 @@
     <div class="win-body">
 log: INIT_BUILD_2025
 log: region=UAE
-log: delegates_online = 100%
+log: signal_strength = rising
 
-> echo "seek diplomacy"
-> awaiting_next_build...
+> cat memo.silence
+> "seek diplomacy"
+> awaiting_next_wave...
     </div>
   </div>
 
@@ -233,12 +265,12 @@ log: delegates_online = 100%
     <div class="win-body">
 version: 2025.10-preview
 state: online
-status: stable
+status: steady
 
 release_notes:
- - visual layer: updating
- - committees: compiling
- - details: withheld
+ - visual_layer: repainting
+ - briefings: defragmenting
+ - disclosure: withheld
     </div>
   </div>
 
@@ -253,9 +285,10 @@ release_notes:
       </div>
     </div>
     <div class="win-body">
-uptime: 0000:00:00
+uptime: 0003:14:08
 watch: 2025 //
-mode: standby
+mode: attentive
+trace: heartbeat audible
     </div>
   </div>
 
@@ -276,10 +309,10 @@ replaying_memory...
 
 are you still there?
 are you still there?
-are you still there?
+are you still listening?
 
-nothing is broken.
-it is only being rearranged.
+no alarms raised.
+the pattern simply realigns.
     </div>
   </div>
 
@@ -297,9 +330,9 @@ injecting_new_build...
 noise_level: low
 notifications: suppressed
 
-line_01: keep scrolling
-line_02: pretend nothing changed
-line_03: notice that it did
+line_01: keep the cursor steady
+line_02: nothing is overwritten
+line_03: everything is rewritten
     </div>
   </div>
 
@@ -352,7 +385,27 @@ mode: preview
 full_interface:
    not yet deployed.
    not yet announced.
-   not yet forgotten.
+   not yet sleeping.
+    </div>
+  </div>
+
+  <div id="w-shadow" class="win win-blue" style="top:58%;right:18%;width:260px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>shadow://echo</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body flicker">
+feed: 001100
+whisper: "preview holds"
+status: serene takeover
+
+if you feel static,
+stay connected.
+silence carries instructions.
     </div>
   </div>
 
@@ -370,7 +423,7 @@ full_interface:
 next_update: [REDACTED]
 eta: close enough.
 
-stay logged in.
+remain logged in.
     </div>
   </div>
 </div>
@@ -388,20 +441,21 @@ stay logged in.
     "checking delegates_online [██████████] 100%",
     "",
     "status: legacy_interface detected.",
-    "status: appearance != current_version.",
+    "status: overlay handshake accepted.",
     "",
     "starting quiet_recompile.sh",
     "   > base_colour: neon_green",
     "   > overlay_colour: neon_blue",
     "   > notification_sounds: muted",
     "",
-    "note: no action required.",
-    "note: the system will update itself.",
+    "memo: sustain equilibrium.",
+    "memo: standby for resonance.",
     "",
     "echo \"are you still there?\"",
-    "echo \"are you still watching?\"",
+    "echo \"are you still awake?\"",
     "",
-    "log: interface preview online."
+    "log: preview layer aligned.",
+    "log: further detail pending."
   ];
 
   const mainBody = document.getElementById("mainBody");
@@ -424,13 +478,20 @@ stay logged in.
 
   // repeated "are you still there" in bottom-right blue window
   const repeatBody = document.getElementById("repeatBody");
-  const repeatLine = "are you still there?";
+  const repeatLines = [
+    "are you still there?",
+    "are you still there?",
+    "hold the line.",
+    "the quiet will explain itself."
+  ];
   let repeatCount = 0;
   function addRepeatLine(){
-    if(repeatCount < 28){
-      repeatBody.textContent += repeatLine + "\n";
+    if(repeatCount < 32){
+      const line = repeatLines[repeatCount % repeatLines.length];
+      repeatBody.textContent += line + "\n";
       repeatCount++;
-      setTimeout(addRepeatLine, 120);
+      const delay = line === "are you still there?" ? 130 : 260;
+      setTimeout(addRepeatLine, delay);
     }
   }
 
@@ -458,7 +519,8 @@ stay logged in.
     showWin("w-ghost2", 3400);
     showWin("w-ghost3", 3900);
     showWin("w-tag", 4300);
-    showWin("w-timer", 4700);
+    showWin("w-shadow", 4500);
+    showWin("w-timer", 4900);
     setTimeout(addRepeatLine, 4500);
   });
 </script>
