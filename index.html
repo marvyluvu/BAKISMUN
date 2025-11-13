@@ -27,7 +27,6 @@
     color:var(--green);
     overflow:hidden;
     letter-spacing:.5px;
-    filter:hue-rotate(0deg);
   }
 
   /* CRT overlays */
@@ -239,17 +238,6 @@
     5%{opacity:1}
   }
 
-  @keyframes scanShift{
-    0%{background-position:0 0;}
-    100%{background-position:0 12px;}
-  }
-
-  @keyframes bgPulse{
-    0%{background-position:50% 0%; filter:hue-rotate(0deg);}
-    50%{background-position:48% 20%; filter:hue-rotate(-6deg);}
-    100%{background-position:52% 40%; filter:hue-rotate(6deg);}
-  }
-
   @keyframes softPulse{
     0%,100%{box-shadow:0 0 18px rgba(0,255,136,.55);}
     50%{box-shadow:0 0 22px rgba(0,255,136,.75);}
@@ -259,34 +247,6 @@
     0%,100%{box-shadow:0 0 22px rgba(79,208,255,.75);}
     40%{box-shadow:0 0 28px rgba(79,208,255,.85);}
     70%{box-shadow:0 0 18px rgba(79,208,255,.65);}
-  }
-
-  @keyframes orbPulse{
-    0%,100%{opacity:.45; transform:scale(1);}
-    40%{opacity:.75; transform:scale(1.08);}
-    70%{opacity:.55; transform:scale(1.03);}
-  }
-
-  @keyframes noiseSpin{
-    0%{transform:rotate(0deg) scale(1.05);}
-    100%{transform:rotate(360deg) scale(1.05);}
-  }
-
-  @keyframes glitchPulse{
-    0%,100%{opacity:.18;}
-    50%{opacity:.42;}
-  }
-
-  @keyframes glitchJitter{
-    0%,100%{text-shadow:0 0 8px currentColor;}
-    40%{text-shadow:-2px 0 10px rgba(79,208,255,.8), 2px 0 6px rgba(0,255,136,.6);}
-    70%{text-shadow:2px 0 8px rgba(79,208,255,.75), -2px 0 6px rgba(0,255,136,.5);}
-  }
-
-  @keyframes gridPulse{
-    0%{opacity:.15;transform:translate3d(0,0,0);}
-    50%{opacity:.28;transform:translate3d(-12px,8px,0);}
-    100%{opacity:.18;transform:translate3d(0,12px,0);}
   }
 
   /* cursor */
@@ -327,56 +287,20 @@
 
   @media (max-width:720px){
     body{overflow-y:auto;}
-    .desktop{
-      height:1480px;
-      min-height:1480px;
-      padding:32px 4vw 140px;
-    }
+    .desktop{min-height:100vh;}
     .win{
-      width:auto !important;
-      max-width:88vw;
-      --ty:20px;
+      position:relative !important;
+      top:auto !important;
+      right:auto !important;
       bottom:auto !important;
+      left:auto !important;
+      transform:scale(1) translateY(0) !important;
+      width:100%;
+      max-width:100%;
+      margin:12px auto;
     }
-    #w-main{top:60px;left:50%;--tx:-50%;--z:18;}
-    #w-uptime{top:18px;left:8vw;--z:16;}
-    #w-ghost1{top:148px;left:auto;right:6vw;--z:19;}
-    #w-archive{top:260px;left:10vw;--z:15;}
-    #w-log{top:340px;left:62vw;--tx:-70%;--z:14;}
-    #w-static{top:430px;left:56vw;right:auto;--tx:-62%;--z:13;}
-    #w-info{top:520px;left:8vw;--z:12;}
-    #w-hum{top:610px;left:60vw;--tx:-72%;--z:17;}
-    #w-ghost2{top:720px;left:14vw;--z:11;}
-    #w-shadow{top:830px;left:62vw;right:auto;--tx:-70%;--z:13;}
-    #w-signal{top:930px;left:18vw;--tx:-12%;--z:12;}
-    #w-ghost3{top:1020px;left:10vw;right:auto;--z:20;}
-    #w-tag{top:1150px;left:50%;--tx:-50%;--z:16;}
-    #w-timer{top:1270px;left:50%;--tx:-50%;--z:18;}
     .win-body{max-height:none;}
-    .footer{position:relative;margin:1520px auto 32px;}
-  }
-
-  @media (max-width:520px){
-    .desktop{height:1640px;min-height:1640px;}
-    #w-ghost1{right:4vw;}
-    #w-log{left:52vw;}
-    #w-static{left:48vw;}
-    #w-hum{left:50vw;}
-    #w-shadow{left:52vw;}
-    #w-tag{max-width:84vw;}
-    #w-timer{top:1330px;}
-    .footer{margin:1680px auto 40px;}
-  }
-
-  @media (max-width:420px){
-    .desktop{height:1820px;min-height:1820px;}
-    #w-log{left:46vw;}
-    #w-static{left:44vw;}
-    #w-hum{left:46vw;}
-    #w-shadow{left:48vw;}
-    #w-tag{left:48%;}
-    #w-timer{left:48%;top:1380px;}
-    .footer{margin:1860px auto 44px;}
+    .footer{position:relative;margin:30px 0 18px;}
   }
 </style>
 </head>
@@ -441,25 +365,6 @@ release_notes:
  - visual_layer: repainting
  - briefings: defragmenting
  - disclosure: withheld
-    </div>
-  </div>
-
-  <!-- archive window -->
-  <div id="w-archive" class="win win-green" style="top:188px;left:32px;width:280px;--z:7;--tilt:-0.8deg;">
-    <div class="win-header">
-      <div class="win-title">
-        <span>archive://backlog</span>
-      </div>
-      <div class="dots">
-        <span class="dot"></span><span class="dot"></span>
-      </div>
-    </div>
-    <div class="win-body">
-queue_depth: 04
-memo_01: legacy skin cached
-memo_02: handshake recorded
-memo_03: quiet channel open
-memo_04: observers acknowledged
     </div>
   </div>
 
@@ -578,28 +483,7 @@ full_interface:
     </div>
   </div>
 
-  <div id="w-hum" class="win win-blue" style="top:10%;left:68%;width:240px;--z:11;--tilt:0.7deg;">
-    <div class="win-header">
-      <div class="win-title">
-        <span>hum://carrier</span>
-      </div>
-      <div class="dots">
-        <span class="dot"></span><span class="dot"></span>
-      </div>
-    </div>
-    <div class="win-body">
-signal: velvet amplitude
-layering: in progress
-ghost_packets: authenticated
-
-notice:
-  drift with the glow.
-  archive every whisper.
-  let the update settle.
-    </div>
-  </div>
-
-  <div id="w-shadow" class="win win-blue" style="top:58%;right:18%;width:260px;--z:10;--tilt:-0.6deg;">
+  <div id="w-shadow" class="win win-blue" style="top:58%;right:18%;width:260px;">
     <div class="win-header">
       <div class="win-title">
         <span>shadow://echo</span>
@@ -616,27 +500,6 @@ status: serene takeover
 if you feel static,
 stay connected.
 silence carries instructions.
-    </div>
-  </div>
-
-  <div id="w-signal" class="win win-blue" style="top:66%;left:36%;width:280px;--z:9;--tilt:0.35deg;">
-    <div class="win-header">
-      <div class="win-title">
-        <span>signal://convergence</span>
-      </div>
-      <div class="dots">
-        <span class="dot"></span>
-      </div>
-    </div>
-    <div class="win-body">
-sync_status: nearly aligned
-heartbeat: low and steady
-overlay_phase: 03 -> 04
-
-log:
-- crossfade commencing
-- silence remains intentional
-- observers: remain unseen
     </div>
   </div>
 
@@ -781,8 +644,7 @@ remain logged in.
     showWin("w-ghost3", 3900);
     showWin("w-tag", 4300);
     showWin("w-shadow", 4500);
-    showWin("w-signal", 4700);
-    showWin("w-timer", 5100);
+    showWin("w-timer", 4900);
     setTimeout(addRepeatLine, 4500);
     setTimeout(scheduleGlitch, 5600);
   });
