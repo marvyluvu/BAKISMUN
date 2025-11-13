@@ -12,7 +12,7 @@
   :root{
     --bg:#000000;
     --green:#00ff88;
-    --blue:#4fd0ff;
+    --orange:#ff8a3c;
     --amber:#ffcc66;
   }
 
@@ -22,8 +22,12 @@
     margin:0;
     font-family:"VT323", monospace;
     background:radial-gradient(circle at top, #050b09 0, #000 55%);
+    background-size:140% 140%;
+    animation:bgPulse 32s ease-in-out infinite alternate;
     color:var(--green);
     overflow:hidden;
+    letter-spacing:.5px;
+    filter:hue-rotate(0deg);
   }
 
   /* CRT overlays */
@@ -37,13 +41,37 @@
     );
     mix-blend-mode:screen;
     opacity:.75;
+    animation:scanShift 7s linear infinite;
   }
   .overlay-glow{
     position:fixed; inset:-40px;
     background:
       radial-gradient(circle at 20% 0%, rgba(0,255,136,.07), transparent 55%),
-      radial-gradient(circle at 80% 100%, rgba(79,208,255,.12), transparent 55%);
+      radial-gradient(circle at 80% 100%, rgba(255,138,60,.14), transparent 55%);
     pointer-events:none;
+  }
+
+  .overlay-orb{
+    position:fixed; inset:-60px;
+    background:
+      radial-gradient(circle at 18% 28%, rgba(0,255,136,.05) 0, transparent 50%),
+      radial-gradient(circle at 72% 72%, rgba(255,138,60,.1) 0, transparent 55%),
+      radial-gradient(circle at 45% 10%, rgba(255,204,102,.045) 0, transparent 45%);
+    pointer-events:none;
+    mix-blend-mode:screen;
+    opacity:.65;
+    animation:orbPulse 26s ease-in-out infinite;
+  }
+
+  .overlay-noise{
+    position:fixed; inset:-120px;
+    pointer-events:none;
+    background:
+      repeating-conic-gradient(from 15deg, rgba(0,255,136,.05) 0deg 6deg, transparent 6deg 12deg),
+      repeating-linear-gradient(90deg, rgba(255,138,60,.05) 0 12px, transparent 12px 24px);
+    mix-blend-mode:soft-light;
+    opacity:.18;
+    animation:noiseSpin 38s linear infinite;
   }
 
   .desktop{
@@ -54,10 +82,31 @@
     box-sizing:border-box;
   }
 
+  .desktop::before{
+    content:"";
+    position:absolute;
+    inset:-10px;
+    background:
+      linear-gradient(90deg, rgba(0,255,136,.04) 0 1px, transparent 1px 120px),
+      linear-gradient(0deg, rgba(255,138,60,.035) 0 1px, transparent 1px 100px);
+    background-size:120px 100px;
+    opacity:.22;
+    mix-blend-mode:screen;
+    pointer-events:none;
+    animation:gridPulse 28s linear infinite;
+  }
+
   /* windows */
   .win{
     position:absolute;
-    background:rgba(0,0,0,.9);
+    --tx:0;
+    --ty:16px;
+    --tilt:0deg;
+    --z:1;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(255,255,255,.05), transparent 58%),
+      radial-gradient(circle at 100% 0%, rgba(255,255,255,.03), transparent 50%),
+      rgba(0,0,0,.9);
     border:2px solid var(--green);
     box-shadow:0 0 18px rgba(0,255,136,.5);
     color:var(--green);
@@ -66,21 +115,28 @@
     display:flex;
     flex-direction:column;
     opacity:0;
-    transform:scale(.96) translateY(10px);
+    transform:translate3d(var(--tx), var(--ty), 0) scale(.96) rotate(var(--tilt));
     pointer-events:none;
     transition:
       opacity .7s ease,
       transform .7s ease,
-      box-shadow .7s ease,
+      box-shadow 1s ease,
       border-color .7s ease,
       color .7s ease;
+    backdrop-filter:blur(1.2px);
+    z-index:var(--z);
   }
 
   .win.show{
     opacity:1;
-    transform:scale(1) translateY(0);
+    transform:translate3d(var(--tx), 0, 0) scale(1) rotate(var(--tilt));
     pointer-events:auto;
   }
+
+  #w-main{--tx:-50%;}
+  #w-tag{--tx:-15%;}
+  #w-hum{--tx:-18%;}
+  #w-timer{--tx:-50%;}
 
   .win-header{
     display:flex;
@@ -91,6 +147,40 @@
     font-size:18px;
     text-shadow:0 0 8px currentColor;
   }
+
+  .win::before,
+  .win::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .8s ease;
+  }
+
+  .win::before{
+    border:1px solid rgba(255,255,255,.06);
+    mix-blend-mode:screen;
+  }
+
+  .win::after{
+    inset:-14px;
+    background:radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 60%);
+    filter:blur(10px);
+    mix-blend-mode:screen;
+  }
+
+  .win.show::before{opacity:.35;}
+  .win.show::after{opacity:.14;}
+
+  .win.glitch{
+    box-shadow:0 0 32px rgba(255,138,60,.88), 0 0 14px rgba(0,255,136,.55);
+    filter:hue-rotate(2deg);
+  }
+
+  .win.glitch::after{opacity:.32; animation:glitchPulse .45s steps(2) infinite;}
+  .win.glitch .win-header,
+  .win.glitch .win-body{animation:glitchJitter .45s steps(2) infinite;}
 
   .win-title{
     display:flex;
@@ -123,17 +213,19 @@
     border-color:var(--green);
     box-shadow:0 0 18px rgba(0,255,136,.55);
     color:var(--green);
+    animation:softPulse 6s ease-in-out infinite;
   }
 
-  /* blue = silent takeover */
-  .win-blue{
-    border-color:var(--blue);
-    box-shadow:0 0 22px rgba(79,208,255,.75);
-    color:var(--blue);
+  /* orange = silent takeover */
+  .win-orange{
+    border-color:var(--orange);
+    box-shadow:0 0 22px rgba(255,138,60,.78);
+    color:var(--orange);
+    animation:orangePulse 10s ease-in-out infinite;
   }
 
-  .win-blue .win-header{
-    border-bottom-color:rgba(79,208,255,.5);
+  .win-orange .win-header{
+    border-bottom-color:rgba(255,138,60,.5);
   }
 
   /* subtle flicker */
@@ -145,6 +237,56 @@
     3%{opacity:.7}
     4%{opacity:.4}
     5%{opacity:1}
+  }
+
+  @keyframes scanShift{
+    0%{background-position:0 0;}
+    100%{background-position:0 12px;}
+  }
+
+  @keyframes bgPulse{
+    0%{background-position:50% 0%; filter:hue-rotate(0deg);}
+    50%{background-position:48% 20%; filter:hue-rotate(-6deg);}
+    100%{background-position:52% 40%; filter:hue-rotate(6deg);}
+  }
+
+  @keyframes softPulse{
+    0%,100%{box-shadow:0 0 18px rgba(0,255,136,.55);}
+    50%{box-shadow:0 0 22px rgba(0,255,136,.75);}
+  }
+
+  @keyframes orangePulse{
+    0%,100%{box-shadow:0 0 22px rgba(255,138,60,.78);}
+    40%{box-shadow:0 0 28px rgba(255,153,82,.88);}
+    70%{box-shadow:0 0 18px rgba(255,120,45,.62);}
+  }
+
+  @keyframes orbPulse{
+    0%,100%{opacity:.45; transform:scale(1);}
+    40%{opacity:.75; transform:scale(1.08);}
+    70%{opacity:.55; transform:scale(1.03);}
+  }
+
+  @keyframes noiseSpin{
+    0%{transform:rotate(0deg) scale(1.05);}
+    100%{transform:rotate(360deg) scale(1.05);}
+  }
+
+  @keyframes glitchPulse{
+    0%,100%{opacity:.18;}
+    50%{opacity:.42;}
+  }
+
+  @keyframes glitchJitter{
+    0%,100%{text-shadow:0 0 8px currentColor;}
+    40%{text-shadow:-2px 0 10px rgba(255,138,60,.82), 2px 0 6px rgba(0,255,136,.6);}
+    70%{text-shadow:2px 0 8px rgba(255,153,82,.78), -2px 0 6px rgba(0,255,136,.5);}
+  }
+
+  @keyframes gridPulse{
+    0%{opacity:.15;transform:translate3d(0,0,0);}
+    50%{opacity:.28;transform:translate3d(-12px,8px,0);}
+    100%{opacity:.18;transform:translate3d(0,12px,0);}
   }
 
   /* cursor */
@@ -170,25 +312,84 @@
     color:var(--amber);
     text-shadow:0 0 6px var(--amber);
     opacity:.8;
+    padding:6px 12px;
+    border:1px solid rgba(255,204,102,.25);
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(2px);
   }
   .footer span:last-child{
     color:var(--green);
   }
 
-  @media (max-width:700px){
-    .win{width:calc(100vw - 32px);}
-    .win-body{max-height:45vh;}
+  @media (max-width:900px){
+    .desktop{padding:14px;}
+  }
+
+  @media (max-width:720px){
+    body{overflow-y:auto;}
+    .desktop{
+      height:1480px;
+      min-height:1480px;
+      padding:32px 4vw 140px;
+    }
+    .win{
+      width:auto !important;
+      max-width:88vw;
+      --ty:20px;
+      bottom:auto !important;
+    }
+    #w-main{top:60px;left:50%;--tx:-50%;--z:18;}
+    #w-uptime{top:18px;left:8vw;--z:16;}
+    #w-ghost1{top:148px;left:auto;right:6vw;--z:19;}
+    #w-archive{top:260px;left:10vw;--z:15;}
+    #w-log{top:340px;left:62vw;--tx:-70%;--z:14;}
+    #w-static{top:430px;left:56vw;right:auto;--tx:-62%;--z:13;}
+    #w-info{top:520px;left:8vw;--z:12;}
+    #w-hum{top:610px;left:60vw;--tx:-72%;--z:17;}
+    #w-ghost2{top:720px;left:14vw;--z:11;}
+    #w-shadow{top:830px;left:62vw;right:auto;--tx:-70%;--z:13;}
+    #w-signal{top:930px;left:18vw;--tx:-12%;--z:12;}
+    #w-ghost3{top:1020px;left:10vw;right:auto;--z:20;}
+    #w-tag{top:1150px;left:50%;--tx:-50%;--z:16;}
+    #w-timer{top:1270px;left:50%;--tx:-50%;--z:18;}
+    .win-body{max-height:none;}
+    .footer{position:relative;margin:1520px auto 32px;}
+  }
+
+  @media (max-width:520px){
+    .desktop{height:1640px;min-height:1640px;}
+    #w-ghost1{right:4vw;}
+    #w-log{left:52vw;}
+    #w-static{left:48vw;}
+    #w-hum{left:50vw;}
+    #w-shadow{left:52vw;}
+    #w-tag{max-width:84vw;}
+    #w-timer{top:1330px;}
+    .footer{margin:1680px auto 40px;}
+  }
+
+  @media (max-width:420px){
+    .desktop{height:1820px;min-height:1820px;}
+    #w-log{left:46vw;}
+    #w-static{left:44vw;}
+    #w-hum{left:46vw;}
+    #w-shadow{left:48vw;}
+    #w-tag{left:48%;}
+    #w-timer{left:48%;top:1380px;}
+    .footer{margin:1860px auto 44px;}
   }
 </style>
 </head>
 <body>
 
 <div class="overlay-glow"></div>
+<div class="overlay-orb"></div>
 <div class="overlay-scan"></div>
+<div class="overlay-noise"></div>
 
 <div class="desktop">
   <!-- main system window -->
-  <div id="w-main" class="win win-green" style="top:60px;left:50%;transform:translateX(-50%) scale(.96) translateY(10px);">
+  <div id="w-main" class="win win-green" style="top:60px;left:50%;--z:14;--tilt:-0.2deg;">
     <div class="win-header">
       <div class="win-title">
         <span>terminal://diplomacy.os</span>
@@ -201,10 +402,10 @@
   </div>
 
   <!-- system log window -->
-  <div id="w-log" class="win win-green" style="bottom:70px;left:24px;width:320px;">
+  <div id="w-log" class="win win-green" style="bottom:70px;left:24px;width:320px;--z:6;--tilt:-0.5deg;">
     <div class="win-header">
       <div class="win-title">
-        <span>syslog.txt</span>
+        <span>syslog://trace</span>
       </div>
       <div class="dots">
         <span class="dot"></span><span class="dot"></span>
@@ -213,15 +414,16 @@
     <div class="win-body">
 log: INIT_BUILD_2025
 log: region=UAE
-log: delegates_online = 100%
+log: signal_strength = rising
 
-> echo "seek diplomacy"
-> awaiting_next_build...
+> cat memo.silence
+> "seek diplomacy"
+> awaiting_next_wave...
     </div>
   </div>
 
   <!-- system info window -->
-  <div id="w-info" class="win win-green" style="top:52%;left:50px;width:320px;">
+  <div id="w-info" class="win win-green" style="top:52%;left:50px;width:320px;--z:4;--tilt:0.4deg;">
     <div class="win-header">
       <div class="win-title">
         <span>about://version</span>
@@ -233,17 +435,36 @@ log: delegates_online = 100%
     <div class="win-body">
 version: 2025.10-preview
 state: online
-status: stable
+status: steady
 
 release_notes:
- - visual layer: updating
- - committees: compiling
- - details: withheld
+ - visual_layer: repainting
+ - briefings: defragmenting
+ - disclosure: withheld
+    </div>
+  </div>
+
+  <!-- archive window -->
+  <div id="w-archive" class="win win-green" style="top:188px;left:32px;width:280px;--z:7;--tilt:-0.8deg;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>archive://backlog</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+queue_depth: 04
+memo_01: legacy skin cached
+memo_02: handshake recorded
+memo_03: quiet channel open
+memo_04: observers acknowledged
     </div>
   </div>
 
   <!-- small uptime widget -->
-  <div id="w-uptime" class="win win-green" style="top:18px;left:18px;width:210px;">
+  <div id="w-uptime" class="win win-green" style="top:18px;left:18px;width:210px;--z:9;--tilt:0.6deg;">
     <div class="win-header">
       <div class="win-title">
         <span>uptime</span>
@@ -253,15 +474,16 @@ release_notes:
       </div>
     </div>
     <div class="win-body">
-uptime: 0000:00:00
+uptime: 0003:14:08
 watch: 2025 //
-mode: standby
+mode: attentive
+trace: heartbeat audible
     </div>
   </div>
 
-  <!-- corruption windows (blue) -->
+  <!-- takeover windows (orange) -->
 
-  <div id="w-ghost1" class="win win-blue" style="top:30px;right:32px;width:340px;">
+  <div id="w-ghost1" class="win win-orange" style="top:30px;right:32px;width:340px;--z:13;--tilt:0.5deg;">
     <div class="win-header">
       <div class="win-title">
         <span>mirror://overlay</span>
@@ -276,14 +498,14 @@ replaying_memory...
 
 are you still there?
 are you still there?
-are you still there?
+are you still listening?
 
-nothing is broken.
-it is only being rearranged.
+no alarms raised.
+the pattern simply realigns.
     </div>
   </div>
 
-  <div id="w-ghost2" class="win win-blue" style="top:52%;left:12%;width:300px;">
+  <div id="w-ghost2" class="win win-orange" style="top:52%;left:12%;width:300px;--z:8;--tilt:-0.3deg;">
     <div class="win-header">
       <div class="win-title">
         <span>process://silent_takeover</span>
@@ -297,13 +519,13 @@ injecting_new_build...
 noise_level: low
 notifications: suppressed
 
-line_01: keep scrolling
-line_02: pretend nothing changed
-line_03: notice that it did
+line_01: keep the cursor steady
+line_02: nothing is overwritten
+line_03: everything is rewritten
     </div>
   </div>
 
-  <div id="w-ghost3" class="win win-blue" style="bottom:70px;right:30px;width:360px;">
+  <div id="w-ghost3" class="win win-orange" style="bottom:70px;right:30px;width:360px;--z:15;--tilt:-0.2deg;">
     <div class="win-header">
       <div class="win-title">
         <span>are_you_still_there.exe</span>
@@ -316,8 +538,8 @@ line_03: notice that it did
     </div>
   </div>
 
-  <!-- subtle blue static window -->
-  <div id="w-static" class="win win-blue" style="top:34%;right:55%;width:220px;">
+  <!-- subtle orange static window -->
+  <div id="w-static" class="win win-orange" style="top:34%;right:55%;width:220px;--z:9;--tilt:0.9deg;">
     <div class="win-header">
       <div class="win-title">
         <span>static://feed</span>
@@ -335,7 +557,7 @@ line_03: notice that it did
   </div>
 
   <!-- label-ish window, almost like a name tag but still vague -->
-  <div id="w-tag" class="win win-blue" style="top:18%;left:55%;width:260px;">
+  <div id="w-tag" class="win win-orange" style="top:18%;left:55%;width:260px;--z:12;--tilt:-0.4deg;">
     <div class="win-header">
       <div class="win-title">
         <span>session://diplomacy</span>
@@ -352,12 +574,74 @@ mode: preview
 full_interface:
    not yet deployed.
    not yet announced.
-   not yet forgotten.
+   not yet sleeping.
+    </div>
+  </div>
+
+  <div id="w-hum" class="win win-orange" style="top:10%;left:68%;width:240px;--z:11;--tilt:0.7deg;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>hum://carrier</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+signal: velvet amplitude
+layering: in progress
+ghost_packets: authenticated
+
+notice:
+  drift with the glow.
+  archive every whisper.
+  let the update settle.
+    </div>
+  </div>
+
+  <div id="w-shadow" class="win win-orange" style="top:58%;right:18%;width:260px;--z:10;--tilt:-0.6deg;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>shadow://echo</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body flicker">
+feed: 001100
+whisper: "preview holds"
+status: serene takeover
+
+if you feel static,
+stay connected.
+silence carries instructions.
+    </div>
+  </div>
+
+  <div id="w-signal" class="win win-orange" style="top:66%;left:36%;width:280px;--z:9;--tilt:0.35deg;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>signal://convergence</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+sync_status: nearly aligned
+heartbeat: low and steady
+overlay_phase: 03 -> 04
+
+log:
+- crossfade commencing
+- silence remains intentional
+- observers: remain unseen
     </div>
   </div>
 
   <!-- tiny hint of "coming soon" but not explicitly -->
-  <div id="w-timer" class="win win-blue" style="bottom:72px;left:50%;transform:translateX(-50%);width:240px;">
+  <div id="w-timer" class="win win-orange" style="bottom:72px;left:50%;width:240px;--z:16;--tilt:0.25deg;">
     <div class="win-header">
       <div class="win-title">
         <span>countdown://hidden</span>
@@ -370,7 +654,7 @@ full_interface:
 next_update: [REDACTED]
 eta: close enough.
 
-stay logged in.
+remain logged in.
     </div>
   </div>
 </div>
@@ -388,20 +672,21 @@ stay logged in.
     "checking delegates_online [██████████] 100%",
     "",
     "status: legacy_interface detected.",
-    "status: appearance != current_version.",
+    "status: overlay handshake accepted.",
     "",
     "starting quiet_recompile.sh",
     "   > base_colour: neon_green",
-    "   > overlay_colour: neon_blue",
+    "   > overlay_colour: neon_orange",
     "   > notification_sounds: muted",
     "",
-    "note: no action required.",
-    "note: the system will update itself.",
+    "memo: sustain equilibrium.",
+    "memo: standby for resonance.",
     "",
     "echo \"are you still there?\"",
-    "echo \"are you still watching?\"",
+    "echo \"are you still awake?\"",
     "",
-    "log: interface preview online."
+    "log: preview layer aligned.",
+    "log: further detail pending."
   ];
 
   const mainBody = document.getElementById("mainBody");
@@ -422,15 +707,22 @@ stay logged in.
     }
   }
 
-  // repeated "are you still there" in bottom-right blue window
+  // repeated "are you still there" in bottom-right orange window
   const repeatBody = document.getElementById("repeatBody");
-  const repeatLine = "are you still there?";
+  const repeatLines = [
+    "are you still there?",
+    "are you still there?",
+    "hold the line.",
+    "the quiet will explain itself."
+  ];
   let repeatCount = 0;
   function addRepeatLine(){
-    if(repeatCount < 28){
-      repeatBody.textContent += repeatLine + "\n";
+    if(repeatCount < 32){
+      const line = repeatLines[repeatCount % repeatLines.length];
+      repeatBody.textContent += line + "\n";
       repeatCount++;
-      setTimeout(addRepeatLine, 120);
+      const delay = line === "are you still there?" ? 130 : 260;
+      setTimeout(addRepeatLine, delay);
     }
   }
 
@@ -444,22 +736,55 @@ stay logged in.
     }, delay);
   }
 
+  const glitchTargets = [
+    "w-ghost1",
+    "w-ghost2",
+    "w-ghost3",
+    "w-shadow",
+    "w-static",
+    "w-hum",
+    "w-tag",
+    "w-signal"
+  ];
+
+  function triggerGlitch(){
+    const id = glitchTargets[Math.floor(Math.random()*glitchTargets.length)];
+    const panel = document.getElementById(id);
+    if(!panel || !panel.classList.contains("show")){
+      scheduleGlitch();
+      return;
+    }
+    panel.classList.add("glitch");
+    setTimeout(()=>panel.classList.remove("glitch"), 900);
+    scheduleGlitch();
+  }
+
+  function scheduleGlitch(){
+    const delay = 3600 + Math.random()*3200;
+    setTimeout(triggerGlitch, delay);
+  }
+
   window.addEventListener("load", ()=>{
     // green system first
     showWin("w-main", 200);
     setTimeout(typeMain, 600);
     showWin("w-log", 900);
     showWin("w-info", 1200);
+    showWin("w-archive", 1350);
     showWin("w-uptime", 1500);
 
-    // then the blue layer quietly appears, more and more
+    // then the orange layer quietly appears, more and more
     showWin("w-ghost1", 2600);
     showWin("w-static", 2900);
     showWin("w-ghost2", 3400);
+    showWin("w-hum", 3600);
     showWin("w-ghost3", 3900);
     showWin("w-tag", 4300);
-    showWin("w-timer", 4700);
+    showWin("w-shadow", 4500);
+    showWin("w-signal", 4700);
+    showWin("w-timer", 5100);
     setTimeout(addRepeatLine, 4500);
+    setTimeout(scheduleGlitch, 5600);
   });
 </script>
 </body>
