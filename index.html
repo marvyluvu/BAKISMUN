@@ -12,7 +12,7 @@
   :root{
     --bg:#000000;
     --green:#00ff88;
-    --blue:#4fd0ff;
+    --orange:#ff8a3c;
     --amber:#ffcc66;
   }
 
@@ -46,7 +46,7 @@
     position:fixed; inset:-40px;
     background:
       radial-gradient(circle at 20% 0%, rgba(0,255,136,.07), transparent 55%),
-      radial-gradient(circle at 80% 100%, rgba(79,208,255,.12), transparent 55%);
+      radial-gradient(circle at 80% 100%, rgba(255,138,60,.14), transparent 55%);
     pointer-events:none;
   }
 
@@ -223,8 +223,8 @@
     animation:bluePulse 10s ease-in-out infinite;
   }
 
-  .win-blue .win-header{
-    border-bottom-color:rgba(79,208,255,.5);
+  .win-orange .win-header{
+    border-bottom-color:rgba(255,138,60,.5);
   }
 
   /* subtle flicker */
@@ -386,7 +386,7 @@ trace: heartbeat audible
     </div>
   </div>
 
-  <!-- corruption windows (blue) -->
+  <!-- takeover windows (orange) -->
 
   <div id="w-ghost1" class="win win-blue" style="top:30px;right:32px;width:340px;--z:13;--tilt:0.5deg;">
     <div class="win-header">
@@ -539,7 +539,7 @@ remain logged in.
     "",
     "starting quiet_recompile.sh",
     "   > base_colour: neon_green",
-    "   > overlay_colour: neon_blue",
+    "   > overlay_colour: neon_orange",
     "   > notification_sounds: muted",
     "",
     "memo: sustain equilibrium.",
@@ -570,7 +570,7 @@ remain logged in.
     }
   }
 
-  // repeated "are you still there" in bottom-right blue window
+  // repeated "are you still there" in bottom-right orange window
   const repeatBody = document.getElementById("repeatBody");
   const repeatLines = [
     "are you still there?",
@@ -636,7 +636,7 @@ remain logged in.
     showWin("w-archive", 1350);
     showWin("w-uptime", 1500);
 
-    // then the blue layer quietly appears, more and more
+    // then the orange layer quietly appears, more and more
     showWin("w-ghost1", 2600);
     showWin("w-static", 2900);
     showWin("w-ghost2", 3400);
