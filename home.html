@@ -1,9 +1,14 @@
+Got you. Here’s the cleaned-up teaser page: no wallpaper image, no BAKISMUN, and the only location mention is just “UAE”. It keeps the cryptic terminal / “are you still there?” vibe.
+
+You can drop this in as your `index.html`:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>BAKISMUN 2025 — Diplomacy OS</title>
+<title>BOOT://DIPLOMACY.OS</title>
 
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
@@ -11,671 +16,250 @@
 <style>
   :root{
     --green:#00ff88;
-    --bg:black;
+    --bg:#000000;
     --amber:#ffcc66;
     --red:#ff6666;
   }
+
   html,body{height:100%}
+
   body{
     margin:0;
     font-family:"VT323", monospace;
-    background: url('wallpaper.png') center/cover fixed var(--bg);
+    background:radial-gradient(circle at top, #050d08 0, #000 55%);
     color:var(--green);
+    display:flex;
+    align-items:center;
+    justify-content:center;
     overflow:hidden;
-  }
-
-  /* THEME VARIANTS */
-  .window.amber{ border-color:var(--amber); box-shadow:0 0 16px var(--amber); }
-  .title-bar.amber{ background:#332600; color:var(--amber); text-shadow:0 0 6px var(--amber); }
-  .window.amber .tb-btn{ border-color:var(--amber); color:var(--amber); }
-  .window.amber .tb-btn:hover{ background:var(--amber); color:black; }
-
-  /* maximize mode */
-  .window.max{
-    left:10px !important; top:60px !important;
-    width:calc(100vw - 20px) !important;
-    height:calc(100vh - 120px) !important; /* leaves room for taskbar/ticker */
   }
 
   /* CRT overlays */
   .overlay-scan{
     position:fixed; inset:0; pointer-events:none;
-    background: repeating-linear-gradient(to bottom,
-      rgba(0,255,136,.07) 0px,
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(0,255,136,.08) 0px,
       rgba(0,255,136,.03) 2px,
-      transparent 3px);
+      transparent 3px
+    );
     mix-blend-mode:screen;
+    opacity:.8;
   }
-  .overlay-grid{
-    position:fixed; inset:0; pointer-events:none;
-    background-image:
-      linear-gradient(rgba(0,255,136,.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,255,136,.08) 1px, transparent 1px);
-    background-size:40px 40px, 40px 40px;
-    opacity:.14;
-  }
-
-  /* Desktop grid */
-  .desktop{
-    position:absolute; inset:0 0 36px 0;
-    padding:18px;
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    grid-auto-rows: 110px;
-    gap:16px; align-content:start;
+  .overlay-glow{
+    position:fixed; inset:-40px;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(0,255,136,.08), transparent 55%),
+      radial-gradient(circle at 80% 100%, rgba(0,255,136,.08), transparent 55%);
+    pointer-events:none;
   }
 
-  /* Icons */
-  .icon{
-    user-select:none;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:6px; cursor:pointer; text-align:center;
-    color:var(--green); text-shadow:0 0 8px var(--green);
-    border:1px solid transparent; transition:.15s;
-    background:rgba(0,0,0,.25); border-radius:8px;
-  }
-  .icon:hover{ box-shadow:0 0 14px var(--green); border-color:var(--green) }
-  .icon svg{ width:42px; height:42px; filter: drop-shadow(0 0 6px var(--green)); }
-
-  /* Announcement ticker */
-  .ticker{
-    position:absolute; left:18px; right:18px; bottom:48px;
-    padding:6px 10px; background:rgba(0,0,0,.55);
-    border:1px solid var(--green); box-shadow:0 0 10px var(--green);
-    white-space:nowrap; overflow:hidden;
-  }
-  .ticker span{ display:inline-block; padding-left:100%; animation:marq 26s linear infinite; }
-  @keyframes marq{ from{transform:translateX(0)} to{transform:translateX(-100%)} }
-
-  /* Windows */
-  .window{
-    position:absolute; top:120px; left:120px; width:360px; max-width:92vw;
-    background:black; border:2px solid var(--green); display:none; flex-direction:column;
-    box-shadow:0 0 16px var(--green);
-  }
-  .title-bar{
-    background:#003322; color:var(--green);
-    padding:6px 8px; display:flex; justify-content:space-between; align-items:center;
-    cursor:move; font-size:18px; text-shadow:0 0 6px var(--green);
-  }
-  .btns{display:flex; gap:6px}
-  .tb-btn{
-    width:22px; height:22px; border:1px solid var(--green); background:black; color:var(--green);
-    font-weight:bold; cursor:pointer;
-  }
-  .tb-btn:hover{ background:var(--green); color:black }
-  .win-content{
-    padding:12px; font-size:16px; line-height:1.35; text-shadow:0 0 6px var(--green);
-    overflow-y:auto; max-height:70vh;
+  /* Terminal shell */
+  .shell{
+    position:relative;
+    width:min(800px, 92vw);
+    max-height:80vh;
+    background:rgba(0,0,0,.88);
+    border:2px solid var(--green);
+    box-shadow:0 0 24px rgba(0,255,136,.75);
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
   }
 
-  /* Secretariat cards */
-  .cards{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:14px; }
-  .card{ background:rgba(0,0,0,.35); border:1px solid var(--green); box-shadow:0 0 10px var(--green); padding:10px; text-align:center; }
-  .avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:2px solid var(--green); box-shadow:0 0 10px var(--green); margin-bottom:10px; background:#001b12; }
-  .name{ font-size:20px; } .role{ opacity:.9 }
-
-  /* Difficulty badges + sections */
-  .badge{ display:inline-block; padding:2px 8px; margin-bottom:6px; border:1px solid; border-radius:999px; font-size:14px; }
-  .level-beginner .badge{ color:var(--green); border-color:var(--green); box-shadow:0 0 10px var(--green) }
-  .level-intermediate .badge{ color:var(--amber); border-color:var(--amber); box-shadow:0 0 10px var(--amber) }
-  .level-advanced .badge{ color:var(--red); border-color:var(--red); box-shadow:0 0 10px var(--red) }
-
-  .level-beginner{ border-left:3px solid var(--green); padding-left:10px; margin-bottom:14px }
-  .level-intermediate{ border-left:3px solid var(--amber); padding-left:10px; margin-bottom:14px }
-  .level-advanced{ border-left:3px solid var(--red); padding-left:10px; margin-bottom:14px }
-
-  .topics{ margin:6px 0 12px 0 } .topics li{ margin:2px 0 }
-
-  /* Taskbar */
-  .taskbar{
-    position:fixed; left:0; right:0; bottom:0; height:36px;
-    background:black; border-top:2px solid var(--green); display:flex; align-items:center;
-    gap:10px; padding:0 8px; color:var(--green); text-shadow:0 0 8px var(--green);
+  .shell-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:18px;
+    padding:4px 6px 8px;
+    border-bottom:1px solid rgba(0,255,136,.4);
+    text-shadow:0 0 8px var(--green);
   }
-  .start{ background:black; border:2px solid var(--green); padding:3px 12px; cursor:pointer; font-weight:bold; }
-  .start:hover{ background:var(--green); color:black }
-  .clock{ margin-left:auto }
 
-  /* Start menu */
-  .menu{
-    position:fixed; left:8px; bottom:40px; width:240px; background:black; border:2px solid var(--green);
-    display:none; box-shadow:0 0 16px var(--green);
+  .shell-title span:nth-child(1){ color:var(--amber); }
+  .shell-title span:nth-child(2){ color:var(--green); }
+
+  .leds{
+    display:flex;
+    gap:6px;
   }
-  .menu a{ display:block; padding:8px 10px; color:var(--green); text-decoration:none; border-bottom:1px solid rgba(0,255,136,.3); }
-  .menu a:hover{ background:var(--green); color:black }
-
-  /* Form container */
-  .form-wrap{height:100%; background:black;}
-  .form-wrap iframe{width:100%; height:100%; border:0}
-
-  /* Toast notification (bottom so it doesn’t block icons) */
-  .toast{
-    position:fixed; right:16px; bottom:60px;
-    max-width:360px; background:black; border:2px solid var(--green); padding:10px 12px;
-    box-shadow:0 0 16px var(--green); z-index:9999; display:flex; gap:10px; align-items:flex-start;
+  .led{
+    width:9px; height:9px; border-radius:50%;
+    border:1px solid rgba(0,255,136,.6);
+    box-shadow:0 0 8px rgba(0,255,136,.7);
+    opacity:.6;
   }
-  .toast svg{ width:22px; height:22px; flex:0 0 auto; filter: drop-shadow(0 0 6px var(--green)); }
-  .toast .tcontent{ font-size:16px; line-height:1.25 }
-  .toast .close{ margin-left:auto; background:black; color:var(--green); border:1px solid var(--green); cursor:pointer; }
-  .toast .close:hover{ background:var(--green); color:black }
-  .toast .pill{ display:inline-block; border:1px solid var(--green); padding:2px 8px; margin-top:6px }
+  .led.red{border-color:var(--red); box-shadow:0 0 8px var(--red);}
+  .led.amber{border-color:var(--amber); box-shadow:0 0 8px var(--amber);}
 
-  /* Mobile tweaks */
-  @media (max-width:768px){
-    .desktop{ grid-template-columns: repeat(4, 1fr); grid-auto-rows: 100px; gap:12px }
-    .window{ left:10px !important; top:60px !important; width:calc(100vw - 20px) !important; }
-    .toast{ left:16px; right:16px }
-    .cards{ grid-template-columns: 1fr 1fr; }
+  .led.red.blink{animation:blinkRed 1.2s infinite;}
+  .led.amber.blink{animation:blinkAmber 1.8s infinite;}
+  .led.green.blink{animation:blinkGreen 1.5s infinite;}
+
+  @keyframes blinkRed{0%,60%{opacity:.15}61%,100%{opacity:1}}
+  @keyframes blinkAmber{0%,70%{opacity:.15}71%,100%{opacity:1}}
+  @keyframes blinkGreen{0%,75%{opacity:.15}76%,100%{opacity:1}}
+
+  .shell-body{
+    flex:1;
+    overflow-y:hidden;
+    padding:10px 4px 4px;
+  }
+
+  #terminalText{
+    white-space:pre-wrap;
+    font-size:18px;
+    line-height:1.25;
+    text-shadow:0 0 8px var(--green);
+  }
+
+  .cursor{
+    display:inline-block;
+    width:10px;
+    background:var(--green);
+    margin-left:2px;
+    animation:blink 0.9s steps(1) infinite;
+  }
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+  /* subtle random glitch lines */
+  .scanline{
+    position:absolute;
+    left:0; right:0;
+    height:1px;
+    background:rgba(0,255,136,.45);
+    opacity:0;
+    pointer-events:none;
+    animation:scanline 3s infinite;
+  }
+  @keyframes scanline{
+    0%{top:-10%;}
+    10%{opacity:.4;}
+    50%{top:110%;}
+    100%{opacity:0;}
+  }
+
+  /* footer hint */
+  .footer{
+    font-size:14px;
+    opacity:.8;
+    margin-top:4px;
+    color:var(--amber);
+    display:flex;
+    justify-content:space-between;
+  }
+  .footer span:last-child{color:var(--green);}
+
+  @media (max-width:600px){
+    #terminalText{font-size:15px;}
+    .shell-header{font-size:16px;}
   }
 </style>
 </head>
 <body>
 
-<div class="overlay-grid"></div>
+<div class="overlay-glow"></div>
 <div class="overlay-scan"></div>
-<!-- Desktop icons -->
-<div class="desktop">
-  <!-- Conference Info -->
-  <div class="icon" onclick="openWindow('confinfo')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <circle cx="12" cy="12" r="10"/><path d="M12 8v8M12 6h.01"/>
-    </svg>
-    Conference Info
-  </div>
 
-  <!-- Secretariat -->
-  <div class="icon" onclick="openWindow('secretariat')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
-      <path d="M16 4v6H8V4"/>
-      <rect x="8" y="14" width="8" height="6"/>
-    </svg>
-    Secretariat
-  </div>
-
-  <!-- Committees -->
-  <div class="icon" onclick="openWindow('committees')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <path d="M8 6h10a2 2 0 0 1 2 2v8H9a3 3 0 0 1-3-3V6z"/>
-      <path d="M8 6a2 2 0 1 0-4 0v7a3 3 0 0 0 3 3"/>
-      <path d="M16 13H9m7-3H9"/>
-    </svg>
-    Committees
-  </div>
-
-  <!-- Applications -->
-  <div class="icon" onclick="openWindow('applications')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <path d="M9 2h6l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h3z"/>
-      <path d="M14 2v6h6"/>
-      <path d="M8 13h8M8 17h8M8 9h4"/>
-    </svg>
-    Apply
-  </div>
-
-  <!-- Background Guides (Amber) -->
-  <div class="icon" onclick="openWindow('bg-guides')" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
-      <rect x="3" y="4" width="18" height="16" rx="2"/>
-      <path d="M7 8h10M7 12h10M7 16h6"/>
-    </svg>
-    Background Guides
-  </div>
-
-  <!-- Delegate Handbook (Amber) -->
-  <div class="icon" onclick="openWindow('handbook')" style="color:var(--amber);text-shadow:0 0 8px var(--amber)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-      <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/>
-    </svg>
-    Handbook
-  </div>
-
-  <!-- Contact -->
-  <div class="icon" onclick="openWindow('contact')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2">
-      <path d="M12 19V8"/>
-      <circle cx="12" cy="5" r="2"/>
-      <path d="M5 8a7 7 0 0 1 14 0M3 10a9 9 0 0 1 18 0M1 12a11 11 0 0 1 22 0"/>
-    </svg>
-    Contact
-  </div>
-</div>
-
-<!-- Ticker -->
-<div class="ticker">
-  <span id="tickerText">
-    “Seek Diplomacy, Find Peace.” • “Let us never negotiate out of fear. But let us never fear to negotiate.” •
-    “Peace is not the absence of conflict, but the ability to resolve it.” • “In diplomacy, words are bridges.” •
-    In-school payment: Mon–Thu 7:15 AM–4:00 PM • AED 130 • At BAKIS campus.
-  </span>
-</div>
-
-<!-- WINDOWS -->
-
-<!-- Conference Info -->
-<div id="confinfo" class="window" style="top:90px;left:820px;width:520px">
-  <div class="title-bar">
-    Conference Info
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('confinfo')">–</button>
-      <button class="tb-btn" onclick="closeWindow('confinfo')">X</button>
+<div class="shell">
+  <div class="shell-header">
+    <div class="shell-title">
+      <span>DIPLOMACY.OS</span><span>// UAE</span>
+    </div>
+    <div class="leds">
+      <div class="led red blink"></div>
+      <div class="led amber blink"></div>
+      <div class="led green blink"></div>
     </div>
   </div>
-  <div class="win-content">
-    <h3>Conference Details</h3>
-    <p><b>Dates:</b> October 10, 11, and 12, 2025</p>
-    <p><b>Venue:</b> Beaconhouse Al Khaleej International School (BAKIS), Al Azra, Sharjah, UAE</p>
-    <p><b>Fees:</b> Late — AED 130 (🗓️ Aug 15 – Sep 15)</p>
-    <hr>
-    <h3>Difficulty Guide</h3>
-    <p>Beginner: 0–3 MUNs • Intermediate: 4–7 MUNs • Advanced: 8+ MUNs</p>
-  </div>
-</div>
 
-<!-- Secretariat -->
-<div id="secretariat" class="window" style="top:110px;left:80px;width:640px">
-  <div class="title-bar">
-    Secretariat
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('secretariat')">–</button>
-      <button class="tb-btn" onclick="closeWindow('secretariat')">X</button>
-    </div>
+  <div class="shell-body">
+    <div id="terminalText"></div>
+    <div class="scanline"></div>
   </div>
-  <div class="win-content">
-    <div class="cards">
-      <div class="card">
-        <img class="avatar" src="zeyad.jpeg" alt="Zeyad Hany — Secretary-General" onerror="this.style.opacity=.25">
-        <div class="name">Zeyad Hany</div>
-        <div class="role">Secretary-General</div>
-      </div>
-      <div class="card">
-        <img class="avatar" src="nour.jpeg" alt="Nour Ashraf — Deputy Secretary-General" onerror="this.style.opacity=.25">
-        <div class="name">Nour Ashraf</div>
-        <div class="role">Deputy Secretary-General</div>
-      </div>
-      <div class="card">
-        <img class="avatar" src="joudy.jpeg" alt="Joudy Ramy — Deputy Secretary-General" onerror="this.style.opacity=.25">
-        <div class="name">Joudy Ramy</div>
-        <div class="role">Deputy Secretary-General</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Committees -->
-<div id="committees" class="window" style="top:160px;left:180px;width:820px">
-  <div class="title-bar">
-    Committees & Agendas
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('committees')">–</button>
-      <button class="tb-btn" onclick="closeWindow('committees')">X</button>
-    </div>
+  <div class="footer">
+    <span>BUILD_2025.10</span>
+    <span>signal: coming soon_</span>
   </div>
-  <div class="win-content">
-    <section class="level-beginner">
-      <span class="badge">Beginner</span>
-      <h3>WHO — World Health Organization</h3>
-      <ul class="topics">
-        <li>Integrating Artificial Intelligence in Global Healthcare: Opportunities and Ethical Challenges</li>
-        <li>Guaranteeing Impartial Access to Life-Saving Medications Through Diplomatic Arrangements</li>
-      </ul>
-      <h3>UNICEF — United Nations International Children's Emergency Fund</h3>
-      <ul class="topics">
-        <li>Cooperative Procedures for Protecting Children from Abuse in the Digital Age</li>
-        <li>Diplomatic Actions to Secure Children’s Rights in Regions of Armed Conflict</li>
-      </ul>
-    </section>
-
-    <section class="level-intermediate">
-      <span class="badge">Intermediate</span>
-      <h3>UNHRC — United Nations Human Rights Council</h3>
-      <ul class="topics">
-        <li>The Human Rights Implications of Artificial Intelligence in Law Enforcement</li>
-        <li>Political Measures to Protect Ethnic and Religious Minorities in Conflict Zones</li>
-      </ul>
-      <h3>UNODC — United Nations Office on Drugs and Crime</h3>
-      <ul class="topics">
-        <li>Tackling Corruption in Public Institutions and Government Agencies</li>
-        <li>Preventing the Use of Children in Drug Production and Trafficking</li>
-      </ul>
-      <h3>UNOOSA — United Nations Office for Outer Space Affairs</h3>
-      <ul class="topics">
-        <li>Addressing the Militarization of Outer Space and Strengthening Diplomatic Measures for Peaceful Use</li>
-        <li>Modifying Extraterrestrial Environments for Human Survival & Resilience Against Global Threats</li>
-      </ul>
-    </section>
-
-    <section class="level-advanced">
-      <span class="badge">Advanced</span>
-      <h3>GA1 (DISEC) — Disarmament and International Security Committee</h3>
-      <ul class="topics">
-        <li>Global Regulation of AI-Powered Weapons: Preventing an International Arms Race</li>
-        <li>Fostering Diplomatic Solutions to Regional Arms Races and Military Alliances</li>
-      </ul>
-      <h3>FIFA — Fédération Internationale de Football Association</h3>
-      <ul class="topics">
-        <li>Regulating Human Rights in Hosting International Football Tournaments</li>
-        <li>Regulating Player Transfers & Protecting Youth Athletes from Exploitation</li>
-      </ul>
-      <h3>HCC — Historical Crisis Committee</h3>
-      <ul class="topics">
-        <li>The Rwandan Genocide (1994): Rapid International Response and Prevention Strategies</li>
-        <li>Alternate History: The Impact of Artificial Intelligence on Cold War Strategy</li>
-      </ul>
-    </section>
-  </div>
-</div>
-
-<!-- Applications -->
-<div id="applications" class="window" style="top:210px;left:70px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar">
-    Applications
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('applications')">–</button>
-      <button class="tb-btn" onclick="closeWindow('applications')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
-    <div class="form-wrap">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeZ1MpdVuYKYCN_c0ca3INQ3gfBtR53WFlSDqyjbojAMadMDw/viewform?embedded=true">Loading…</iframe>
-    </div>
-  </div>
-</div>
-
-<!-- Delegate Handbook (AMBER) -->
-<div id="handbook" class="window amber" style="top:140px;left:220px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">
-    Delegate Handbook
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('handbook')">⬜</button>
-      <button class="tb-btn" onclick="minimize('handbook')">–</button>
-      <button class="tb-btn" onclick="closeWindow('handbook')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%;display:flex;flex-direction:column;">
-    <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%; overflow: hidden; border-radius: 8px;">
-      <iframe loading="lazy"
-        style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none;"
-        src="https://www.canva.com/design/DAGy8gZiO0Y/sS9D2er_FwRRpeRoflgs6w/view?embed"
-        allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
-    </div>
-    <p style="margin:8px 10px 0;font-size:14px;">
-      <a href="https://www.canva.com/design/DAGy8gZiO0Y/sS9D2er_FwRRpeRoflgs6w/view?utm_content=DAGy8gZiO0Y&utm_campaign=designshare&utm_medium=embeds&utm_source=link"
-         target="_blank" rel="noopener" style="color:var(--amber)">
-         Open BAKISMUN Delegate Handbook in Canva
-      </a> by ozoo hany
-    </p>
-  </div>
-</div>
-
-<!-- Background Guides main menu -->
-<div id="bg-guides" class="window amber" style="top:120px;left:120px;width:640px;height:400px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">
-    Background Guides
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('bg-guides')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-guides')">X</button>
-    </div>
-  </div>
-  <div class="win-content">
-    <p>Select a committee to view its Background Guide:</p>
-    <ul>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-who')">WHO</a></li>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unicef')">UNICEF</a></li>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unhrc')">UNHRC</a></li>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unodc')">UNODC</a></li>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-unoosa')">UNOOSA</a></li>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-fifa')">FIFA</a></li>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-hcc')">HCC</a></li>
-      <li><a href="#" style="color:var(--amber)" onclick="openWindow('bg-disec')">GA1 (DISEC)</a></li>
-    </ul>
-  </div>
-</div>
-
-<!-- WHO -->
-<div id="bg-who" class="window amber" style="top:160px;left:180px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">WHO — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-who')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-who')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-who')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAGyrrO852g/snABSmQHVtxxjzPcnYfAHQ/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- UNICEF -->
-<div id="bg-unicef" class="window amber" style="top:160px;left:200px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">UNICEF — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-unicef')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-unicef')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-unicef')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAGygANb1ew/F2REP5RL8qMPBd9SGqiTaQ/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- UNHRC -->
-<div id="bg-unhrc" class="window amber" style="top:160px;left:220px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">UNHRC — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-unhrc')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-unhrc')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-unhrc')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAGyqc5Tw-o/T2z0flVD0vyKh7Q_B9DbkQ/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- UNODC -->
-<div id="bg-unodc" class="window amber" style="top:160px;left:240px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">UNODC — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-unodc')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-unodc')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-unodc')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAGy8ONatq4/Gs9sHQgcZ3sL9coaWjrBHA/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- UNOOSA -->
-<div id="bg-unoosa" class="window amber" style="top:160px;left:260px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">UNOOSA — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-unoosa')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-unoosa')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-unoosa')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAGypAdArmI/9SMT2fTbaEH2_mC37kH26Q/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- FIFA -->
-<div id="bg-fifa" class="window amber" style="top:160px;left:280px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">FIFA — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-fifa')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-fifa')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-fifa')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAGypAblUQA/Tj7LHP6yM03Odytjc_zsYg/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- HCC -->
-<div id="bg-hcc" class="window amber" style="top:160px;left:300px;width:740px;height:600px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">HCC — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-hcc')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-hcc')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-hcc')">X</button>
-    </div>
-  </div>
-  <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAGy8Xm2OIY/iLWUD49-gqHyg6uinexLzA/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- DISEC Coming Soon -->
-<div id="bg-disec" class="window amber" style="top:160px;left:320px;width:740px;height:420px;max-width:95vw;max-height:80vh;">
-  <div class="title-bar amber">GA1 (DISEC) — Background Guide
-    <div class="btns">
-      <button class="tb-btn" onclick="toggleMax('bg-disec')">⬜</button>
-      <button class="tb-btn" onclick="minimize('bg-disec')">–</button>
-      <button class="tb-btn" onclick="closeWindow('bg-disec')">X</button>
-    </div>
-  </div>
- <div class="win-content" style="padding:0;height:100%">
-    <iframe src="https://www.canva.com/design/DAG0AaMnML0/aN_vyklB6O1UeA_L92A4zg/view?embed" style="width:100%;height:100%;border:none;"></iframe>
-  </div>
-</div>
-
-<!-- Contact -->
-<div id="contact" class="window" style="top:80px;left:520px;width:420px">
-  <div class="title-bar">
-    Contact
-    <div class="btns">
-      <button class="tb-btn" onclick="minimize('contact')">–</button>
-      <button class="tb-btn" onclick="closeWindow('contact')">X</button>
-    </div>
-  </div>
-  <div class="win-content">
-    <p><b>Email:</b> <a href="mailto:bakismun@gmail.com" style="color:var(--green)">bakismun@gmail.com</a></p>
-    <p><b>Instagram:</b> <a href="https://instagram.com/bakismun" target="_blank" style="color:var(--green)">@bakismun</a></p>
-  </div>
-</div>
-
-<!-- Taskbar -->
-<div class="taskbar">
-  <button class="start" onclick="toggleMenu()">[ BAKISMUN ]</button>
-  <div class="clock" id="clock"></div>
-</div>
-
-<!-- Start Menu -->
-<div class="menu" id="menu">
-  <a href="#" onclick="openWindow('confinfo');toggleMenu()">Conference Info</a>
-  <a href="#" onclick="openWindow('secretariat');toggleMenu()">Secretariat</a>
-  <a href="#" onclick="openWindow('committees');toggleMenu()">Committees</a>
-  <a href="#" onclick="openWindow('applications');toggleMenu()">Applications</a>
-  <a href="#" onclick="openWindow('bg-guides');toggleMenu()">Background Guides</a>
-  <a href="#" onclick="openWindow('handbook');toggleMenu()">Delegate Handbook</a>
-  <a href="#" onclick="openWindow('contact');toggleMenu()">Contact</a>
 </div>
 
 <script>
-  function openWindow(id){
-    const w = document.getElementById(id);
-    if(!w) return;
-    w.style.display = 'flex';
-    bringToFront(w);
-    centerOnMobile(w);
-    makeDraggable(w);
-  }
-  function closeWindow(id){ const w=document.getElementById(id); if(w) w.style.display='none' }
-  function minimize(id){ closeWindow(id) }
+  const el = document.getElementById("terminalText");
 
-  function toggleMax(id){
-    const w = document.getElementById(id);
-    if(!w) return;
-    w.classList.toggle('max');
-    bringToFront(w);
-  }
+  const lines = [
+    "BOOTING DIPLOMACY_OS_BUILD_2025...",
+    "mount /dev/seek_diplomacy -> /uae",
+    "checking delegates_online [██████████] 100%",
+    "",
+    "warning: legacy_instance \"mun_client\" marked for reconfigure",
+    "creating sandbox: diplomacy_os.preview",
+    "",
+    "run probe_are_you_still_there.exe",
+    ">> are you still there?",
+    ">> are you still there?",
+    ">> are you still there?",
+    "",
+    "trace: unidentified signal detected.",
+    "origin: [REDACTED] :: node_012",
+    "",
+    "opening port 130 // late_access",
+    "handshake_request: SEEK_DIPLOMACY",
+    "handshake_status: pending...",
+    "",
+    "memory://fragments",
+    "   \"gavel hits\"",
+    "   \"paper rustling\"",
+    "   \"overheated committee\"",
+    "   \"you are not just a delegate\"",
+    "",
+    "stderr: timeline mismatch.",
+    "note: what you remember no longer compiles.",
+    "",
+    "compiling new build...",
+    "   > fetching background_guides",
+    "   > rewriting directives",
+    "   > encrypting theme // [CLASSIFIED]",
+    "",
+    "question: if diplomacy is a language,",
+    "          why are you reading this in silence?",
+    "",
+    "are you still there?",
+    "are you still refreshing?",
+    "are you still waiting for the next ping?",
+    "",
+    "incoming packet // 001",
+    "   type: teaser",
+    "   body: access denied.",
+    "",
+    "hint: watch this screen.",
+    "hint: the system will speak when it is ready.",
+    "",
+    "are you still there?",
+    "are you still there?",
+    "are you still there?"
+  ];
 
-  // Dismiss toast
-  function dismissToast(){ const t=document.getElementById('toast'); if(t) t.style.display='none' }
+  const fullText = lines.join("\n");
+  let idx = 0;
 
-  // z-index focus
-  let zTop = 10;
-  function bringToFront(el){ el.style.zIndex = ++zTop }
-
-  // draggable (mouse + touch)
-  function makeDraggable(win){
-    const bar = win.querySelector('.title-bar');
-    if(!bar || bar._dragBound) return;
-    let dx=0, dy=0, dragging=false;
-    const down = (e)=>{
-      dragging=true; bringToFront(win);
-      const rect = win.getBoundingClientRect();
-      dx = (e.touches?e.touches[0].clientX:e.clientX) - rect.left;
-      dy = (e.touches?e.touches[0].clientY:e.clientY) - rect.top;
-      document.addEventListener('mousemove', move);
-      document.addEventListener('mouseup', up);
-      document.addEventListener('touchmove', move, {passive:false});
-      document.addEventListener('touchend', up);
-    };
-    const move = (e)=>{
-      if(!dragging) return;
-      const x = (e.touches?e.touches[0].clientX:e.clientX) - dx;
-      const y = (e.touches?e.touches[0].clientY:e.clientY) - dy;
-      win.style.left = x + 'px';
-      win.style.top  = y + 'px';
-      e.preventDefault?.();
-    };
-    const up = ()=>{
-      dragging=false;
-      document.removeEventListener('mousemove', move);
-      document.removeEventListener('mouseup', up);
-      document.removeEventListener('touchmove', move);
-      document.removeEventListener('touchend', up);
-    };
-    bar.addEventListener('mousedown', down);
-    bar.addEventListener('touchstart', down, {passive:true});
-    bar._dragBound = true;
-  }
-
-  // mobile centering + sizing
-  function centerOnMobile(win){
-    if(window.innerWidth < 768){
-      win.style.left = '10px';
-      win.style.top  = '60px';
-      win.style.width = (window.innerWidth - 20) + 'px';
-      win.style.height = (window.innerHeight - 120) + 'px';
+  function typeNext(){
+    if(idx <= fullText.length){
+      const visible = fullText.slice(0, idx);
+      el.textContent = visible;
+      el.innerHTML = el.textContent + '<span class="cursor"></span>';
+      idx++;
+      const delay = fullText[idx-1] === "\n" ? 80 : 22; // slightly slower on new lines
+      setTimeout(typeNext, delay);
+    } else {
+      el.innerHTML = el.textContent + '<span class="cursor"></span>';
     }
   }
 
-  // Start menu toggle + click-away
-  function toggleMenu(){
-    const m = document.getElementById('menu');
-    m.style.display = (m.style.display==='block') ? 'none' : 'block';
-  }
-  document.addEventListener('click', (e)=>{
-    const m = document.getElementById('menu');
-    if(m.style.display==='block' && !e.target.closest('#menu') && !e.target.closest('.start')){
-      m.style.display='none';
-    }
-  });
-
-  // Clock
-  function tick(){
-    const now = new Date();
-    document.getElementById('clock').textContent =
-      now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-  }
-  setInterval(tick,1000); tick();
-
-  // Ensure ticker long enough
-  (function ensureTicker(){
-    const t = document.getElementById('tickerText');
-    if(t && t.textContent.length < 120){
-      t.textContent = (t.textContent + ' • ' + t.textContent + ' • ' + t.textContent);
-    }
-  })();
+  setTimeout(typeNext, 400);
 </script>
 </body>
 </html>
+```
