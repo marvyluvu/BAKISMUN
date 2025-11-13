@@ -68,7 +68,12 @@
     opacity:0;
     transform:scale(.96) translateY(10px);
     pointer-events:none;
-    transition:opacity .7s ease, transform .7s ease, box-shadow .7s ease, border-color .7s ease, color .7s ease;
+    transition:
+      opacity .7s ease,
+      transform .7s ease,
+      box-shadow .7s ease,
+      border-color .7s ease,
+      color .7s ease;
   }
 
   .win.show{
@@ -120,7 +125,7 @@
     color:var(--green);
   }
 
-  /* blue = silent corruption */
+  /* blue = silent takeover */
   .win-blue{
     border-color:var(--blue);
     box-shadow:0 0 22px rgba(79,208,255,.75);
@@ -211,7 +216,46 @@ log: region=UAE
 log: delegates_online = 100%
 
 > echo "seek diplomacy"
-> waiting_for_reply...
+> awaiting_next_build...
+    </div>
+  </div>
+
+  <!-- system info window -->
+  <div id="w-info" class="win win-green" style="top:52%;left:50px;width:320px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>about://version</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+version: 2025.10-preview
+state: online
+status: stable
+
+release_notes:
+ - visual layer: updating
+ - committees: compiling
+ - details: withheld
+    </div>
+  </div>
+
+  <!-- small uptime widget -->
+  <div id="w-uptime" class="win win-green" style="top:18px;left:18px;width:210px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>uptime</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+uptime: 0000:00:00
+watch: 2025 //
+mode: standby
     </div>
   </div>
 
@@ -235,7 +279,7 @@ are you still there?
 are you still there?
 
 nothing is broken.
-it is only being rewritten.
+it is only being rearranged.
     </div>
   </div>
 
@@ -250,14 +294,12 @@ it is only being rewritten.
     </div>
     <div class="win-body">
 injecting_new_build...
-no alarms.
-no logout.
+noise_level: low
+notifications: suppressed
 
-line_01: diplomacy != debate_only
-line_02: committee != classroom_only
-line_03: delegate != spectator
-
-patch_applied.
+line_01: keep scrolling
+line_02: pretend nothing changed
+line_03: notice that it did
     </div>
   </div>
 
@@ -273,11 +315,69 @@ patch_applied.
     <div class="win-body" id="repeatBody">
     </div>
   </div>
+
+  <!-- subtle blue static window -->
+  <div id="w-static" class="win win-blue" style="top:34%;right:55%;width:220px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>static://feed</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body flicker">
+///
+/// ///
+/// /////
+/// ///
+    </div>
+  </div>
+
+  <!-- label-ish window, almost like a name tag but still vague -->
+  <div id="w-tag" class="win win-blue" style="top:18%;left:55%;width:260px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>session://diplomacy</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+session_id: 2025
+host: uae_node
+mode: preview
+
+full_interface:
+   not yet deployed.
+   not yet announced.
+   not yet forgotten.
+    </div>
+  </div>
+
+  <!-- tiny hint of "coming soon" but not explicitly -->
+  <div id="w-timer" class="win win-blue" style="bottom:72px;left:50%;transform:translateX(-50%);width:240px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>countdown://hidden</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+next_update: [REDACTED]
+eta: close enough.
+
+stay logged in.
+    </div>
+  </div>
 </div>
 
 <div class="footer">
   <span>DIPLOMACY.OS // BUILD_2025.10 // UAE</span>
-  <span>do not close this window.</span>
+  <span>this is only a preview window.</span>
 </div>
 
 <script>
@@ -291,17 +391,17 @@ patch_applied.
     "status: appearance != current_version.",
     "",
     "starting quiet_recompile.sh",
-    "   > rewriting colours: neon_green",
-    "   > preparing overlay: neon_blue",
-    "   > noise_level: low",
+    "   > base_colour: neon_green",
+    "   > overlay_colour: neon_blue",
+    "   > notification_sounds: muted",
     "",
-    "note: this is not an error.",
-    "note: this is a replacement.",
+    "note: no action required.",
+    "note: the system will update itself.",
     "",
-    "question: are you still there?",
-    "question: are you still reading?",
+    "echo \"are you still there?\"",
+    "echo \"are you still watching?\"",
     "",
-    "hint: the first clue is that this is only the shell."
+    "log: interface preview online."
   ];
 
   const mainBody = document.getElementById("mainBody");
@@ -327,7 +427,7 @@ patch_applied.
   const repeatLine = "are you still there?";
   let repeatCount = 0;
   function addRepeatLine(){
-    if(repeatCount < 24){
+    if(repeatCount < 28){
       repeatBody.textContent += repeatLine + "\n";
       repeatCount++;
       setTimeout(addRepeatLine, 120);
@@ -349,11 +449,16 @@ patch_applied.
     showWin("w-main", 200);
     setTimeout(typeMain, 600);
     showWin("w-log", 900);
+    showWin("w-info", 1200);
+    showWin("w-uptime", 1500);
 
-    // then the blue corruption quietly layers in
+    // then the blue layer quietly appears, more and more
     showWin("w-ghost1", 2600);
+    showWin("w-static", 2900);
     showWin("w-ghost2", 3400);
-    showWin("w-ghost3", 4200);
+    showWin("w-ghost3", 3900);
+    showWin("w-tag", 4300);
+    showWin("w-timer", 4700);
     setTimeout(addRepeatLine, 4500);
   });
 </script>
