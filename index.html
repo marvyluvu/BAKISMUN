@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>BOOT://DIPLOMACY.OS</title>
+<title>DIPLOMACY.OS // BOOT</title>
 
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
 
 <style>
   :root{
-    --green:#00ff88;
     --bg:#000000;
+    --green:#00ff88;
+    --blue:#4fd0ff;
     --amber:#ffcc66;
-    --red:#ff6666;
   }
 
   html,body{height:100%}
@@ -21,11 +21,8 @@
   body{
     margin:0;
     font-family:"VT323", monospace;
-    background:radial-gradient(circle at top, #050d08 0, #000 55%);
+    background:radial-gradient(circle at top, #050b09 0, #000 55%);
     color:var(--green);
-    display:flex;
-    align-items:center;
-    justify-content:center;
     overflow:hidden;
   }
 
@@ -39,117 +36,143 @@
       transparent 3px
     );
     mix-blend-mode:screen;
-    opacity:.8;
+    opacity:.75;
   }
   .overlay-glow{
     position:fixed; inset:-40px;
     background:
-      radial-gradient(circle at 20% 0%, rgba(0,255,136,.08), transparent 55%),
-      radial-gradient(circle at 80% 100%, rgba(0,255,136,.08), transparent 55%);
+      radial-gradient(circle at 20% 0%, rgba(0,255,136,.07), transparent 55%),
+      radial-gradient(circle at 80% 100%, rgba(79,208,255,.12), transparent 55%);
     pointer-events:none;
   }
 
-  /* Terminal shell */
-  .shell{
+  .desktop{
     position:relative;
-    width:min(800px, 92vw);
-    max-height:80vh;
-    background:rgba(0,0,0,.88);
+    width:100%;
+    height:100%;
+    padding:18px;
+    box-sizing:border-box;
+  }
+
+  /* windows */
+  .win{
+    position:absolute;
+    background:rgba(0,0,0,.9);
     border:2px solid var(--green);
-    box-shadow:0 0 24px rgba(0,255,136,.75);
-    padding:14px;
+    box-shadow:0 0 18px rgba(0,255,136,.5);
+    color:var(--green);
+    width:360px;
+    max-width:90vw;
     display:flex;
     flex-direction:column;
+    opacity:0;
+    transform:scale(.96) translateY(10px);
+    pointer-events:none;
+    transition:opacity .7s ease, transform .7s ease, box-shadow .7s ease, border-color .7s ease, color .7s ease;
+  }
+
+  .win.show{
+    opacity:1;
+    transform:scale(1) translateY(0);
+    pointer-events:auto;
+  }
+
+  .win-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:4px 8px 6px;
+    border-bottom:1px solid rgba(0,255,136,.4);
+    font-size:18px;
+    text-shadow:0 0 8px currentColor;
+  }
+
+  .win-title{
+    display:flex;
+    gap:6px;
+    align-items:center;
+  }
+
+  .dots{
+    display:flex;
+    gap:4px;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    border:1px solid currentColor;
+    opacity:.45;
+  }
+
+  .win-body{
+    padding:8px 10px 10px;
+    font-size:16px;
+    line-height:1.25;
+    white-space:pre-wrap;
+    text-shadow:0 0 8px currentColor;
+    max-height:50vh;
     overflow:hidden;
   }
 
-  .shell-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:18px;
-    padding:4px 6px 8px;
-    border-bottom:1px solid rgba(0,255,136,.4);
-    text-shadow:0 0 8px var(--green);
+  /* green = original system */
+  .win-green{
+    border-color:var(--green);
+    box-shadow:0 0 18px rgba(0,255,136,.55);
+    color:var(--green);
   }
 
-  .shell-title span:nth-child(1){ color:var(--amber); }
-  .shell-title span:nth-child(2){ color:var(--green); }
-
-  .leds{
-    display:flex;
-    gap:6px;
-  }
-  .led{
-    width:9px; height:9px; border-radius:50%;
-    border:1px solid rgba(0,255,136,.6);
-    box-shadow:0 0 8px rgba(0,255,136,.7);
-    opacity:.6;
-  }
-  .led.red{border-color:var(--red); box-shadow:0 0 8px var(--red);}
-  .led.amber{border-color:var(--amber); box-shadow:0 0 8px var(--amber);}
-
-  .led.red.blink{animation:blinkRed 1.2s infinite;}
-  .led.amber.blink{animation:blinkAmber 1.8s infinite;}
-  .led.green.blink{animation:blinkGreen 1.5s infinite;}
-
-  @keyframes blinkRed{0%,60%{opacity:.15}61%,100%{opacity:1}}
-  @keyframes blinkAmber{0%,70%{opacity:.15}71%,100%{opacity:1}}
-  @keyframes blinkGreen{0%,75%{opacity:.15}76%,100%{opacity:1}}
-
-  .shell-body{
-    flex:1;
-    overflow-y:hidden;
-    padding:10px 4px 4px;
+  /* blue = silent corruption */
+  .win-blue{
+    border-color:var(--blue);
+    box-shadow:0 0 22px rgba(79,208,255,.75);
+    color:var(--blue);
   }
 
-  #terminalText{
-    white-space:pre-wrap;
-    font-size:18px;
-    line-height:1.25;
-    text-shadow:0 0 8px var(--green);
+  .win-blue .win-header{
+    border-bottom-color:rgba(79,208,255,.5);
   }
 
+  /* subtle flicker */
+  .flicker{
+    animation:flicker 2.4s infinite;
+  }
+  @keyframes flicker{
+    0%,8%,100%{opacity:1}
+    3%{opacity:.7}
+    4%{opacity:.4}
+    5%{opacity:1}
+  }
+
+  /* cursor */
   .cursor{
     display:inline-block;
     width:10px;
-    background:var(--green);
+    height:1.05em;
+    background:currentColor;
     margin-left:2px;
-    animation:blink 0.9s steps(1) infinite;
+    animation:blink .8s steps(1) infinite;
   }
   @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 
-  /* subtle random glitch lines */
-  .scanline{
-    position:absolute;
-    left:0; right:0;
-    height:1px;
-    background:rgba(0,255,136,.45);
-    opacity:0;
-    pointer-events:none;
-    animation:scanline 3s infinite;
-  }
-  @keyframes scanline{
-    0%{top:-10%;}
-    10%{opacity:.4;}
-    50%{top:110%;}
-    100%{opacity:0;}
-  }
-
-  /* footer hint */
+  /* footer */
   .footer{
-    font-size:14px;
-    opacity:.8;
-    margin-top:4px;
-    color:var(--amber);
+    position:fixed;
+    left:10px;
+    right:10px;
+    bottom:8px;
     display:flex;
     justify-content:space-between;
+    font-size:14px;
+    color:var(--amber);
+    text-shadow:0 0 6px var(--amber);
+    opacity:.8;
   }
-  .footer span:last-child{color:var(--green);}
+  .footer span:last-child{
+    color:var(--green);
+  }
 
-  @media (max-width:600px){
-    #terminalText{font-size:15px;}
-    .shell-header{font-size:16px;}
+  @media (max-width:700px){
+    .win{width:calc(100vw - 32px);}
+    .win-body{max-height:45vh;}
   }
 </style>
 </head>
@@ -158,102 +181,181 @@
 <div class="overlay-glow"></div>
 <div class="overlay-scan"></div>
 
-<div class="shell">
-  <div class="shell-header">
-    <div class="shell-title">
-      <span>DIPLOMACY.OS</span><span>// UAE</span>
+<div class="desktop">
+  <!-- main system window -->
+  <div id="w-main" class="win win-green" style="top:60px;left:50%;transform:translateX(-50%) scale(.96) translateY(10px);">
+    <div class="win-header">
+      <div class="win-title">
+        <span>terminal://diplomacy.os</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
     </div>
-    <div class="leds">
-      <div class="led red blink"></div>
-      <div class="led amber blink"></div>
-      <div class="led green blink"></div>
+    <div class="win-body" id="mainBody"></div>
+  </div>
+
+  <!-- system log window -->
+  <div id="w-log" class="win win-green" style="bottom:70px;left:24px;width:320px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>syslog.txt</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+log: INIT_BUILD_2025
+log: region=UAE
+log: delegates_online = 100%
+
+> echo "seek diplomacy"
+> waiting_for_reply...
     </div>
   </div>
 
-  <div class="shell-body">
-    <div id="terminalText"></div>
-    <div class="scanline"></div>
+  <!-- corruption windows (blue) -->
+
+  <div id="w-ghost1" class="win win-blue" style="top:30px;right:32px;width:340px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>mirror://overlay</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body flicker">
+mirror_online = true
+replaying_memory...
+
+are you still there?
+are you still there?
+are you still there?
+
+nothing is broken.
+it is only being rewritten.
+    </div>
   </div>
 
-  <div class="footer">
-    <span>BUILD_2025.10</span>
-    <span>signal: coming soon_</span>
+  <div id="w-ghost2" class="win win-blue" style="top:52%;left:12%;width:300px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>process://silent_takeover</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body">
+injecting_new_build...
+no alarms.
+no logout.
+
+line_01: diplomacy != debate_only
+line_02: committee != classroom_only
+line_03: delegate != spectator
+
+patch_applied.
+    </div>
+  </div>
+
+  <div id="w-ghost3" class="win win-blue" style="bottom:70px;right:30px;width:360px;">
+    <div class="win-header">
+      <div class="win-title">
+        <span>are_you_still_there.exe</span>
+      </div>
+      <div class="dots">
+        <span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+    <div class="win-body" id="repeatBody">
+    </div>
   </div>
 </div>
 
-<script>
-  const el = document.getElementById("terminalText");
+<div class="footer">
+  <span>DIPLOMACY.OS // BUILD_2025.10 // UAE</span>
+  <span>do not close this window.</span>
+</div>
 
-  const lines = [
-    "BOOTING DIPLOMACY_OS_BUILD_2025...",
+<script>
+  // main terminal typing
+  const mainLines = [
+    "BOOTING DIPLOMACY.OS...",
     "mount /dev/seek_diplomacy -> /uae",
     "checking delegates_online [██████████] 100%",
     "",
-    "warning: legacy_instance \"mun_client\" marked for reconfigure",
-    "creating sandbox: diplomacy_os.preview",
+    "status: legacy_interface detected.",
+    "status: appearance != current_version.",
     "",
-    "run probe_are_you_still_there.exe",
-    ">> are you still there?",
-    ">> are you still there?",
-    ">> are you still there?",
+    "starting quiet_recompile.sh",
+    "   > rewriting colours: neon_green",
+    "   > preparing overlay: neon_blue",
+    "   > noise_level: low",
     "",
-    "trace: unidentified signal detected.",
-    "origin: [REDACTED] :: node_012",
+    "note: this is not an error.",
+    "note: this is a replacement.",
     "",
-    "opening port 130 // late_access",
-    "handshake_request: SEEK_DIPLOMACY",
-    "handshake_status: pending...",
+    "question: are you still there?",
+    "question: are you still reading?",
     "",
-    "memory://fragments",
-    "   \"gavel hits\"",
-    "   \"paper rustling\"",
-    "   \"overheated committee\"",
-    "   \"you are not just a delegate\"",
-    "",
-    "stderr: timeline mismatch.",
-    "note: what you remember no longer compiles.",
-    "",
-    "compiling new build...",
-    "   > fetching background_guides",
-    "   > rewriting directives",
-    "   > encrypting theme // [CLASSIFIED]",
-    "",
-    "question: if diplomacy is a language,",
-    "          why are you reading this in silence?",
-    "",
-    "are you still there?",
-    "are you still refreshing?",
-    "are you still waiting for the next ping?",
-    "",
-    "incoming packet // 001",
-    "   type: teaser",
-    "   body: access denied.",
-    "",
-    "hint: watch this screen.",
-    "hint: the system will speak when it is ready.",
-    "",
-    "are you still there?",
-    "are you still there?",
-    "are you still there?"
+    "hint: the first clue is that this is only the shell."
   ];
 
-  const fullText = lines.join("\n");
+  const mainBody = document.getElementById("mainBody");
+  const fullMainText = mainLines.join("\n");
   let idx = 0;
 
-  function typeNext(){
-    if(idx <= fullText.length){
-      const visible = fullText.slice(0, idx);
-      el.textContent = visible;
-      el.innerHTML = el.textContent + '<span class="cursor"></span>';
+  function typeMain(){
+    if(idx <= fullMainText.length){
+      const visible = fullMainText.slice(0, idx);
+      mainBody.textContent = visible;
+      mainBody.innerHTML = mainBody.textContent + '<span class="cursor"></span>';
       idx++;
-      const delay = fullText[idx-1] === "\n" ? 80 : 22; // slightly slower on new lines
-      setTimeout(typeNext, delay);
-    } else {
-      el.innerHTML = el.textContent + '<span class="cursor"></span>';
+      const ch = fullMainText[idx-1];
+      const delay = ch === "\n" ? 70 : 22;
+      setTimeout(typeMain, delay);
+    }else{
+      mainBody.innerHTML = mainBody.textContent + '<span class="cursor"></span>';
     }
   }
 
-  setTimeout(typeNext, 400);
+  // repeated "are you still there" in bottom-right blue window
+  const repeatBody = document.getElementById("repeatBody");
+  const repeatLine = "are you still there?";
+  let repeatCount = 0;
+  function addRepeatLine(){
+    if(repeatCount < 24){
+      repeatBody.textContent += repeatLine + "\n";
+      repeatCount++;
+      setTimeout(addRepeatLine, 120);
+    }
+  }
+
+  // window show sequence
+  function showWin(id, delay){
+    setTimeout(()=>{
+      const w = document.getElementById(id);
+      if(w){
+        w.classList.add("show");
+      }
+    }, delay);
+  }
+
+  window.addEventListener("load", ()=>{
+    // green system first
+    showWin("w-main", 200);
+    setTimeout(typeMain, 600);
+    showWin("w-log", 900);
+
+    // then the blue corruption quietly layers in
+    showWin("w-ghost1", 2600);
+    showWin("w-ghost2", 3400);
+    showWin("w-ghost3", 4200);
+    setTimeout(addRepeatLine, 4500);
+  });
 </script>
 </body>
 </html>
