@@ -12,9 +12,7 @@
   :root{
     --bg:#000000;
     --green:#00ff88;
-    --orange:#ff7b24;
-    --orange-neon:#ff9430;
-    --orange-bright:#ffb05a;
+    --orange:#ff8a3c;
     --amber:#ffcc66;
   }
 
@@ -29,7 +27,6 @@
     color:var(--green);
     overflow:hidden;
     letter-spacing:.5px;
-    filter:hue-rotate(0deg);
   }
 
   /* CRT overlays */
@@ -37,9 +34,9 @@
     position:fixed; inset:0; pointer-events:none;
     background:repeating-linear-gradient(
       to bottom,
-      rgba(255,123,36,.16) 0px,
-      rgba(255,123,36,.08) 2px,
-      rgba(255,180,90,.06) 3px,
+      rgba(255,123,36,.12) 0px,
+      rgba(255,123,36,.07) 1px,
+      rgba(0,255,136,.05) 3px,
       transparent 5px
     );
     mix-blend-mode:screen;
@@ -49,41 +46,29 @@
   .overlay-glow{
     position:fixed; inset:-40px;
     background:
-      radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--green) 30%, transparent) 0, transparent 48%),
-      radial-gradient(circle at 72% 18%, color-mix(in srgb, var(--orange-neon) 75%, transparent) 0, transparent 58%),
-      radial-gradient(circle at 80% 100%, color-mix(in srgb, var(--orange-bright) 78%, transparent) 0, transparent 55%);
+      radial-gradient(circle at 20% 0%, rgba(0,255,136,.07), transparent 55%),
+      radial-gradient(circle at 80% 100%, rgba(255,138,60,.14), transparent 55%);
     pointer-events:none;
   }
 
   .overlay-orb{
     position:fixed; inset:-60px;
     background:
-      radial-gradient(circle at 18% 28%, color-mix(in srgb, var(--orange) 35%, transparent) 0, transparent 50%),
-      radial-gradient(circle at 70% 68%, color-mix(in srgb, var(--orange-neon) 60%, transparent) 0, transparent 55%),
-      radial-gradient(circle at 45% 10%, color-mix(in srgb, var(--orange-bright) 46%, transparent) 0, transparent 45%);
+      radial-gradient(circle at 18% 28%, rgba(0,255,136,.05) 0, transparent 50%),
+      radial-gradient(circle at 72% 72%, rgba(79,208,255,.08) 0, transparent 55%),
+      radial-gradient(circle at 45% 10%, rgba(255,204,102,.045) 0, transparent 45%);
     pointer-events:none;
     mix-blend-mode:screen;
     opacity:.65;
     animation:orbPulse 26s ease-in-out infinite;
   }
 
-  .overlay-amber{
-    position:fixed; inset:-90px;
-    background:
-      radial-gradient(circle at 30% 50%, color-mix(in srgb, var(--orange) 50%, transparent) 0 28%, transparent 60%),
-      conic-gradient(from 90deg, color-mix(in srgb, var(--orange-bright) 45%, transparent) 0deg 140deg, transparent 150deg 360deg);
-    pointer-events:none;
-    mix-blend-mode:screen;
-    opacity:.48;
-    animation:amberFlow 34s ease-in-out infinite;
-  }
-
   .overlay-noise{
     position:fixed; inset:-120px;
     pointer-events:none;
     background:
-      repeating-conic-gradient(from 15deg, color-mix(in srgb, var(--orange-neon) 35%, transparent) 0deg 6deg, transparent 6deg 12deg),
-      repeating-linear-gradient(90deg, color-mix(in srgb, var(--orange-bright) 45%, transparent) 0 12px, transparent 12px 24px);
+      repeating-conic-gradient(from 15deg, rgba(0,255,136,.05) 0deg 6deg, transparent 6deg 12deg),
+      repeating-linear-gradient(90deg, rgba(79,208,255,.04) 0 12px, transparent 12px 24px);
     mix-blend-mode:soft-light;
     opacity:.18;
     animation:noiseSpin 38s linear infinite;
@@ -103,7 +88,7 @@
     inset:-10px;
     background:
       linear-gradient(90deg, rgba(0,255,136,.04) 0 1px, transparent 1px 120px),
-      linear-gradient(0deg, color-mix(in srgb, var(--orange) 35%, transparent) 0 1px, transparent 1px 100px);
+      linear-gradient(0deg, rgba(79,208,255,.035) 0 1px, transparent 1px 100px);
     background-size:120px 100px;
     opacity:.22;
     mix-blend-mode:screen;
@@ -189,8 +174,8 @@
   .win.show::after{opacity:.14;}
 
   .win.glitch{
-    box-shadow:0 0 32px rgba(255,138,60,.88), 0 0 14px rgba(0,255,136,.55);
-    filter:hue-rotate(2deg);
+    box-shadow:0 0 32px rgba(79,208,255,.85), 0 0 14px rgba(0,255,136,.55);
+    filter:hue-rotate(8deg);
   }
 
   .win.glitch::after{opacity:.32; animation:glitchPulse .45s steps(2) infinite;}
@@ -229,50 +214,18 @@
     box-shadow:0 0 18px rgba(0,255,136,.55);
     color:var(--green);
     animation:softPulse 6s ease-in-out infinite;
-    background:
-      linear-gradient(135deg, color-mix(in srgb, var(--green) 40%, transparent) 0%, rgba(0,255,136,.02) 65%, transparent 95%),
-      radial-gradient(circle at 0% 0%, rgba(255,255,255,.05), transparent 58%),
-      radial-gradient(circle at 100% 0%, rgba(255,255,255,.03), transparent 50%),
-      rgba(0,0,0,.9);
   }
 
-  /* orange = silent takeover */
-  .win-orange{
-    border-color:var(--orange-neon);
-    box-shadow:0 0 26px rgba(255,148,48,.92), 0 0 38px rgba(255,176,90,.35);
-    color:var(--orange-neon);
-    animation:orangePulse 10s ease-in-out infinite;
-    background:
-      linear-gradient(140deg, color-mix(in srgb, var(--orange) 35%, transparent) 0%, rgba(0,0,0,.25) 42%, rgba(0,0,0,.62) 100%),
-      radial-gradient(circle at 12% 14%, color-mix(in srgb, var(--orange-bright) 70%, transparent) 0, transparent 58%),
-      radial-gradient(circle at 88% 6%, color-mix(in srgb, var(--orange-neon) 80%, transparent) 0, transparent 55%),
-      radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--orange) 55%, transparent) 0, transparent 62%),
-      rgba(0,0,0,.9);
-    text-shadow:0 0 12px rgba(255,176,90,.58);
+  /* blue = silent takeover */
+  .win-blue{
+    border-color:var(--blue);
+    box-shadow:0 0 22px rgba(79,208,255,.75);
+    color:var(--blue);
+    animation:bluePulse 10s ease-in-out infinite;
   }
 
   .win-orange .win-header{
-    border-bottom-color:rgba(255,148,48,.58);
-    text-shadow:0 0 12px rgba(255,176,90,.65);
-  }
-
-  .win-orange .win-body{
-    color:color-mix(in srgb, var(--orange-neon) 85%, white 15%);
-    text-shadow:0 0 14px rgba(255,176,90,.62);
-  }
-
-  #w-ghost2.win-orange{
-    background:
-      linear-gradient(160deg, color-mix(in srgb, var(--orange-neon) 55%, transparent) 0%, rgba(0,0,0,.18) 48%, rgba(0,0,0,.72) 100%),
-      radial-gradient(circle at 14% 24%, color-mix(in srgb, var(--orange-bright) 82%, transparent) 0, transparent 56%),
-      radial-gradient(circle at 86% 18%, color-mix(in srgb, var(--orange-neon) 88%, transparent) 0, transparent 58%),
-      rgba(0,0,0,.92);
-    box-shadow:0 0 34px rgba(255,148,48,.95), 0 0 52px rgba(255,189,114,.5);
-  }
-
-  #w-ghost2.win-orange .win-body{
-    color:color-mix(in srgb, var(--orange-neon) 92%, white 12%);
-    text-shadow:0 0 18px rgba(255,189,114,.7);
+    border-bottom-color:rgba(255,138,60,.5);
   }
 
   /* subtle flicker */
@@ -286,60 +239,15 @@
     5%{opacity:1}
   }
 
-  @keyframes scanShift{
-    0%{background-position:0 0;}
-    100%{background-position:0 12px;}
-  }
-
-  @keyframes bgPulse{
-    0%{background-position:50% 0%; filter:hue-rotate(0deg);}
-    50%{background-position:48% 20%; filter:hue-rotate(-6deg);}
-    100%{background-position:52% 40%; filter:hue-rotate(6deg);}
-  }
-
   @keyframes softPulse{
     0%,100%{box-shadow:0 0 18px rgba(0,255,136,.55);}
     50%{box-shadow:0 0 22px rgba(0,255,136,.75);}
   }
 
-  @keyframes orangePulse{
-    0%,100%{box-shadow:0 0 32px rgba(255,148,48,.95), 0 0 44px rgba(255,189,114,.48);}
-    40%{box-shadow:0 0 40px rgba(255,176,90,.98), 0 0 56px rgba(255,204,140,.6);}
-    70%{box-shadow:0 0 22px rgba(255,132,42,.76), 0 0 32px rgba(255,176,90,.38);}
-  }
-
-  @keyframes orbPulse{
-    0%,100%{opacity:.45; transform:scale(1);}
-    40%{opacity:.75; transform:scale(1.08);}
-    70%{opacity:.55; transform:scale(1.03);}
-  }
-
-  @keyframes amberFlow{
-    0%{transform:rotate(0deg) scale(1); opacity:.32;}
-    50%{transform:rotate(18deg) scale(1.04); opacity:.55;}
-    100%{transform:rotate(32deg) scale(1.06); opacity:.38;}
-  }
-
-  @keyframes noiseSpin{
-    0%{transform:rotate(0deg) scale(1.05);}
-    100%{transform:rotate(360deg) scale(1.05);}
-  }
-
-  @keyframes glitchPulse{
-    0%,100%{opacity:.18;}
-    50%{opacity:.42;}
-  }
-
-  @keyframes glitchJitter{
-    0%,100%{text-shadow:0 0 8px currentColor;}
-    40%{text-shadow:-2px 0 10px rgba(255,138,60,.82), 2px 0 6px rgba(0,255,136,.6);}
-    70%{text-shadow:2px 0 8px rgba(255,153,82,.78), -2px 0 6px rgba(0,255,136,.5);}
-  }
-
-  @keyframes gridPulse{
-    0%{opacity:.15;transform:translate3d(0,0,0);}
-    50%{opacity:.28;transform:translate3d(-12px,8px,0);}
-    100%{opacity:.18;transform:translate3d(0,12px,0);}
+  @keyframes bluePulse{
+    0%,100%{box-shadow:0 0 22px rgba(79,208,255,.75);}
+    40%{box-shadow:0 0 28px rgba(79,208,255,.85);}
+    70%{box-shadow:0 0 18px rgba(79,208,255,.65);}
   }
 
   /* cursor */
@@ -380,61 +288,20 @@
 
   @media (max-width:720px){
     body{overflow-y:auto;}
-    .desktop{
-      height:1650px;
-      min-height:1650px;
-      padding:32px 4vw 140px;
-    }
+    .desktop{min-height:100vh;}
     .win{
-      width:auto !important;
-      max-width:88vw;
-      --ty:20px;
+      position:relative !important;
+      top:auto !important;
+      right:auto !important;
       bottom:auto !important;
+      left:auto !important;
+      transform:scale(1) translateY(0) !important;
+      width:100%;
+      max-width:100%;
+      margin:12px auto;
     }
-    #w-main{top:60px;left:50%;--tx:-50%;--z:18;}
-    #w-uptime{top:18px;left:8vw;--z:16;}
-    #w-ghost1{top:148px;left:auto;right:6vw;--z:19;}
-    #w-archive{top:250px;left:10vw;--z:15;}
-    #w-log{top:338px;left:62vw;--tx:-70%;--z:14;}
-    #w-static{top:430px;left:56vw;right:auto;--tx:-62%;--z:13;}
-    #w-info{top:520px;left:8vw;--z:12;}
-    #w-hum{top:610px;left:60vw;--tx:-72%;--z:17;}
-    #w-ghost2{top:702px;left:14vw;--z:11;}
-    #w-flare{top:792px;left:60vw;--tx:-68%;--z:18;}
-    #w-shadow{top:894px;left:18vw;--tx:-12%;--z:13;}
-    #w-signal{top:988px;left:64vw;--tx:-74%;--z:12;}
-    #w-ghost3{top:1082px;left:10vw;right:auto;--z:20;}
-    #w-tag{top:1215px;left:50%;--tx:-50%;--z:16;}
-    #w-timer{top:1348px;left:50%;--tx:-50%;--z:18;}
     .win-body{max-height:none;}
-    .footer{position:relative;margin:1720px auto 32px;}
-  }
-
-  @media (max-width:520px){
-    .desktop{height:1840px;min-height:1840px;}
-    #w-ghost1{right:4vw;}
-    #w-log{left:52vw;}
-    #w-static{left:48vw;}
-    #w-hum{left:50vw;}
-    #w-flare{left:48vw;}
-    #w-shadow{left:18vw;}
-    #w-signal{left:50vw;}
-    #w-tag{max-width:84vw;}
-    #w-timer{top:1400px;}
-    .footer{margin:1880px auto 40px;}
-  }
-
-  @media (max-width:420px){
-    .desktop{height:2040px;min-height:2040px;}
-    #w-log{left:46vw;}
-    #w-static{left:44vw;}
-    #w-hum{left:46vw;}
-    #w-flare{left:44vw;}
-    #w-shadow{left:16vw;}
-    #w-signal{left:46vw;}
-    #w-tag{left:48%;}
-    #w-timer{left:48%;top:1460px;}
-    .footer{margin:2080px auto 44px;}
+    .footer{position:relative;margin:30px 0 18px;}
   }
 </style>
 </head>
@@ -442,7 +309,6 @@
 
 <div class="overlay-glow"></div>
 <div class="overlay-orb"></div>
-<div class="overlay-amber"></div>
 <div class="overlay-scan"></div>
 <div class="overlay-noise"></div>
 
@@ -474,7 +340,6 @@
 log: INIT_BUILD_2025
 log: region=UAE
 log: signal_strength = rising
-log: overlay_tint = orange
 
 > cat memo.silence
 > "seek diplomacy"
@@ -500,28 +365,7 @@ status: steady
 release_notes:
  - visual_layer: repainting
  - briefings: defragmenting
- - overlay_hue: orange resonance
  - disclosure: withheld
-    </div>
-  </div>
-
-  <!-- archive window -->
-  <div id="w-archive" class="win win-green" style="top:188px;left:32px;width:280px;--z:7;--tilt:-0.8deg;">
-    <div class="win-header">
-      <div class="win-title">
-        <span>archive://backlog</span>
-      </div>
-      <div class="dots">
-        <span class="dot"></span><span class="dot"></span>
-      </div>
-    </div>
-    <div class="win-body">
-queue_depth: 04
-memo_01: legacy skin cached
-memo_02: handshake recorded
-memo_03: quiet channel open
-memo_04: observers acknowledged
-memo_05: amber strands indexing
     </div>
   </div>
 
@@ -540,13 +384,12 @@ uptime: 0003:14:08
 watch: 2025 //
 mode: attentive
 trace: heartbeat audible
-overlay_glow: orange hush
     </div>
   </div>
 
   <!-- takeover windows (orange) -->
 
-  <div id="w-ghost1" class="win win-orange" style="top:30px;right:32px;width:340px;--z:13;--tilt:0.5deg;">
+  <div id="w-ghost1" class="win win-blue" style="top:30px;right:32px;width:340px;--z:13;--tilt:0.5deg;">
     <div class="win-header">
       <div class="win-title">
         <span>mirror://overlay</span>
@@ -565,11 +408,11 @@ are you still there?
 are you still listening?
 
 no alarms raised.
-the pattern simply realigns in amber.
+the pattern simply realigns.
     </div>
   </div>
 
-  <div id="w-ghost2" class="win win-orange" style="top:52%;left:12%;width:300px;--z:8;--tilt:-0.3deg;">
+  <div id="w-ghost2" class="win win-blue" style="top:52%;left:12%;width:300px;--z:8;--tilt:-0.3deg;">
     <div class="win-header">
       <div class="win-title">
         <span>process://silent_takeover</span>
@@ -584,12 +427,12 @@ noise_level: low
 notifications: suppressed
 
 line_01: keep the cursor steady
-line_02: orange static weaving in
-line_03: legacy glow yielding gently
+line_02: nothing is overwritten
+line_03: everything is rewritten
     </div>
   </div>
 
-  <div id="w-ghost3" class="win win-orange" style="bottom:70px;right:30px;width:360px;--z:15;--tilt:-0.2deg;">
+  <div id="w-ghost3" class="win win-blue" style="bottom:70px;right:30px;width:360px;--z:15;--tilt:-0.2deg;">
     <div class="win-header">
       <div class="win-title">
         <span>are_you_still_there.exe</span>
@@ -602,8 +445,8 @@ line_03: legacy glow yielding gently
     </div>
   </div>
 
-  <!-- subtle orange static window -->
-  <div id="w-static" class="win win-orange" style="top:34%;right:55%;width:220px;--z:9;--tilt:0.9deg;">
+  <!-- subtle blue static window -->
+  <div id="w-static" class="win win-blue" style="top:34%;right:55%;width:220px;--z:9;--tilt:0.9deg;">
     <div class="win-header">
       <div class="win-title">
         <span>static://feed</span>
@@ -622,7 +465,7 @@ line_03: legacy glow yielding gently
   </div>
 
   <!-- label-ish window, almost like a name tag but still vague -->
-  <div id="w-tag" class="win win-orange" style="top:18%;left:55%;width:260px;--z:12;--tilt:-0.4deg;">
+  <div id="w-tag" class="win win-blue" style="top:18%;left:55%;width:260px;--z:12;--tilt:-0.4deg;">
     <div class="win-header">
       <div class="win-title">
         <span>session://diplomacy</span>
@@ -639,53 +482,11 @@ mode: preview
 full_interface:
    not yet deployed.
    not yet announced.
-   not yet dimming the orange trace.
+   not yet sleeping.
     </div>
   </div>
 
-  <div id="w-hum" class="win win-orange" style="top:10%;left:68%;width:240px;--z:11;--tilt:0.7deg;">
-    <div class="win-header">
-      <div class="win-title">
-        <span>hum://carrier</span>
-      </div>
-      <div class="dots">
-        <span class="dot"></span><span class="dot"></span>
-      </div>
-    </div>
-    <div class="win-body">
-signal: velvet amplitude
-layering: in progress
-ghost_packets: authenticated
-
-notice:
-  drift with the orange tide.
-  archive every whisper.
-  let the update settle.
-    </div>
-  </div>
-
-  <div id="w-flare" class="win win-orange" style="top:46%;left:64%;width:260px;--z:12;--tilt:0.55deg;">
-    <div class="win-header">
-      <div class="win-title">
-        <span>flare://ascend</span>
-      </div>
-      <div class="dots">
-        <span class="dot"></span><span class="dot"></span>
-      </div>
-    </div>
-    <div class="win-body flicker">
-phase: orange bloom
-coating: legacy shells
-trace_lights: multiplying
-
-note_to_self:
-  follow the radiant seams.
-  listen for the ember heartbeat.
-  confirm the takeover feels warm.
-    </div>
-  </div>
-
-  <div id="w-shadow" class="win win-orange" style="top:58%;right:18%;width:260px;--z:10;--tilt:-0.6deg;">
+  <div id="w-shadow" class="win win-blue" style="top:58%;right:18%;width:260px;">
     <div class="win-header">
       <div class="win-title">
         <span>shadow://echo</span>
@@ -701,33 +502,12 @@ status: serene takeover
 
 if you feel static,
 stay connected.
-silence carries orange instructions.
-    </div>
-  </div>
-
-  <div id="w-signal" class="win win-orange" style="top:66%;left:36%;width:280px;--z:9;--tilt:0.35deg;">
-    <div class="win-header">
-      <div class="win-title">
-        <span>signal://convergence</span>
-      </div>
-      <div class="dots">
-        <span class="dot"></span>
-      </div>
-    </div>
-    <div class="win-body">
-sync_status: nearly aligned
-heartbeat: low and steady
-overlay_phase: 03 -> 04
-
-log:
-- crossfade glowing amber
-- silence remains intentional
-- observers: remain unseen
+silence carries instructions.
     </div>
   </div>
 
   <!-- tiny hint of "coming soon" but not explicitly -->
-  <div id="w-timer" class="win win-orange" style="bottom:72px;left:50%;width:240px;--z:16;--tilt:0.25deg;">
+  <div id="w-timer" class="win win-blue" style="bottom:72px;left:50%;width:240px;--z:16;--tilt:0.25deg;">
     <div class="win-header">
       <div class="win-title">
         <span>countdown://hidden</span>
@@ -740,7 +520,7 @@ log:
 next_update: [REDACTED]
 eta: close enough.
 
-remain within the orange quiet.
+remain logged in.
     </div>
   </div>
 </div>
@@ -762,19 +542,16 @@ remain within the orange quiet.
     "",
     "starting quiet_recompile.sh",
     "   > base_colour: neon_green",
-    "   > overlay_colour: neon_amber",
-    "   > takeover_intensity: +++",
+    "   > overlay_colour: neon_orange",
     "   > notification_sounds: muted",
     "",
     "memo: sustain equilibrium.",
-    "memo: keep orange glow contained.",
     "memo: standby for resonance.",
     "",
     "echo \"are you still there?\"",
     "echo \"are you still awake?\"",
     "",
     "log: preview layer aligned.",
-    "log: orange takeover saturating.",
     "log: further detail pending."
   ];
 
@@ -802,7 +579,6 @@ remain within the orange quiet.
     "are you still there?",
     "are you still there?",
     "hold the line.",
-    "feel the orange hush.",
     "the quiet will explain itself."
   ];
   let repeatCount = 0;
@@ -833,7 +609,6 @@ remain within the orange quiet.
     "w-shadow",
     "w-static",
     "w-hum",
-    "w-flare",
     "w-tag",
     "w-signal"
   ];
@@ -869,12 +644,10 @@ remain within the orange quiet.
     showWin("w-static", 2900);
     showWin("w-ghost2", 3400);
     showWin("w-hum", 3600);
-    showWin("w-flare", 3780);
-    showWin("w-ghost3", 4020);
-    showWin("w-tag", 4380);
-    showWin("w-shadow", 4560);
-    showWin("w-signal", 4780);
-    showWin("w-timer", 5140);
+    showWin("w-ghost3", 3900);
+    showWin("w-tag", 4300);
+    showWin("w-shadow", 4500);
+    showWin("w-timer", 4900);
     setTimeout(addRepeatLine, 4500);
     setTimeout(scheduleGlitch, 5600);
   });
