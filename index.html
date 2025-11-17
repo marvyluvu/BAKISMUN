@@ -43,7 +43,6 @@
     filter:brightness(.9) contrast(1.1);
   }
 
-  /* CRT overlays */
   .overlay-scan{
     position:fixed; inset:0; pointer-events:none;
     background:repeating-linear-gradient(
@@ -160,7 +159,6 @@
     opacity:.22;
   }
 
-  /* windows */
   .win{
     position:absolute;
     --tx:0;
@@ -252,6 +250,11 @@
     opacity:.65;
   }
 
+  .hard-glitch{
+    animation:hardGlitchShake .18s steps(2) infinite;
+    filter:hue-rotate(-22deg) saturate(1.4) brightness(1.1);
+  }
+
   .win-title{
     display:flex;
     gap:6px;
@@ -278,7 +281,6 @@
     overflow:hidden;
   }
 
-  /* green = original system */
   .win-green{
     border-color:var(--green);
     box-shadow:0 0 18px rgba(0,255,136,.55);
@@ -286,7 +288,6 @@
     animation:softPulse 6s ease-in-out infinite;
   }
 
-  /* blue = interference layer */
   .win-blue{
     border-color:var(--blue);
     box-shadow:0 0 22px rgba(79,208,255,.75);
@@ -294,7 +295,6 @@
     animation:bluePulse 10s ease-in-out infinite;
   }
 
-  /* orange = takeover layer */
   .win-orange{
     border-color: var(--orange);
     box-shadow: 0 0 22px rgba(255,138,60,.85);
@@ -309,7 +309,6 @@
     filter:hue-rotate(-18deg) saturate(1.2);
   }
 
-  /* subtle flicker */
   .flicker{
     animation:flicker 2.4s infinite;
   }
@@ -336,7 +335,6 @@
     50%{box-shadow:0 0 30px rgba(255,204,102,.9);}
   }
 
-  /* cursor */
   .cursor{
     display:inline-block;
     width:10px;
@@ -347,7 +345,6 @@
   }
   @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 
-  /* footer */
   .footer{
     position:fixed;
     left:10px;
@@ -379,7 +376,6 @@
     opacity:.9;
   }
 
-  /* quiet overlay */
   .quiet-overlay{
     position:fixed;
     inset:0;
@@ -435,7 +431,6 @@
     .quiet-line{font-size:22px;}
   }
 
-  /* extra animations used above */
   @keyframes bgPulse{
     0%{background-position:50% 0%;}
     100%{background-position:50% 60%;}
@@ -471,6 +466,12 @@
     0%,100%{transform:translate(0,0);}
     50%{transform:translate(-1px,1px);}
   }
+
+  @keyframes hardGlitchShake{
+    0%{transform:translate(-2px,1px) skewX(-1deg);}
+    50%{transform:translate(3px,-2px) skewX(2deg);}
+    100%{transform:translate(-1px,2px) skewX(-2deg);}
+  }
 </style>
 </head>
 <body>
@@ -481,7 +482,6 @@
 <div class="overlay-noise"></div>
 
 <div class="desktop">
-  <!-- main system window -->
   <div id="w-main" class="win win-green" style="top:60px;left:50%;--z:14;--tilt:-0.2deg;">
     <div class="win-header">
       <div class="win-title">
@@ -494,7 +494,6 @@
     <div class="win-body" id="mainBody"></div>
   </div>
 
-  <!-- system log window -->
   <div id="w-log" class="win win-green" style="bottom:70px;left:24px;width:320px;--z:6;--tilt:-0.5deg;">
     <div class="win-header">
       <div class="win-title">
@@ -515,7 +514,6 @@ log: signal_strength = rising
     </div>
   </div>
 
-  <!-- system info window -->
   <div id="w-info" class="win win-green" style="top:52%;left:50px;width:320px;--z:4;--tilt:0.4deg;">
     <div class="win-header">
       <div class="win-title">
@@ -537,7 +535,6 @@ release_notes:
     </div>
   </div>
 
-  <!-- small uptime widget -->
   <div id="w-uptime" class="win win-green" style="top:18px;left:18px;width:210px;--z:9;--tilt:0.6deg;">
     <div class="win-header">
       <div class="win-title">
@@ -555,7 +552,6 @@ trace: heartbeat audible
     </div>
   </div>
 
-  <!-- archive stub (stays vague) -->
   <div id="w-archive" class="win win-green" style="top:24%;right:60%;width:230px;--z:5;--tilt:-0.7deg;">
     <div class="win-header">
       <div class="win-title">
@@ -575,8 +571,6 @@ note:
   so new ones can load.
     </div>
   </div>
-
-  <!-- takeover windows -->
 
   <div id="w-ghost1" class="win win-blue" style="top:30px;right:32px;width:340px;--z:13;--tilt:0.5deg;">
     <div class="win-header">
@@ -634,7 +628,6 @@ line_03: everything is rewritten
     </div>
   </div>
 
-  <!-- subtle static window -->
   <div id="w-static" class="win win-blue" style="top:34%;right:55%;width:220px;--z:9;--tilt:0.9deg;">
     <div class="win-header">
       <div class="win-title">
@@ -654,7 +647,6 @@ incoming_tint: {orange}
     </div>
   </div>
 
-  <!-- hum window: low-level orange noise -->
   <div id="w-hum" class="win win-blue" style="top:68%;left:4%;width:230px;--z:7;--tilt:0.3deg;">
     <div class="win-header">
       <div class="win-title">
@@ -674,7 +666,6 @@ buffering in.
     </div>
   </div>
 
-  <!-- label-ish window, still vague -->
   <div id="w-tag" class="win win-blue" style="top:18%;left:55%;width:260px;--z:12;--tilt:-0.4deg;">
     <div class="win-header">
       <div class="win-title">
@@ -696,7 +687,6 @@ full_interface:
     </div>
   </div>
 
-  <!-- signal hint window -->
   <div id="w-signal" class="win win-blue" style="top:8%;right:50%;width:220px;--z:10;--tilt:0.1deg;">
     <div class="win-header">
       <div class="win-title">
@@ -737,7 +727,6 @@ silence carries instructions.
     </div>
   </div>
 
-  <!-- countdown-style hint -->
   <div id="w-timer" class="win win-blue" style="bottom:72px;left:50%;width:240px;--z:16;--tilt:0.25deg;">
     <div class="win-header">
       <div class="win-title">
@@ -761,18 +750,18 @@ remain logged in.
   <span>this is only a preview window.</span>
 </div>
 
-<!-- quiet message layer -->
 <div id="quiet-overlay" class="quiet-overlay">
   <div class="quiet-inner">
     <div class="quiet-line">the quiet will explain itself.</div>
     <div class="quiet-sub">
-      no feed. no noise. just a new pattern loading<span class="cursor"></span>
+      no feed. no noise. still a signal<span class="cursor"></span>
     </div>
   </div>
 </div>
 
 <script>
-  // main terminal typing
+  const STAGE = 3;
+
   const mainLines = [
     "BOOTING DIPLOMACY.OS...",
     "mount /dev/seek_diplomacy -> /uae",
@@ -817,15 +806,16 @@ remain logged in.
     }
   }
 
-  // repeated "are you still there" in bottom-right window
   const repeatBody = document.getElementById("repeatBody");
   const repeatLines = [
     "are you still there?",
     "are you still there?",
     "hold the line.",
-    "the quiet will explain itself."
+    "the quiet will explain itself.",
+    "no posts. no noise. still a signal."
   ];
   let repeatCount = 0;
+
   function addRepeatLine(){
     if(repeatCount < 32){
       const line = repeatLines[repeatCount % repeatLines.length];
@@ -836,7 +826,6 @@ remain logged in.
     }
   }
 
-  // window show sequence
   function showWin(id, delay){
     setTimeout(()=>{
       const w = document.getElementById(id);
@@ -865,19 +854,52 @@ remain logged in.
       return;
     }
     panel.classList.add("glitch");
-    setTimeout(()=>panel.classList.remove("glitch"), 900);
+    if (STAGE >= 3){
+      panel.classList.add("hard-glitch");
+    }
+    setTimeout(()=>{
+      panel.classList.remove("glitch","hard-glitch");
+    }, STAGE >= 3 ? 700 : 900);
     scheduleGlitch();
   }
 
   function scheduleGlitch(){
-    const delay = 3600 + Math.random()*3200;
+    let factor = 1;
+    if (STAGE === 2) factor = 0.6;
+    if (STAGE === 3) factor = 0.3;
+    const delay = (3600 + Math.random()*3200) * factor;
     setTimeout(triggerGlitch, delay);
   }
 
-  // orange invasion: progressively recolor windows and overlays
+  function corruptText(str){
+    const glitchChars = ["█","▒","■","/","\\","_","?","*"];
+    return str.split("").map(ch=>{
+      if (ch === " " || ch === "\n") return ch;
+      const p = STAGE === 2 ? 0.06 : 0.14;
+      if (STAGE >= 2 && Math.random() < p){
+        return glitchChars[Math.floor(Math.random()*glitchChars.length)];
+      }
+      return ch;
+    }).join("");
+  }
+
+  function randomCorruptionTick(){
+    if (STAGE < 2) return;
+    const panels = document.querySelectorAll(".win-body");
+    if (!panels.length) return;
+    const target = panels[Math.floor(Math.random()*panels.length)];
+    if (!target.dataset.original){
+      target.dataset.original = target.textContent;
+    }
+    const base = target.dataset.original;
+    target.textContent = corruptText(base);
+    const interval = STAGE === 2 ? 8000 + Math.random()*4000
+                                 : 3500 + Math.random()*2500;
+    setTimeout(randomCorruptionTick, interval);
+  }
+
   function startInvasion(){
     document.body.classList.add("orange-phase");
-
     const allWins = document.querySelectorAll(".win");
     allWins.forEach((w, i)=>{
       setTimeout(()=>{
@@ -889,7 +911,6 @@ remain logged in.
         }
       }, 260 * i);
     });
-
     const footer = document.querySelector(".footer span:last-child");
     if(footer){
       setTimeout(()=>{
@@ -898,17 +919,14 @@ remain logged in.
     }
   }
 
-  // after invasion: slip into quiet mode + overlay
   function startQuietPhase(){
     document.body.classList.add("quiet-phase");
-
     const allWins = document.querySelectorAll(".win");
     allWins.forEach((w, i)=>{
       setTimeout(()=>{
         w.classList.add("muted");
       }, 220 * i);
     });
-
     const qo = document.getElementById("quiet-overlay");
     if(qo){
       setTimeout(()=>qo.classList.add("show"), 2200);
@@ -916,15 +934,12 @@ remain logged in.
   }
 
   window.addEventListener("load", ()=>{
-    // green system first
     showWin("w-main", 200);
     setTimeout(typeMain, 600);
     showWin("w-log", 900);
     showWin("w-info", 1200);
     showWin("w-archive", 1350);
     showWin("w-uptime", 1500);
-
-    // then the blue/orange layer quietly appears
     showWin("w-ghost1", 2600);
     showWin("w-static", 2900);
     showWin("w-ghost2", 3400);
@@ -937,12 +952,21 @@ remain logged in.
     setTimeout(addRepeatLine, 4500);
 
     setTimeout(scheduleGlitch, 5600);
+    setTimeout(randomCorruptionTick, 9000);
 
-    // delayed orange takeover sweep
-    setTimeout(startInvasion, 11500);
+    let invasionDelay = 11500;
+    let quietDelay = 15500;
 
-    // and then the quiet sets in
-    setTimeout(startQuietPhase, 15500);
+    if (STAGE === 2){
+      invasionDelay = 9000;
+      quietDelay = 13500;
+    }else if (STAGE === 3){
+      invasionDelay = 6500;
+      quietDelay = 11000;
+    }
+
+    setTimeout(startInvasion, invasionDelay);
+    setTimeout(startQuietPhase, quietDelay);
   });
 </script>
 </body>
