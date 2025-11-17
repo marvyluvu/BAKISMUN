@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=1200,initial-scale=1.0"/>
 <title>DIPLOMACY.OS // BOOT</title>
 
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -31,8 +31,7 @@
     transition:
       background 2.4s ease,
       color 1.4s ease,
-      filter 1.6s ease,
-      transform .4s ease;
+      filter 1.6s ease;
   }
 
   body.orange-phase{
@@ -44,7 +43,7 @@
     filter:brightness(.9) contrast(1.1);
   }
 
-  body.stage3-shake{
+  .desktop.stage3-shake{
     animation:globalShake .45s infinite;
   }
 
@@ -264,6 +263,12 @@
     animation:chaosWarp .35s infinite alternate;
   }
 
+  .popup-win{
+    width:260px;
+    max-width:260px;
+    font-size:14px;
+  }
+
   .win-title{
     display:flex;
     gap:6px;
@@ -419,37 +424,20 @@
 
   @media (max-width:900px){
     body{
-      overflow-y:auto;
-      overflow-x:hidden;
+      overflow:auto;
+      overflow-x:auto;
     }
     .desktop{
       min-height:100vh;
-      padding:14px 10px 40px;
+      padding:10px 10px 40px;
     }
     .win{
-      position:relative !important;
-      top:auto !important;
-      right:auto !important;
-      bottom:auto !important;
-      left:auto !important;
-      width:100%;
-      max-width:100%;
-      transform-origin:center;
-      transform:scale(.94) rotate(var(--tilt)) translateY(0);
-      margin:0 auto;
-    }
-    .win.show{
-      transform:scale(.96) rotate(var(--tilt));
-    }
-    .desktop .win + .win{
-      margin-top:-14px;
-    }
-    .win-body{
-      max-height:none;
+      max-width:none;
+      transform-origin:top left;
     }
     .footer{
       position:relative;
-      margin:26px 0 10px;
+      margin:26px 10px 10px;
     }
     .quiet-line{
       font-size:22px;
@@ -500,8 +488,8 @@
 
   @keyframes chaosWarp{
     0%{transform:translate3d(var(--tx),0,0) scale(1) rotate(var(--tilt));}
-    50%{transform:translate3d(calc(var(--tx) + 5px), -4px,0) scale(1.04) rotate(calc(var(--tilt) + 3deg));}
-    100%{transform:translate3d(calc(var(--tx) -4px), 3px,0) scale(.97) rotate(calc(var(--tilt) -3deg));}
+    50%{transform:translate3d(calc(var(--tx) + 6px), -4px,0) scale(1.05) rotate(calc(var(--tilt) + 4deg));}
+    100%{transform:translate3d(calc(var(--tx) -5px), 3px,0) scale(.95) rotate(calc(var(--tilt) -4deg));}
   }
 
   @keyframes globalShake{
@@ -943,6 +931,65 @@ remain logged in.
     setTimeout(randomCorruptionTick, interval);
   }
 
+  let popupCount = 0;
+
+  function spawnPopup(){
+    if (STAGE < 3) return;
+    const desktop = document.querySelector(".desktop");
+    if (!desktop) return;
+    const phrases = [
+      "overlay_injection: complete",
+      "do_not_close_this_window",
+      "quiet_mode: enforced",
+      "feed_deleted // signal remains",
+      "seeking_diplomacy: background",
+      "orange_layer: taking_focus",
+      "echo: are you still there?",
+      "new_session: unnamed_interface"
+    ];
+    const p = phrases[Math.floor(Math.random()*phrases.length)];
+    const wrapper = document.createElement("div");
+    wrapper.className = "win win-orange popup-win";
+    const top = 10 + Math.random()*70;
+    const left = 5 + Math.random()*75;
+    wrapper.style.top = top + "%";
+    wrapper.style.left = left + "%";
+    wrapper.style.setProperty("--tx","0px");
+    wrapper.style.setProperty("--ty","0px");
+    wrapper.style.setProperty("--tilt", (Math.random()*6 - 3) + "deg");
+    wrapper.style.setProperty("--z", 20 + Math.floor(Math.random()*20));
+    wrapper.innerHTML =
+      '<div class="win-header">' +
+        '<div class="win-title">' +
+          '<span>alert://overlay</span>' +
+        '</div>' +
+        '<div class="dots">' +
+          '<span class="dot"></span><span class="dot"></span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="win-body">' +
+        p + "\n" +
+        "id:" + Math.random().toString(16).slice(2,8) +
+      "</div>";
+    desktop.appendChild(wrapper);
+    popupCount++;
+    setTimeout(()=>wrapper.classList.add("show"), 20);
+    if (popupCount > 32){
+      const first = desktop.querySelector(".popup-win");
+      if (first) {
+        desktop.removeChild(first);
+        popupCount--;
+      }
+    }
+  }
+
+  function popupLoop(){
+    if (STAGE < 3) return;
+    spawnPopup();
+    const delay = 400 + Math.random()*700;
+    setTimeout(popupLoop, delay);
+  }
+
   function randomChaosTick(){
     if (STAGE < 3) return;
     const wins = Array.from(document.querySelectorAll(".win.show"));
@@ -998,7 +1045,8 @@ remain logged in.
 
   window.addEventListener("load", ()=>{
     if (STAGE === 3){
-      document.body.classList.add("stage3-shake");
+      const desk = document.querySelector(".desktop");
+      if (desk) desk.classList.add("stage3-shake");
     }
     showWin("w-main", 200);
     setTimeout(typeMain, 600);
@@ -1021,6 +1069,7 @@ remain logged in.
     setTimeout(randomCorruptionTick, 9000);
     if (STAGE === 3){
       setTimeout(randomChaosTick, 10000);
+      setTimeout(popupLoop, 9000);
     }
 
     let invasionDelay = 11500;
