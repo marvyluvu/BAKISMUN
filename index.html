@@ -31,7 +31,8 @@
     transition:
       background 2.4s ease,
       color 1.4s ease,
-      filter 1.6s ease;
+      filter 1.6s ease,
+      transform .4s ease;
   }
 
   body.orange-phase{
@@ -41,6 +42,10 @@
 
   body.quiet-phase{
     filter:brightness(.9) contrast(1.1);
+  }
+
+  body.stage3-shake{
+    animation:globalShake .45s infinite;
   }
 
   .overlay-scan{
@@ -255,6 +260,10 @@
     filter:hue-rotate(-22deg) saturate(1.4) brightness(1.1);
   }
 
+  .chaos-warp{
+    animation:chaosWarp .35s infinite alternate;
+  }
+
   .win-title{
     display:flex;
     gap:6px;
@@ -409,26 +418,42 @@
   }
 
   @media (max-width:900px){
-    .desktop{padding:14px;}
-  }
-
-  @media (max-width:720px){
-    body{overflow-y:auto;}
-    .desktop{min-height:100vh;}
+    body{
+      overflow-y:auto;
+      overflow-x:hidden;
+    }
+    .desktop{
+      min-height:100vh;
+      padding:14px 10px 40px;
+    }
     .win{
       position:relative !important;
       top:auto !important;
       right:auto !important;
       bottom:auto !important;
       left:auto !important;
-      transform:scale(1) translateY(0) !important;
       width:100%;
       max-width:100%;
-      margin:12px auto;
+      transform-origin:center;
+      transform:scale(.94) rotate(var(--tilt)) translateY(0);
+      margin:0 auto;
     }
-    .win-body{max-height:none;}
-    .footer{position:relative;margin:30px 0 18px;}
-    .quiet-line{font-size:22px;}
+    .win.show{
+      transform:scale(.96) rotate(var(--tilt));
+    }
+    .desktop .win + .win{
+      margin-top:-14px;
+    }
+    .win-body{
+      max-height:none;
+    }
+    .footer{
+      position:relative;
+      margin:26px 0 10px;
+    }
+    .quiet-line{
+      font-size:22px;
+    }
   }
 
   @keyframes bgPulse{
@@ -471,6 +496,20 @@
     0%{transform:translate(-2px,1px) skewX(-1deg);}
     50%{transform:translate(3px,-2px) skewX(2deg);}
     100%{transform:translate(-1px,2px) skewX(-2deg);}
+  }
+
+  @keyframes chaosWarp{
+    0%{transform:translate3d(var(--tx),0,0) scale(1) rotate(var(--tilt));}
+    50%{transform:translate3d(calc(var(--tx) + 5px), -4px,0) scale(1.04) rotate(calc(var(--tilt) + 3deg));}
+    100%{transform:translate3d(calc(var(--tx) -4px), 3px,0) scale(.97) rotate(calc(var(--tilt) -3deg));}
+  }
+
+  @keyframes globalShake{
+    0%{transform:translate(0,0);}
+    25%{transform:translate(1px,-1px);}
+    50%{transform:translate(-2px,1px);}
+    75%{transform:translate(1px,2px);}
+    100%{transform:translate(0,-1px);}
   }
 </style>
 </head>
@@ -753,7 +792,7 @@ remain logged in.
 <div id="quiet-overlay" class="quiet-overlay">
   <div class="quiet-inner">
     <div class="quiet-line">the quiet will explain itself.</div>
-    <div class="quiet-sub">
+    <div class="quiet-sub" id="quietSub">
       no feed. no noise. still a signal<span class="cursor"></span>
     </div>
   </div>
@@ -859,23 +898,25 @@ remain logged in.
     }
     setTimeout(()=>{
       panel.classList.remove("glitch","hard-glitch");
-    }, STAGE >= 3 ? 700 : 900);
+    }, STAGE >= 3 ? 550 : 900);
     scheduleGlitch();
   }
 
   function scheduleGlitch(){
     let factor = 1;
     if (STAGE === 2) factor = 0.6;
-    if (STAGE === 3) factor = 0.3;
+    if (STAGE === 3) factor = 0.25;
     const delay = (3600 + Math.random()*3200) * factor;
     setTimeout(triggerGlitch, delay);
   }
 
   function corruptText(str){
-    const glitchChars = ["█","▒","■","/","\\","_","?","*"];
+    const glitchChars = ["█","▒","■","/","\\","_","?","*","#","≈","∆"];
     return str.split("").map(ch=>{
       if (ch === " " || ch === "\n") return ch;
-      const p = STAGE === 2 ? 0.06 : 0.14;
+      let p = 0;
+      if (STAGE === 2) p = 0.12;
+      if (STAGE === 3) p = 0.35;
       if (STAGE >= 2 && Math.random() < p){
         return glitchChars[Math.floor(Math.random()*glitchChars.length)];
       }
@@ -893,9 +934,24 @@ remain logged in.
     }
     const base = target.dataset.original;
     target.textContent = corruptText(base);
-    const interval = STAGE === 2 ? 8000 + Math.random()*4000
-                                 : 3500 + Math.random()*2500;
+    let interval;
+    if (STAGE === 2){
+      interval = 7000 + Math.random()*3500;
+    } else {
+      interval = 1100 + Math.random()*900;
+    }
     setTimeout(randomCorruptionTick, interval);
+  }
+
+  function randomChaosTick(){
+    if (STAGE < 3) return;
+    const wins = Array.from(document.querySelectorAll(".win.show"));
+    if (!wins.length) return;
+    const w = wins[Math.floor(Math.random()*wins.length)];
+    w.classList.add("chaos-warp");
+    setTimeout(()=>w.classList.remove("chaos-warp"), 600 + Math.random()*600);
+    const interval = 900 + Math.random()*700;
+    setTimeout(randomChaosTick, interval);
   }
 
   function startInvasion(){
@@ -931,9 +987,19 @@ remain logged in.
     if(qo){
       setTimeout(()=>qo.classList.add("show"), 2200);
     }
+    if (STAGE === 3){
+      const qs = document.getElementById("quietSub");
+      if(qs){
+        const base = "no feed. no noise. still a signal";
+        qs.innerHTML = corruptText(base) + '<span class="cursor"></span>';
+      }
+    }
   }
 
   window.addEventListener("load", ()=>{
+    if (STAGE === 3){
+      document.body.classList.add("stage3-shake");
+    }
     showWin("w-main", 200);
     setTimeout(typeMain, 600);
     showWin("w-log", 900);
@@ -953,6 +1019,9 @@ remain logged in.
 
     setTimeout(scheduleGlitch, 5600);
     setTimeout(randomCorruptionTick, 9000);
+    if (STAGE === 3){
+      setTimeout(randomChaosTick, 10000);
+    }
 
     let invasionDelay = 11500;
     let quietDelay = 15500;
