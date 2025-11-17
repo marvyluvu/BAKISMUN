@@ -30,12 +30,17 @@
     letter-spacing:.5px;
     transition:
       background 2.4s ease,
-      color 1.4s ease;
+      color 1.4s ease,
+      filter 1.6s ease;
   }
 
   body.orange-phase{
     background:radial-gradient(circle at 20% -10%, #2a1200 0, #000 60%);
     color:var(--orange);
+  }
+
+  body.quiet-phase{
+    filter:brightness(.9) contrast(1.1);
   }
 
   /* CRT overlays */
@@ -51,6 +56,7 @@
     mix-blend-mode:screen;
     opacity:.75;
     animation:scanShift 7s linear infinite;
+    transition:opacity 2s ease;
   }
   body.orange-phase .overlay-scan{
     background:repeating-linear-gradient(
@@ -60,6 +66,9 @@
       rgba(255,204,102,.08) 3px,
       transparent 6px
     );
+  }
+  body.quiet-phase .overlay-scan{
+    opacity:.4;
   }
 
   .overlay-glow{
@@ -73,6 +82,9 @@
   body.orange-phase .overlay-glow{
     filter:hue-rotate(-12deg) saturate(1.3);
     opacity:.95;
+  }
+  body.quiet-phase .overlay-glow{
+    opacity:.7;
   }
 
   .overlay-orb{
@@ -92,6 +104,9 @@
       radial-gradient(circle at 77% 78%, rgba(255,204,102,.13) 0, transparent 55%),
       radial-gradient(circle at 50% 6%, rgba(255,255,255,.09) 0, transparent 45%);
   }
+  body.quiet-phase .overlay-orb{
+    opacity:.55;
+  }
 
   .overlay-noise{
     position:fixed; inset:-120px;
@@ -102,12 +117,17 @@
     mix-blend-mode:soft-light;
     opacity:.18;
     animation:noiseSpin 38s linear infinite;
+    transition:opacity 2s ease, filter 2s ease;
   }
   body.orange-phase .overlay-noise{
     background:
       repeating-conic-gradient(from 12deg, rgba(255,138,60,.11) 0deg 6deg, transparent 6deg 12deg),
       repeating-linear-gradient(90deg, rgba(255,204,102,.05) 0 10px, transparent 10px 22px);
     opacity:.26;
+  }
+  body.quiet-phase .overlay-noise{
+    opacity:.18;
+    filter:blur(1px);
   }
 
   .desktop{
@@ -135,6 +155,9 @@
   body.orange-phase .desktop::before{
     filter:hue-rotate(-18deg);
     opacity:.3;
+  }
+  body.quiet-phase .desktop::before{
+    opacity:.22;
   }
 
   /* windows */
@@ -164,7 +187,8 @@
       box-shadow 1s ease,
       border-color .7s ease,
       color .7s ease,
-      filter .8s ease;
+      filter .8s ease,
+      opacity 1s ease;
     backdrop-filter:blur(1.2px);
     z-index:var(--z);
   }
@@ -223,6 +247,10 @@
   .win.glitch::after{opacity:.32; animation:glitchPulse .45s steps(2) infinite;}
   .win.glitch .win-header,
   .win.glitch .win-body{animation:glitchJitter .45s steps(2) infinite;}
+
+  .win.muted{
+    opacity:.65;
+  }
 
   .win-title{
     display:flex;
@@ -347,6 +375,42 @@
   body.orange-phase .footer span:last-child{
     color:var(--amber);
   }
+  body.quiet-phase .footer{
+    opacity:.9;
+  }
+
+  /* quiet overlay */
+  .quiet-overlay{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    transition:opacity 3s ease;
+    background:radial-gradient(circle at 50% 10%, rgba(0,0,0,.1) 0, rgba(0,0,0,.88) 65%);
+    mix-blend-mode:screen;
+    z-index:99;
+  }
+  .quiet-overlay.show{
+    opacity:1;
+  }
+  .quiet-inner{
+    text-align:center;
+    max-width:80vw;
+  }
+  .quiet-line{
+    font-size:26px;
+    color:var(--amber);
+    text-shadow:0 0 14px rgba(255,204,102,.9);
+    margin-bottom:12px;
+  }
+  .quiet-sub{
+    font-size:17px;
+    color:var(--orange);
+    opacity:.9;
+  }
 
   @media (max-width:900px){
     .desktop{padding:14px;}
@@ -368,6 +432,7 @@
     }
     .win-body{max-height:none;}
     .footer{position:relative;margin:30px 0 18px;}
+    .quiet-line{font-size:22px;}
   }
 
   /* extra animations used above */
@@ -684,7 +749,7 @@ silence carries instructions.
     </div>
     <div class="win-body">
 next_update: [REDACTED]
-eta: soon.
+eta: close enough.
 
 remain logged in.
     </div>
@@ -694,6 +759,16 @@ remain logged in.
 <div class="footer">
   <span>DIPLOMACY.OS // BUILD_2025.10 // UAE</span>
   <span>this is only a preview window.</span>
+</div>
+
+<!-- quiet message layer -->
+<div id="quiet-overlay" class="quiet-overlay">
+  <div class="quiet-inner">
+    <div class="quiet-line">the quiet will explain itself.</div>
+    <div class="quiet-sub">
+      no feed. no noise. just a new pattern loading<span class="cursor"></span>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -818,8 +893,25 @@ remain logged in.
     const footer = document.querySelector(".footer span:last-child");
     if(footer){
       setTimeout(()=>{
-        footer.textContent = "the preview is already changing you.";
+        footer.textContent = "the quiet will explain itself.";
       }, 5200);
+    }
+  }
+
+  // after invasion: slip into quiet mode + overlay
+  function startQuietPhase(){
+    document.body.classList.add("quiet-phase");
+
+    const allWins = document.querySelectorAll(".win");
+    allWins.forEach((w, i)=>{
+      setTimeout(()=>{
+        w.classList.add("muted");
+      }, 220 * i);
+    });
+
+    const qo = document.getElementById("quiet-overlay");
+    if(qo){
+      setTimeout(()=>qo.classList.add("show"), 2200);
     }
   }
 
@@ -832,7 +924,7 @@ remain logged in.
     showWin("w-archive", 1350);
     showWin("w-uptime", 1500);
 
-    // then the blue/orange layer quietly appears, more and more
+    // then the blue/orange layer quietly appears
     showWin("w-ghost1", 2600);
     showWin("w-static", 2900);
     showWin("w-ghost2", 3400);
@@ -848,6 +940,9 @@ remain logged in.
 
     // delayed orange takeover sweep
     setTimeout(startInvasion, 11500);
+
+    // and then the quiet sets in
+    setTimeout(startQuietPhase, 15500);
   });
 </script>
 </body>
